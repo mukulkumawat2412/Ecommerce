@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-
+import { Link } from "react-router-dom";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -17,7 +17,6 @@ const ProductList = () => {
       try {
         const token = getCookie("accessToken"); 
         if (!token) {
-          alert("User not logged in! Token missing.");
           setLoading(false);
           return;
         }
@@ -45,27 +44,38 @@ const ProductList = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
       <h1 className="text-2xl font-bold mb-6 text-gray-800">Our Products</h1>
+      
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.length > 0 ? (
           products.map((product) => (
-            <div
-              key={product._id}
-              className="bg-white shadow-lg rounded-xl p-4 hover:shadow-xl transition transform hover:-translate-y-1"
-            >
-              <div className="flex justify-center items-center h-48 mb-4">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="max-h-full object-contain rounded-md"
-                />
+            <Link key={product._id} to={`/product-details/${product._id}`}>
+              <div
+                key={product._id}
+                className="bg-white shadow-lg rounded-xl p-4 hover:shadow-xl transition transform hover:-translate-y-1 flex flex-col h-full"
+              >
+                <div className="flex justify-center items-center h-48 mb-4">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="max-h-full object-contain rounded-md"
+                  />
+                </div>
+
+                {/* Product Info */}
+                <div className="flex-1 flex flex-col">
+                  <h2 className="text-lg font-semibold text-gray-800">{product.name}</h2>
+                  <p className="text-gray-500 text-sm mt-1">{product.title}</p>
+                  <p className="text-gray-900 font-bold mt-2 text-lg">₹{product.price}</p>
+
+                  {/* Add to Cart Button at Bottom */}
+                  <div className="mt-auto">
+                    <button className="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-700 transition">
+                      Add to Cart
+                    </button>
+                  </div>
+                </div>
               </div>
-              <h2 className="text-lg font-semibold text-gray-800">{product.name}</h2>
-              <p className="text-gray-500 text-sm mt-1">{product.title}</p>
-              <p className="text-gray-900 font-bold mt-2 text-lg">₹{product.price}</p>
-              <button className="mt-4 w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-700 transition">
-                Add to Cart
-              </button>
-            </div>
+            </Link>
           ))
         ) : (
           <p className="text-center text-gray-500 col-span-4">No products available</p>

@@ -88,10 +88,27 @@ if(!products){
 
 
 
+const getSingleProduct = asyncHandler(async(req,res)=>{
+ const product =   await Product.findById(req.params.id)
+
+ if(!product){
+    throw new ApiError(404,"Product not found")
+ }
+
+
+
+ return res.status(200).json(new ApiResponse(200,product,"Single product successfully fetched"))
+
+
+
+})
 
 
 
 
 
 
-export {CreateProduct,GetProducts}
+
+
+
+export {CreateProduct,GetProducts,getSingleProduct}

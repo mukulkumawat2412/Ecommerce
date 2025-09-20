@@ -157,6 +157,9 @@ const LoginForm = () => {
           <div style={{ textAlign: "center", marginTop: "10px" }}>
   <Link to="/signup" style={{ color: "#007BFF", textDecoration: "none" }}>
     Don’t have an account? Register here
+  </Link><br/>
+  <Link to="/forgot-password" style={{ color: "#007BFF", textDecoration: "none" }}>
+  ForgotPassword
   </Link>
 </div>
 

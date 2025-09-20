@@ -5,6 +5,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { generateAccessTokenAndRefreshToken } from "../utils/generateAccessAndRefreshToken.js";
 import jwt from "jsonwebtoken"
 import User from "../models/user.model.js";
+import bcrypt from "bcrypt"
 
 
 
@@ -187,10 +188,101 @@ return res.status(200).clearCookie("accessToken",options).clearCookie("refreshTo
 
 
 
+const Profile = asyncHandler(async(req,res)=>{
+
+   const userId = req.user?._id
+
+const user =   await User.findById(userId).select("-password")
+
+if(!user){
+   throw new ApiError(404,"User not found")
+}
+
+
+return res.status(200).json(new ApiResponse(200,user,"User profile successfully fetched"))
+
+})
+
+
+const UpdateProfile = asyncHandler(async(req,res)=>{
+const user =   await User.findById(req.user?._id)
+
+if(!user){
+   throw new ApiError(404,"User not found")
+}
+
+const {username,fullName,email} = req.body
+
+if([username,fullName,email].some((value)=>value?.trim()==="")){
+   throw new ApiError(400,"Some field is required")
+   
+}
 
 
 
-export {Login,RefreshAccessToken,Logout,Register}
+
+
+const updatedProfile = await User.findByIdAndUpdate(req.user?._id,{
+   username,
+   fullName,
+   email
+   
+   
+
+},{new:true, select:"-password"})
+
+
+if(!updatedProfile){
+   throw new ApiError(400,"Profile not updated")
+}
+
+
+return res.status(200).json(new ApiResponse(200,updatedProfile,"Profile updated successfully"))
+
+
+})
+
+
+const ProfileChangePassword = asyncHandler(async(req,res)=>{
+
+const user =   await User.findById(req.user?._id)
+
+if(!user){
+   throw new ApiError(404,"User not found")
+}
+
+const {oldPassword,newPassword,confirmNewPassword} = req.body
+
+
+const isMatch =  await bcrypt.compare(oldPassword,user.password)
+
+if(!isMatch){
+   throw new ApiError(400,"oldPassword is incorrect, please correct oldPassword")
+
+}
+
+
+if(newPassword !==confirmNewPassword){
+   throw new ApiError(400,"newPassword and confirmPassword do not match ")
+}
+
+
+
+ user.password = newPassword
+
+ await user.save()
+
+
+
+return res.status(200).json(new ApiResponse(200,user,"Profile password change successfully"))
+
+
+})
+
+
+
+
+export {Login,RefreshAccessToken,Logout,Register,Profile,UpdateProfile,ProfileChangePassword}
 
 
 

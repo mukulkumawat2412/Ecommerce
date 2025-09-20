@@ -8,6 +8,11 @@ import ProtectedRoute from "./components/ProtectedRoutes"
 import Dashboard from "./Admin/Dashboard"
 import SignUp from "./auth/SignUp"
 import MainLayout from "./components/navigation/layout/MainLayout"
+import ProductDetails from "./Product-Details/ProductDetails"
+import ProfilePage from "./components/navigation/layout/ProfilePage"
+import ProfileUpdate from "./components/navigation/layout/ProfileUpdate"
+import ProfileChangePassword from "./components/navigation/layout/ProfileChangePassword"
+
 
 
 function App() {
@@ -23,10 +28,15 @@ function App() {
     
   <Route path="/login" element={<LoginForm/>}/>
   <Route path="/signup"  element={<SignUp/>}/>
-  <Route path="/product-form" element={<ProductForm/>}/>
+    <Route path="/profile" element={<ProfilePage/>}/>
+    <Route path="/update/profile" element={<ProfileUpdate/>}/>
+    <Route path="/changePassword/profile" element={<ProfileChangePassword/>}/>
+ 
   <Route path="/products" element={<ProductList/>}/>
+  <Route path="/product-details/:id" element={<ProductDetails/>}/>
   <Route element={<ProtectedRoute allowedRoles={["admin"]}/>}>
    <Route path="/dashboard" element={<Dashboard/>}/>
+    <Route path="/product-form" element={<ProductForm/>}/>
 
   </Route>
 </Routes>

@@ -1,11 +1,26 @@
 import React from "react";
 
-
 const categories = [
-  { id: "electronics", label: "Electronics", img: "/images/electronics.jpg" },
-  { id: "clothing", label: "Clothing", img: "/images/clothing.jpg" },
-  { id: "food", label: "Foods", img: "/images/food.jpg" },
-  { id: "books", label: "Books", img: "/images/books.jpg" },
+  {
+    id: "electronics",
+    label: "Electronics",
+    img: "https://rukminim2.flixcart.com/image/240/240/xif0q/mobile/p/a/i/-original-imahfvuagzmf2ppf.jpeg?q=60",
+  },
+  {
+    id: "clothing",
+    label: "Clothing",
+    img: "https://rukminim2.flixcart.com/image/612/612/xif0q/kids-t-shirt/e/u/u/2-3-years-kd-708-because-navy-24-atlans-clothes-original-imahdt8acuqfpgfy.jpeg?q=70",
+  },
+  {
+    id: "food",
+    label: "Foods",
+    img: "https://rukminim1.flixcart.com/image/240/240/k6fd47k0/nut-dry-fruit/p/z/7/200-100-natural-california-pouch-happilo-original-imafzvw2tcazeur6.jpeg?q=60",
+  },
+  {
+    id: "books",
+    label: "Books",
+    img: "https://rukminim2.flixcart.com/image/612/612/kynb6vk0/regionalbooks/i/u/j/mindset-deep-work-set-of-two-original-imagatbmangddjzm.jpeg?q=70",
+  },
 ];
 
 const CategoriesGrid = () => {
@@ -18,13 +33,18 @@ const CategoriesGrid = () => {
             key={cat.id}
             className="relative rounded-lg overflow-hidden shadow-lg hover:scale-105 transition-transform duration-300 cursor-pointer"
           >
+            {/* Image */}
             <img
               src={cat.img}
               alt={cat.label}
-              className="w-full h-40 object-cover"
+              className="w-full h-48 object-contain"
             />
-            <div className="absolute inset-0 bg-gray-300 bg-opacity-30 flex items-center justify-center">
-              <h3 className="text-white text-lg font-semibold">{cat.label}</h3>
+
+            {/* Overlay with gradient for better visibility */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end justify-center">
+              <h3 className="text-white text-lg font-semibold mb-3">
+                {cat.label}
+              </h3>
             </div>
           </div>
         ))}
