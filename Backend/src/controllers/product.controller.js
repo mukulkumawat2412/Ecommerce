@@ -6,6 +6,7 @@ import asyncHandler from "../utils/AsyncHandler.js";
 import uploadOnCloudinary from "../utils/cloudinary.js";
 
 
+
 const CreateProduct = asyncHandler(async(req,res)=>{
 
 
@@ -29,20 +30,39 @@ if(user.role == !req.user.role){
     throw new ApiError("only created Admin")
 }
 
-const localImagePath = req.file?.path
 
-if(!localImagePath){
-    throw new ApiError(400,"Image is required")
 
+
+
+const localImagePath = req.files;
+console.log(localImagePath)
+
+if (!localImagePath || localImagePath.length === 0) {
+  throw new ApiError(400, "Images are required");
 }
 
 
-const UploadLocalImagePath = await uploadOnCloudinary(req.file?.path)
+const uploadImages = [] // 4 url of cloudinary
+
+for(const file of req.files){
+
+const UploadLocalImagePath = await uploadOnCloudinary(file.path)
 
 if(!UploadLocalImagePath){
     throw new ApiError(400,"cloudinary uploading error")
 
 }
+
+uploadImages.push(UploadLocalImagePath.url)
+
+}
+
+
+
+
+
+
+
 
 const product = await Product.create({
     name,
@@ -51,7 +71,7 @@ const product = await Product.create({
     description,
     category,
     stock,
-    image:UploadLocalImagePath.url
+    image:uploadImages
 })
 
 
@@ -106,9 +126,53 @@ const getSingleProduct = asyncHandler(async(req,res)=>{
 
 
 
+const ProductSearch = asyncHandler(async(req,res)=>{
+
+const user =    await  User.findById(req.user?._id)
+
+if(!user){
+    throw new ApiError(404,"User not found, please login")
+}
+
+
+const {query} = req.query
+
+ 
+
+
+
+
+const productSearch = await Product.find({
+    $or:[
+        {name:{$regex:query, $options:"i"}},
+        {category:{$regex:query, $options:"i"}}
+    ]
+})
+
+
+
+if (!productSearch || productSearch.length === 0) {
+    return res.status(200).json(new ApiResponse(200, [], "No products found"));
+  }
+
+
+
+
+return res.status(200).json(new ApiResponse(200,productSearch,"Product searched successfully"))
 
 
 
 
 
-export {CreateProduct,GetProducts,getSingleProduct}
+
+
+})
+
+
+
+
+
+
+
+
+export {CreateProduct,GetProducts,getSingleProduct,ProductSearch}

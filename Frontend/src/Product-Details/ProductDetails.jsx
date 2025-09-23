@@ -10,6 +10,8 @@ const ProductDetails = () => {
     const [quantity, setQuantity] = useState(1)
     const {id} = useParams()
 
+    console.log(product)
+
     useEffect(()=>{
         const fetchSingleProduct = async()=>{
             const token = getCookie("accessToken")
@@ -42,55 +44,83 @@ const ProductDetails = () => {
     if(loading) return <p className='text-center mt-20 text-xl'>Loading...</p>
     if(!product) return <p className='text-center mt-20 text-xl'>No product found</p>
 
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="max-w-6xl mx-auto mt-10 p-5 flex flex-col md:flex-row gap-10"
-        >
+   return (
+  <motion.div
+    initial={{ opacity: 0, y: 50 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5 }}
+    className="max-w-6xl mx-auto mt-10 p-5 flex flex-col md:flex-row gap-10"
+  >
     
-            <div className="flex-1 flex justify-center items-center bg-white rounded-lg shadow-md p-5">
-                <img 
-                    src={product.image} 
-                    alt={product.name} 
-                    className="w-[300px] h-[300px] object-contain"
-                />
-            </div>
+    <div className="flex gap-4 flex-1">
+      {/* Thumbnails - vertical */}
+      <div className="flex flex-col gap-2">
+        {product.image?.map((img, index) => (
+          <img
+            key={index}
+            src={img}
+            alt={`thumb-${index}`}
+            className={`w-16 h-16 object-cover rounded cursor-pointer border ${
+              product.image[0] === img
+                ? "border-blue-500"
+                : "border-gray-300"
+            }`}
+            onClick={() => {
+              // main image ko change karo
+              const newImages = [...product.image]; // url http/cloudinary.comjfkdsjkfjkl
+              
+              // clicked image ko array ke 0 index pe laao
+              const clicked = newImages.splice(index, 1)[0];
+              newImages.unshift(clicked);
+              setProduct({ ...product, image: newImages });
+            }}
+          />
+        ))}
+      </div>
 
-         
-            <div className="flex-1 flex flex-col gap-5">
-                <h2 className="text-3xl font-semibold text-gray-800">{product.name}</h2>
-                <h3 className="text-xl text-gray-500">{product.title}</h3>
-                <p className="text-2xl font-bold text-green-600">₹{product.price}</p>
-                
-                <p className="text-gray-700">{product.description}</p>
+      {/* Main Image */}
+      <div className="flex-1 flex justify-center items-center bg-white rounded-lg shadow-md p-5">
+        <img
+          src={product.image?.[0]}
+          alt={product.name}
+          className="w-[350px] h-[350px] object-contain"
+        />
+      </div>
+    </div>
 
-                
-                <div className="flex items-center gap-4 mt-4">
-                    <input 
-                        type="number" 
-                        value={quantity} 
-                        onChange={(e)=>setQuantity(Number(e.target.value))}
-                        min={1} 
-                        className="w-20 border rounded px-2 py-1 text-center"
-                    />
-                    <button 
-                      
-                        className="bg-green-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded shadow-md transition-all"
-                    >
-                        Buy Now
-                    </button>
-                </div>
+    {/* Right (Product Details) */}
+    <div className="flex-1 flex flex-col gap-5">
+      <h2 className="text-3xl font-semibold text-gray-800">{product.name}</h2>
+      <h3 className="text-xl text-gray-500">{product.title}</h3>
+      <p className="text-2xl font-bold text-green-600">₹{product.price}</p>
 
-                
-                <div className="mt-5 text-gray-600">
-                    <p>⭐⭐⭐⭐☆ 4.2 Ratings</p>
-                    <p className="mt-2">Available offers: Buy 2 get 10% off</p>
-                </div>
-            </div>
-        </motion.div>
-    )
+      <p className="text-gray-700">{product.description}</p>
+
+      <p className="text-green-700">
+        {product.stock > 0 ? "InStock" : "Out-of-stock"}
+      </p>
+
+      <div className="flex items-center gap-4 mt-4">
+        <input
+          type="number"
+          value={quantity}
+          onChange={(e) => setQuantity(Number(e.target.value))}
+          min={1}
+          className="w-20 border rounded px-2 py-1 text-center"
+        />
+        <button className="bg-green-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded shadow-md transition-all">
+          Buy Now
+        </button>
+      </div>
+
+      <div className="mt-5 text-gray-600">
+        <p>⭐⭐⭐⭐☆ 4.2 Ratings</p>
+        <p className="mt-2">Available offers: Buy 2 get 10% off</p>
+      </div>
+    </div>
+  </motion.div>
+);
+
 }
 
 export default ProductDetails

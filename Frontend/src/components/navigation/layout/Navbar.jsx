@@ -7,6 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import getCookie from '../../../../../Backend/src/utils/GetToken.js';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
+import SearchBar from '../SearchBar.jsx';
 
 function Navbar() {
   const [showNavbar, setShowNavbar] = useState(true);
@@ -119,7 +120,7 @@ const decoded =   jwtDecode(token)
         <div className="w-[50px] md:w-[90px] flex-shrink-0">
           <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvUy6QJ_dbr3a08V_Tj_IcuC7ewqh5W0ezjQ&s' alt="Logo" className="w-[150px] h-[50px]" />
         </div>
-
+    <SearchBar/>
         <ul className="hidden md:flex md:space-x-6 items-center md:mr-20">
           <Link to="/"><li className="hover:text-purple-300 cursor-pointer">Home</li></Link>
           <Link to={"/products"}><li className='hover:text-purple-300 cursor-pointer'>Products</li></Link>
