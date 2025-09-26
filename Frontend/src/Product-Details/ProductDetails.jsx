@@ -96,7 +96,7 @@ const ProductDetails = () => {
 
       <p className="text-gray-700">{product.description}</p>
 
-      <p className="text-green-700">
+      <p className="text-red-700 font-semibold text-2xl">
         {product.stock > 0 ? "InStock" : "Out-of-stock"}
       </p>
 

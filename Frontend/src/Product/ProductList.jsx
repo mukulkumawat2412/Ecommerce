@@ -1,34 +1,32 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { getProducts } from "../redux/slices/productSlice";
+
 
 const ProductList = () => {
-  const [products, setProducts] = useState([]);
+
+
+  
+
+
   const [loading, setLoading] = useState(true);
 
-  const getCookie = (name) => {
-    const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-    if (match) return match[2];
-    return null;
-  };
+
+  const dispatch = useDispatch()
+  const {products} = useSelector((state)=>state.product)
+
+
+ 
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const token = getCookie("accessToken"); 
-        if (!token) {
-          setLoading(false);
-          return;
-        }
-
-        const res = await axios.get("http://localhost:8000/api/v1/product/products", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true, 
-        });
-
-        setProducts(res.data.data);
+       
+      await dispatch(getProducts()).unwrap()
+      
+       
       } catch (err) {
         console.error("Error fetching products:", err);
       } finally {
@@ -55,7 +53,7 @@ const ProductList = () => {
               >
                 <div className="flex justify-center items-center h-48 mb-4">
                   <img
-                    src={product.image}
+                    src={product.image[0]}
                     alt={product.name}
                     className="max-h-full object-contain rounded-md"
                   />
@@ -69,7 +67,7 @@ const ProductList = () => {
 
                   {/* Add to Cart Button at Bottom */}
                   <div className="mt-auto">
-                    <button className="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-700 transition">
+                    <button className="w-full bg-slate-500 text-white py-2 rounded-lg hover:bg-slate-700 transition">
                       Add to Cart
                     </button>
                   </div>

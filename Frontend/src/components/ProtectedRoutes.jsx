@@ -1,13 +1,10 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
+import getCookie from "../../../Backend/src/utils/GetToken.js";
 
 function ProtectedRoutes({ allowedRoles }) {
-  const getCookie = (name) => {
-    const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-    if (match) return match[2];
-    return null;
-  };
+
 
   const token = getCookie("accessToken");
 

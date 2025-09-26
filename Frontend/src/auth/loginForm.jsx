@@ -3,6 +3,8 @@ import axios from "axios";
 import { motion } from "framer-motion"; // ✅ framer-motion import
 import { useNavigate } from "react-router-dom";
 import {Link} from "react-router-dom"
+import { useDispatch } from "react-redux";
+import { Login } from "../redux/slices/authSlice";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -10,6 +12,8 @@ const LoginForm = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate()
+
+  const dispatch  = useDispatch()
 
 
   const handleLogin = async (e) => {
@@ -23,22 +27,20 @@ const LoginForm = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post(
-        "http://localhost:8000/api/v1/users/login",
-        { email, password },
-        {
-          withCredentials: true,
-        }
-      );
+     
+      
+    const res =   await dispatch(Login({email,password})).unwrap()
 
-      console.log("Login Response:", res.data);
+    
+ 
+     
       alert("Login successful! Cookie set.");
 
       setEmail("");
       setPassword("");
 
 
-  const role = res.data.data.loggedIn.role
+  const role = res.loggedIn.role
 
   if(role==="user"){
     navigate("/")

@@ -1,5 +1,6 @@
 import mongoose,{Schema} from "mongoose"
 
+
 const productSchema = new Schema({
     name:{
         type:String,
@@ -19,7 +20,11 @@ const productSchema = new Schema({
     },
 
     category:{
-        type:String,
+        // {
+        //     _id:"68jksldjr33jk3b8"
+        // }
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Category",
         required:true
     },
 

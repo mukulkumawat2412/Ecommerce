@@ -12,6 +12,9 @@ import ProductDetails from "./Product-Details/ProductDetails"
 import ProfilePage from "./components/navigation/layout/ProfilePage"
 import ProfileUpdate from "./components/navigation/layout/ProfileUpdate"
 import ProfileChangePassword from "./components/navigation/layout/ProfileChangePassword"
+import ProductPage from "./Product/ProductPage"
+import AddCategory from "./Admin/AddCategory"
+import CategoryByProducts from "./Product/CategoryByProducts"
 
 
 
@@ -33,8 +36,11 @@ function App() {
     <Route path="/changePassword/profile" element={<ProfileChangePassword/>}/>
  
   <Route path="/products" element={<ProductList/>}/>
+  <Route path="/product-page" element={<ProductPage/>}/>
   <Route path="/product-details/:id" element={<ProductDetails/>}/>
+  <Route path="/category-by-products/:categoryId" element={<CategoryByProducts/>}/>
   <Route element={<ProtectedRoute allowedRoles={["admin"]}/>}>
+  <Route path="/add-category" element={<AddCategory/>}/>
    <Route path="/dashboard" element={<Dashboard/>}/>
     <Route path="/product-form" element={<ProductForm/>}/>
 

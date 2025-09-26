@@ -5,6 +5,8 @@ import { TextField, Button, Link } from "@mui/material";
 import axios from "axios";
 import { Link as RouterLink } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Register } from "../redux/slices/authSlice";
+import { useDispatch } from "react-redux";
 
 const SignUp = () => {
   const validationSchema = Yup.object({
@@ -22,6 +24,12 @@ const SignUp = () => {
       .min(6, "Password must be at least 6 characters"),
   });
 
+
+
+ const dispatch =  useDispatch()
+
+
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -30 }}
@@ -38,13 +46,10 @@ const SignUp = () => {
         validationSchema={validationSchema}
         onSubmit={async (values, { resetForm, setSubmitting }) => {
           try {
-            const response = await axios.post(
-              "http://localhost:8000/api/v1/users/register",
-              values,
-              { withCredentials: true }
-            );
+            
+            await dispatch(Register(values)).unwrap()
 
-            console.log("Register Response:", response.data);
+          
             alert("✅ Registration successful! Please login.");
             resetForm();
           } catch (error) {

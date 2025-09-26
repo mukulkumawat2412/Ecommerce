@@ -3,23 +3,54 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { TextField, Button, MenuItem } from '@mui/material';
 import axios from 'axios';
+import getCookie from '../../../Backend/src/utils/GetToken.js';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { createProduct } from '../redux/slices/productSlice.jsx';
+import { getCategories } from '../redux/slices/categorySlice.jsx';
 
 const ProductForm = () => {
     const [images, setImages] = useState([]);
 
-    const categories = ["Electronics", "Clothing", "Books", "Food", "Sports"];
+    const [categories,setCategories] = useState([])
 
-    const getCookie = (name) => {
-        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-        if (match) return match[2];
-        return null;
-    };
+
+    const dispatch = useDispatch()
+
+  console.log(categories)
 
     const token = getCookie("accessToken");
     if (!token) {
         alert("User not logged in! Token missing.");
-        return null;
+      
     }
+
+
+   
+    
+ useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await dispatch(getCategories()).unwrap();
+        setCategories(res); 
+      } catch (err) {
+        console.error("Failed to fetch categories:", err);
+      }
+    };
+    fetchCategories();
+  }, [dispatch]);
+   
+
+
+
+
+
+
+
+
+
+
+
 
     const validationSchema = Yup.object({
         name: Yup.string().required("Name is required"),
@@ -30,6 +61,26 @@ const ProductForm = () => {
         category: Yup.string().required("Category is required"),
         images: Yup.array().min(1, "At least 1 image is required").max(5, "Maximum 5 images allowed"),
     });
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     return (
         <Formik
@@ -56,23 +107,10 @@ const ProductForm = () => {
                     formData.append("images", img); // backend should handle "images" array
                 });
 
-                try {
-                    const response = await axios.post(
-                        "http://localhost:8000/api/v1/product/create-product",
-                        formData,
-                        {
-                            headers: {
-                                "Content-Type": "multipart/form-data",
-                                Authorization: `Bearer ${token}`,
-                            },
-                        }
-                    );
-                    console.log("Server Response:", response.data);
-                    alert("Product created successfully!");
-                } catch (error) {
-                    console.error("Upload Error:", error);
-                    alert("Product upload failed!");
-                }
+
+                await dispatch(createProduct(formData)).unwrap()
+
+              
             }}
         >
             {({ values, handleChange, handleBlur, errors, touched, setFieldValue }) => {
@@ -159,8 +197,8 @@ const ProductForm = () => {
                                 fullWidth
                             >
                                 {categories.map((cat) => (
-                                    <MenuItem key={cat} value={cat}>
-                                        {cat}
+                                    <MenuItem key={cat} value={cat._id}>
+                                        {cat.name}
                                     </MenuItem>
                                 ))}
                             </Field>
