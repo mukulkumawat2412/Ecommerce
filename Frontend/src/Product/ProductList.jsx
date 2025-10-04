@@ -3,30 +3,34 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getProducts } from "../redux/slices/productSlice";
+import getCookie from "../../../Backend/src/utils/GetToken.js";
+import { AddToCart } from "../redux/slices/cartSlice.jsx";
 
 
-const ProductList = () => {
+const ProductList = ({ setCartCount }) => {
 
 
-  
+
 
 
   const [loading, setLoading] = useState(true);
 
 
   const dispatch = useDispatch()
-  const {products} = useSelector((state)=>state.product)
+  const { products } = useSelector((state) => state.product)
 
+const { cartItems } = useSelector((state) => state.cart);
+  
+console.log(cartItems)
 
- 
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-       
-      await dispatch(getProducts()).unwrap()
-      
-       
+
+        await dispatch(getProducts()).unwrap()
+
+
       } catch (err) {
         console.error("Error fetching products:", err);
       } finally {
@@ -39,10 +43,45 @@ const ProductList = () => {
 
   if (loading) return <p className="text-center text-lg mt-10">Loading...</p>;
 
+
+
+
+const addToCart = async (productId) => {
+  try {
+    // Check karo ki product already cartItems me hai ya nahi
+    const alreadyInCart = cartItems.some(
+      (item) => item.product.toString() === productId.toString()
+    );
+
+    const res = await dispatch(AddToCart({ productId, quantity: 1 })).unwrap();
+    console.log("AddToCart response:", res);
+
+    // Agar product pehli baar add ho raha hai tabhi count increase karo
+    if (!alreadyInCart) {
+      setCartCount((prev) => prev + 1);
+      console.log("✅ New product added, count increased");
+    } else {
+      console.log("⚠️ Existing product, quantity updated, count unchanged");
+    }
+  } catch (error) {
+    console.log("Error adding to cart:", error);
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
       <h1 className="text-2xl font-bold mb-6 text-gray-800">Our Products</h1>
-      
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.length > 0 ? (
           products.map((product) => (
@@ -67,9 +106,18 @@ const ProductList = () => {
 
                   {/* Add to Cart Button at Bottom */}
                   <div className="mt-auto">
-                    <button className="w-full bg-slate-500 text-white py-2 rounded-lg hover:bg-slate-700 transition">
+
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault(); 
+                        e.stopPropagation(); 
+                        addToCart(product._id);
+                      }}
+                      className="w-full bg-slate-500 text-white py-2 rounded-lg hover:bg-slate-700 transition"
+                    >
                       Add to Cart
                     </button>
+
                   </div>
                 </div>
               </div>

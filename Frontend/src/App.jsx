@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import LoginForm from "./auth/loginForm"
 import { Routes,Route } from "react-router-dom"
 import ProductForm from "./Admin/ProductForm"
@@ -15,14 +15,20 @@ import ProfileChangePassword from "./components/navigation/layout/ProfileChangeP
 import ProductPage from "./Product/ProductPage"
 import AddCategory from "./Admin/AddCategory"
 import CategoryByProducts from "./Product/CategoryByProducts"
+import CartPage from "./components/navigation/layout/cartPage"
+import Success from "./components/navigation/layout/Success"
+import Cancel from "./components/navigation/layout/Cancel"
+import {Toaster} from "sonner"
 
 
 
 function App() {
+   const [cartCount, setCartCount] = useState(0);
 
 
   return (
     <>
+    <Toaster richColors position="top-center"/>
 <Routes>
 
     <Route element={<MainLayout/>}>
@@ -35,10 +41,13 @@ function App() {
     <Route path="/update/profile" element={<ProfileUpdate/>}/>
     <Route path="/changePassword/profile" element={<ProfileChangePassword/>}/>
  
-  <Route path="/products" element={<ProductList/>}/>
+  <Route path="/products" element={<ProductList setCartCount={setCartCount}/>}/>
   <Route path="/product-page" element={<ProductPage/>}/>
-  <Route path="/product-details/:id" element={<ProductDetails/>}/>
+  <Route path="/product-details/:id" element={<ProductDetails setCartCount={setCartCount}/>}/>
   <Route path="/category-by-products/:categoryId" element={<CategoryByProducts/>}/>
+  <Route path="/cart-page" element={<CartPage/>}/>
+  <Route path="/success" element={<Success/>}/>
+  <Route path="/cancel" element={<Cancel/>}/>
   <Route element={<ProtectedRoute allowedRoles={["admin"]}/>}>
   <Route path="/add-category" element={<AddCategory/>}/>
    <Route path="/dashboard" element={<Dashboard/>}/>

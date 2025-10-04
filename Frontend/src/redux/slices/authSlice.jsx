@@ -1,12 +1,13 @@
 import {createAsyncThunk,createSlice} from "@reduxjs/toolkit"
 import axios from "axios"
+import { toast } from "sonner"
 
 
 
 const initialState = {
     loading:false,
     error:null,
-    token:null
+  
 }
 
 
@@ -32,10 +33,28 @@ export const Login = createAsyncThunk("/login",async(loginData,{rejectWithValue}
     const res =    await axios.post("http://localhost:8000/api/v1/users/login",loginData,{
         withCredentials:true
     })
+
+    console.log(res)
         
     return res.data.data
 
     } catch (error) {
+        return rejectWithValue(error)
+    }
+
+})
+
+
+
+
+export const Logout = createAsyncThunk("/logout",async(_,{rejectWithValue})=>{
+    try {
+      const res =   await axios.post("http://localhost:8000/api/v1/users/logout",{},{withCredentials:true})
+        
+        return res.data.data
+
+    } catch (error) {
+        
         return rejectWithValue(error)
     }
 
@@ -50,9 +69,7 @@ export const Login = createAsyncThunk("/login",async(loginData,{rejectWithValue}
 const authSlice = createSlice({
     name:"auth",
     initialState,
-    reducers:{
-
-    },
+    reducers:{},
 
     extraReducers:(builder)=>{
         builder.addCase(Register.pending,(state)=>{
@@ -71,9 +88,12 @@ const authSlice = createSlice({
         }).addCase(Login.fulfilled,(action,state)=>{
             state.loading = false,
             console.log(action.payload)
+            toast.success("Login successfully")
 
         }).addCase(Login.rejected,(state,action)=>{
             state.loading = false
+            console.log(action.payload)
+            toast.error(action.payload.data.message)
 
         })
     }

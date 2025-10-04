@@ -12,34 +12,35 @@ import { getCategories } from '../redux/slices/categorySlice.jsx';
 const ProductForm = () => {
     const [images, setImages] = useState([]);
 
-    const [categories,setCategories] = useState([])
+    const [categories, setCategories] = useState([])
 
 
     const dispatch = useDispatch()
 
-  console.log(categories)
+    console.log(categories)
 
     const token = getCookie("accessToken");
     if (!token) {
         alert("User not logged in! Token missing.");
-      
+
     }
 
 
-   
-    
- useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await dispatch(getCategories()).unwrap();
-        setCategories(res); 
-      } catch (err) {
-        console.error("Failed to fetch categories:", err);
-      }
-    };
-    fetchCategories();
-  }, [dispatch]);
-   
+
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await dispatch(getCategories()).unwrap();
+                setCategories(res);
+                console.log(res)
+            } catch (err) {
+                console.error("Failed to fetch categories:", err);
+            }
+        };
+        fetchCategories();
+    }, [dispatch]);
+
 
 
 
@@ -64,7 +65,7 @@ const ProductForm = () => {
 
 
 
-    
+
 
 
 
@@ -108,9 +109,14 @@ const ProductForm = () => {
                 });
 
 
-                await dispatch(createProduct(formData)).unwrap()
+                const res = await dispatch(createProduct(formData)).unwrap()
 
-              
+                console.log(res)
+
+                if (res) {
+                    alert("Product successfully created✅")
+                }
+
             }}
         >
             {({ values, handleChange, handleBlur, errors, touched, setFieldValue }) => {

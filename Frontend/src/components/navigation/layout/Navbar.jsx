@@ -9,12 +9,21 @@ import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 import SearchBar from '../SearchBar.jsx';
 import CategoriesDropdown from '../CategoriesDropdown.jsx';
+import { FaShoppingCart } from "react-icons/fa";
+import { useDispatch, useSelector } from 'react-redux';
+import { Logout } from '../../../redux/slices/authSlice.jsx';
+import { getCartItems } from '../../../redux/slices/cartSlice.jsx';
+
 
 function Navbar() {
   const [showNavbar, setShowNavbar] = useState(true);
   const [navbarStyle, setNavbarStyle] = useState("black");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [category, setCategory] = useState("");
+
+
+
+
   //   const lastScrollY = useRef(0);
   //   const [scrollCount, setScrollCount] = useState(0);
 
@@ -22,7 +31,24 @@ function Navbar() {
 
   const dropdownRef = useRef(null);
 
+  const dispatch = useDispatch()
   const navigate = useNavigate()
+
+  const {cartItems} = useSelector((state)=>state.cart)
+console.log(cartItems)
+
+  const fetchCart = async () => {
+    try {
+      await dispatch(getCartItems())
+      
+    } catch (error) {
+      console.log(error.response?.data || error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchCart();
+  }, [dispatch]);
 
   //   useEffect(() => {
   //     const handleScroll = () => {
@@ -101,9 +127,8 @@ function Navbar() {
   const handlelogout = async () => {
 
     try {
-      await axios.post("http://localhost:8000/api/v1/users/logout", {},
-        { withCredentials: true }
-      )
+     
+     await dispatch(Logout()).unwrap()
 
       navigate("/")
 
@@ -129,7 +154,8 @@ function Navbar() {
         <SearchBar />
         <ul className="hidden md:flex md:space-x-6 items-center md:mr-20">
 
-          
+
+
 
 
 
@@ -146,7 +172,7 @@ function Navbar() {
                 <Link to="/"><li className="hover:text-purple-300 cursor-pointer">Home</li></Link>
                 <Link to={"/product-page"}><li className='hover:text-purple-300 cursor-pointer'>Products</li></Link>
                 <Link to="/about-us"><li className="hover:text-purple-300 cursor-pointer">About Us</li></Link>
-                
+
 
                 {/* {
                   !token ? (
@@ -162,10 +188,24 @@ function Navbar() {
                   )
                 } */}
 
-                
+
                 <Link to="/contact-us"><li className="hover:text-purple-300 cursor-pointer">Contact</li></Link>
                 <Link to="/faq"><li className='hover:text-purple-300 cursor-pointer'>FAQ</li></Link>
-
+                       {cartItems.length > 0 && (
+                        <Link to={"/cart-page"}>
+                <li className="relative list-none mx-2">
+                  <FaShoppingCart size={24} />
+             
+                    
+                    
+                    <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                      {cartItems.length}
+                    </span>
+                  
+                
+                </li>
+                </Link>
+                  )}
               </>
             )
           }

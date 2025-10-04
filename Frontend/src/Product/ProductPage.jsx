@@ -50,6 +50,16 @@ const ProductPage = () => {
     return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   };
 
+
+
+  
+
+
+
+
+
+
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       {/* Filter + Sort */}

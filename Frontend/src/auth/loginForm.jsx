@@ -3,15 +3,18 @@ import axios from "axios";
 import { motion } from "framer-motion"; // ✅ framer-motion import
 import { useNavigate } from "react-router-dom";
 import {Link} from "react-router-dom"
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Login } from "../redux/slices/authSlice";
+import { CircularProgress } from "@mui/material";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+
 
   const navigate = useNavigate()
+
+  const {loading} = useSelector((state)=>state.auth)
 
   const dispatch  = useDispatch()
 
@@ -24,7 +27,7 @@ const LoginForm = () => {
       return;
     }
 
-    setLoading(true);
+   
 
     try {
      
@@ -34,7 +37,7 @@ const LoginForm = () => {
     
  
      
-      alert("Login successful! Cookie set.");
+      console.log(res)
 
       setEmail("");
       setPassword("");
@@ -57,10 +60,10 @@ const LoginForm = () => {
 
     } catch (err) {
       console.error("Login Error:", err);
-      alert("Login failed! Check email and password.");
-    } finally {
-      setLoading(false);
-    }
+     
+    } 
+      
+    
   };
 
   return (
@@ -152,7 +155,7 @@ const LoginForm = () => {
             fontSize: "16px",
           }}
         >
-          {loading ? "Logging in..." : "Login"}
+         {loading ? <CircularProgress size={24} className="text-white font-bold" /> : "login"}
         </motion.button>
       </form>
 

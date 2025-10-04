@@ -4,11 +4,14 @@ import axios from "axios"
 
 
 
+
+
 const initialState = {
 
     loading:false,
     error:null,
     products:[],
+    SingleProduct:null,
       currentPage: 1,
   totalPages: 1,
 }
@@ -94,13 +97,29 @@ export const categoryByProducts = createAsyncThunk("/categoryBy-product",async({
 
 
 
+export const singleProduct = createAsyncThunk("/single-Product",async({id},{rejectWithValue})=>{
+
+try {
+    const res =     await axios.get(`http://localhost:8000/api/v1/product/single-product/${id}`,{
+        withCredentials:true
+    })
+    console.log(res)
+    return res.data.data
+} catch (error) {
+    return rejectWithValue(error)
+    
+}
+
+
+})
+
+
+
 
 const productSlice = createSlice({
     name:"product",
     initialState,
-    reducers:{
-
-    },
+    reducers:{},
 
     extraReducers:(builder)=>{
         builder.addCase(createProduct.pending,(state)=>{
@@ -148,6 +167,19 @@ const productSlice = createSlice({
             state.products = action.payload
 
         }).addCase(categoryByProducts.rejected,(state,action)=>{
+            state.loading = false,
+            console.log(action.payload)
+
+        }).addCase(singleProduct.pending,(state)=>{
+            state.loading = true
+
+        }).addCase(singleProduct.fulfilled,(state,action)=>{
+            state.loading = false,
+            console.log(action.payload)
+            state.SingleProduct = action.payload
+
+
+        }).addCase(singleProduct.rejected,(state,action)=>{
             state.loading = false,
             console.log(action.payload)
 
