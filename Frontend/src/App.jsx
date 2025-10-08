@@ -19,6 +19,7 @@ import CartPage from "./components/navigation/layout/cartPage"
 import Success from "./components/navigation/layout/Success"
 import Cancel from "./components/navigation/layout/Cancel"
 import {Toaster} from "sonner"
+import UpdateProductForm from "./Admin/UpdateProductForm"
 
 
 
@@ -49,9 +50,11 @@ function App() {
   <Route path="/success" element={<Success/>}/>
   <Route path="/cancel" element={<Cancel/>}/>
   <Route element={<ProtectedRoute allowedRoles={["admin"]}/>}>
+  
   <Route path="/add-category" element={<AddCategory/>}/>
    <Route path="/dashboard" element={<Dashboard/>}/>
     <Route path="/product-form" element={<ProductForm/>}/>
+    <Route path="/update-product/:id" element={<UpdateProductForm/>}/>
 
   </Route>
 </Routes>

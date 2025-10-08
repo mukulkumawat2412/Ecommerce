@@ -245,7 +245,7 @@ const ProductForm = () => {
 
                         <div className="mb-2">
                             <Button type="submit" variant="contained" color="primary" fullWidth>
-                                Submit
+                               Add Product
                             </Button>
                         </div>
                     </Form>

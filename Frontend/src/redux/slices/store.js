@@ -4,6 +4,7 @@ import productReducer from "./productSlice.jsx"
 import categoryReducer from "./categorySlice.jsx"
 import searchReducer from "./searchSlice.jsx"
 import cartReducer from "./cartSlice.jsx"
+import adminReducer from "./admin.productSlice.jsx"
 
 
 
@@ -13,7 +14,8 @@ const store = configureStore({
         product:productReducer,
         category:categoryReducer,
         search:searchReducer,
-        cart:cartReducer
+        cart:cartReducer,
+        adminProduct:adminReducer
     }
 })
 
