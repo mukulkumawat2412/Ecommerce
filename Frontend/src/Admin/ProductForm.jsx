@@ -6,7 +6,7 @@ import axios from 'axios';
 import getCookie from '../../../Backend/src/utils/GetToken.js';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { createProduct } from '../redux/slices/productSlice.jsx';
+import { createProduct } from '../redux/slices/admin.productSlice.jsx';
 import { getCategories } from '../redux/slices/categorySlice.jsx';
 
 const ProductForm = () => {
@@ -130,7 +130,7 @@ const ProductForm = () => {
                 };
 
                 return (
-                    <Form className="w-[500px] mx-auto mt-4">
+                    <Form className="w-[500px] mx-auto mt-25">
                         <div className="mb-2">
                             <Field
                                 as={TextField}
@@ -145,7 +145,7 @@ const ProductForm = () => {
                             />
                         </div>
 
-                        <div className="mb-2">
+                        <div className="mb-2 ">
                             <Field
                                 as={TextField}
                                 name="title"

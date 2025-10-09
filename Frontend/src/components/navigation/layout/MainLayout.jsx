@@ -20,7 +20,7 @@ const MainLayout = () => {
       
 
 
-      <main>
+      <main  className="min-h-[calc(100vh-200px)] py-6">
         <Outlet />
       </main>
 

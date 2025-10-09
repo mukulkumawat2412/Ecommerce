@@ -40,7 +40,7 @@ const AddCategory = () => {
 
 
   return (
-    <div className="max-w-md mx-auto p-4 shadow rounded">
+    <div className="max-w-md mx-auto p-4 shadow rounded mt-25">
       <h2 className="text-xl font-bold mb-4">Add Category</h2>
       {message && <p className="mb-2 text-green-600">{message}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">

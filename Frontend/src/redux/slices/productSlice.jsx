@@ -20,19 +20,7 @@ const initialState = {
 
 
 
-export const createProduct = createAsyncThunk("/create-product",async(productData,{rejectWithValue})=>{
-    try {
-      const res =   await axios.post("http://localhost:8000/api/v1/product/create-product",productData,{
-        withCredentials:true
-      })
 
-      return res.data.data
-        
-    } catch (error) {
-        rejectWithValue(error)
-    }
-
-})
 
 
 
@@ -122,18 +110,7 @@ const productSlice = createSlice({
     reducers:{},
 
     extraReducers:(builder)=>{
-        builder.addCase(createProduct.pending,(state)=>{
-            state.loading  = true
-
-        }).addCase(createProduct.fulfilled,(state,action)=>{
-            state.loading = false,
-           console.log(action.payload)
-           
-
-        }).addCase(createProduct.rejected,(state,action)=>{
-            console.log(action.payload)
-
-        }).addCase(getProducts.pending,(state)=>{
+       builder.addCase(getProducts.pending,(state)=>{
             state.loading = true
 
         }).addCase(getProducts.fulfilled,(state,action)=>{

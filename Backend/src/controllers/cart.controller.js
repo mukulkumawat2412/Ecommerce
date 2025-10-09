@@ -6,6 +6,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/AsyncHandler.js";
 import Stripe from "stripe"
 import dotenv from "dotenv"
+import Wishlist from "../models/wishlist.model.js";
 
 dotenv.config()
 
@@ -98,11 +99,11 @@ if(!user){
     throw new ApiError(401,"Unauthorized, please login")
 }
 
+const {id} = req.params
 
-const cartItems = await Cart.findOneAndDelete({
-    _id:req.params.id,
-    user:req.user?._id
-})
+const cartItems = await Cart.findByIdAndDelete(
+    id
+)
 
 
 if(!cartItems){
@@ -111,7 +112,7 @@ if(!cartItems){
 
 
   return res
-    .status(200).json(new ApiResponse(200, {}, "Item removed from cart successfully"));
+    .status(200).json(new ApiResponse(200, id, "Item removed from cart successfully"));
 
 
 
@@ -167,4 +168,107 @@ const Checkout = asyncHandler(async (req, res) => {
 
 
 
-export {AddToCart,getCart,removeCartItems,Checkout}
+const AddWishlistProduct = asyncHandler(async(req,res)=>{
+
+const user =  await User.findById(req.user?._id)
+
+if(!user){
+  throw new ApiError(401,"Unauthorized, please login")
+}
+
+const {id} = req.params
+
+
+
+
+const alreadyWishlist = await Wishlist.findOne({user:req.user?._id, product:id})
+
+if(alreadyWishlist){
+  await Wishlist.findByIdAndDelete(alreadyWishlist._id)
+
+  return res.status(200).json(new ApiResponse(200,{},"Remove from wishlist"))
+}
+
+
+
+
+
+
+
+
+const wishlist = await Wishlist.create({user:req.user?._id,product:id})
+
+
+// console.log(wishlist)
+
+return res.status(201).json(new ApiResponse(201,wishlist,"Added to wishlist"))
+
+
+
+})
+
+
+
+
+
+const GetWishlistProducts = asyncHandler(async(req,res)=>{
+
+const user  =  await User.findById(req.user?._id)
+
+if(!user){
+  throw new ApiError(401,"Unauthorized, please login")
+}
+
+
+const wishlistProduct = await Wishlist.find({user:req.user?._id}).populate("product")
+
+
+if(!wishlistProduct || wishlistProduct.length===0){
+
+  return res.status(200).json(new ApiResponse(200,{} ,"Wishlist is empty"))
+}
+
+
+return res.status(200).json(new ApiResponse(200,wishlistProduct,"Wishlist products fetched successfully"))
+
+
+
+})
+
+
+
+const DeleteWishlistItems = asyncHandler(async(req,res)=>{
+ 
+const user =  await User.findById(req.user?._id)
+
+if(!user){
+  throw new ApiError(401,"Unauthorized, please login")
+}
+
+
+const {id} = req.params
+
+
+const wishlistItem = await Wishlist.findByIdAndDelete(id)
+
+
+if(!wishlistItem){
+  throw new ApiError(404,"Wishlist items not found")
+}
+
+
+return res.status(200).json(new ApiResponse(200,id,"Product Remove from wishlist"))
+
+
+})
+
+
+
+
+
+
+
+
+
+
+export {AddToCart,getCart,removeCartItems,Checkout,AddWishlistProduct,GetWishlistProducts,DeleteWishlistItems}

@@ -48,7 +48,7 @@ const ProfileChangePassword = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow rounded">
+    <div className="max-w-md mx-auto mt-25 p-6 bg-white shadow rounded">
       <h2 className="text-2xl font-bold mb-4">Change Password</h2>
       <Formik
         initialValues={{ oldPassword: '', newPassword: '', confirmNewPassword: '' }}

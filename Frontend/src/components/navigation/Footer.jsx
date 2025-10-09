@@ -17,41 +17,41 @@ function Footer() {
               OFFICE ADDRESS
             </p>
             <p className="text-gray-300 mt-3">
-              Laxmaya Technologies Pvt. Ltd, First Floor, Laxmaya Tower, opp. Kumbha Marg, Pratap Nagar, Sanganer, Jaipur, 302033
+              ShopNow Pvt. Ltd., 2nd Floor, Sapphire Plaza, Near City Mall,
+              Malviya Nagar, Jaipur, Rajasthan - 302017
             </p>
-            <p className="mt-4 text-white font-semibold">info@laxmaya.com</p>
+            <p className="mt-4 text-white font-semibold">support@shopnow.com</p>
           </div>
         </div>
 
         {/* Quick Links */}
         <div className="flex flex-col sm:items-center sm:text-center">
           <p className="bg-purple-300 text-black inline-block px-3 py-1 rounded-full text-sm font-semibold mb-4">
-            Quick LINKS
+            QUICK LINKS
           </p>
           <ul className="space-y-2 text-gray-300 text-sm mt-4">
             <li><Link to="/about" className="hover:text-purple-300">About Us</Link></li>
-            <li><Link to="/privacy-policy" className="hover:text-purple-300">Privacy & Policy</Link></li>
+            <li><Link to="/privacy-policy" className="hover:text-purple-300">Privacy Policy</Link></li>
             <li><Link to="/faq" className="hover:text-purple-300">FAQs</Link></li>
             <li><Link to="/contact" className="hover:text-purple-300">Contact</Link></li>
-            <li><Link to="/services" className="hover:text-purple-300">Services</Link></li>
-            <li><Link to="/term-condition" className="hover:text-purple-300">Terms & Conditions</Link></li>
+            <li><Link to="/services" className="hover:text-purple-300">Our Services</Link></li>
+            <li><Link to="/terms" className="hover:text-purple-300">Terms & Conditions</Link></li>
           </ul>
         </div>
 
         {/* Services */}
         <div>
           <p className="text-black bg-purple-300 inline-block px-3 py-1 rounded-full text-sm font-semibold mb-4">
-            SERVICES
+            OUR SERVICES
           </p>
           <ul className="space-y-2 text-gray-300 text-sm mt-4">
-            <li><Link to="/digital-transformation" className="hover:text-purple-300">Digital Transformation</Link></li>
-            <li><Link to="/web-application" className="hover:text-purple-300">Web Application Development</Link></li>
-            <li><Link to="/mobile-application" className="hover:text-purple-300">Mobile Application Development</Link></li>
-            <li><Link to="/ui-ux" className="hover:text-purple-300">UI/UX Design</Link></li>
-            <li><Link to="/artificial-intelligence" className="hover:text-purple-300">Artificial Intelligence (AI)</Link></li>
-            <li><Link to="/devops" className="hover:text-purple-300">DevOps</Link></li>
-            <li><Link to="/cloud-services" className="hover:text-purple-300">Cloud Services</Link></li>
-            <li><Link to="/cms-development" className="hover:text-purple-300">CMS Development (Shopify, Salesforce etc.)</Link></li>
+            <li><Link to="/ecommerce" className="hover:text-purple-300">E-commerce Solutions</Link></li>
+            <li><Link to="/web-development" className="hover:text-purple-300">Web Development</Link></li>
+            <li><Link to="/mobile-apps" className="hover:text-purple-300">Mobile App Development</Link></li>
+            <li><Link to="/design" className="hover:text-purple-300">UI/UX Design</Link></li>
+            <li><Link to="/ai" className="hover:text-purple-300">Artificial Intelligence</Link></li>
+            <li><Link to="/cloud" className="hover:text-purple-300">Cloud & Hosting</Link></li>
+            <li><Link to="/support" className="hover:text-purple-300">Customer Support</Link></li>
           </ul>
         </div>
       </div>
@@ -61,19 +61,19 @@ function Footer() {
         
         {/* Social Icons */}
         <div className="flex space-x-4 text-white text-xl mb-4 md:mb-0">
-          <a href="https://www.facebook.com/laxmayatechnolgies/" target="_blank" rel="noreferrer"
+          <a href="https://www.facebook.com" target="_blank" rel="noreferrer"
              className="hover:bg-blue-500 rounded-full p-2"><FaFacebookF /></a>
-          <a href="https://wa.me/918058315610" target="_blank" rel="noreferrer"
+          <a href="https://wa.me/918000000000" target="_blank" rel="noreferrer"
              className="hover:bg-green-400 rounded-full p-2"><FaWhatsapp /></a>
-          <a href="https://www.instagram.com/laxmayatechnologies/?hl=en" target="_blank" rel="noreferrer"
+          <a href="https://www.instagram.com" target="_blank" rel="noreferrer"
              className="hover:bg-pink-500 rounded-full p-2"><FaInstagram /></a>
-          <a href="https://www.linkedin.com/company/laxmaya-technologies-private-limited/" target="_blank" rel="noreferrer"
+          <a href="https://www.linkedin.com" target="_blank" rel="noreferrer"
              className="hover:bg-blue-400 rounded-full p-2"><FaLinkedinIn /></a>
         </div>
 
         {/* Copyright */}
         <p className="text-center md:text-left">
-          © 2022 <span className="text-purple-300">Laxmaya Technologies Pvt. Ltd.</span> All Rights Reserved.
+          © {new Date().getFullYear()} <span className="text-purple-300">ShopNow Pvt. Ltd.</span> All Rights Reserved.
         </p>
       </div>
 

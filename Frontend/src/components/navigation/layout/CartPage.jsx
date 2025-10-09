@@ -4,7 +4,7 @@ import getCookie from "../../../../../Backend/src/utils/GetToken.js";
 import { Link, useNavigate } from "react-router-dom";
 import { parseInt } from "lodash";
 import { useDispatch } from "react-redux";
-import { createCheckOut, getCartItems } from "../../../redux/slices/cartSlice.jsx";
+import { createCheckOut, DeleteCartItems, getCartItems } from "../../../redux/slices/cartSlice.jsx";
 // import {loadStripe}from "@stripe/stripe-js"
 
 
@@ -25,11 +25,19 @@ const CartPage = () => {
 
   console.log(cartItems)
 
+  useEffect(()=>{
+    window.scrollTo({top:0,behavior:"smooth"})
+  },[])
+
+
+
+
 
   useEffect(() => {
     const fetchCart = async () => {
       try {
         const res = await dispatch(getCartItems());
+        console.log(res)
         setCartItems(res.payload);
       } catch (error) {
         console.error("Error fetching cart:", error);
@@ -67,15 +75,12 @@ const CartPage = () => {
   };
 
   const removeItem = async (cartId) => {
+    console.log(cartId)
     try {
-      await axios.delete(
-        `http://localhost:8000/api/v1/cart/removeItem/${cartId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      navigate("/cart-page");
-      setCartItems((prev) => prev.filter((item) => item._id !== cartId));
+   const res =    await dispatch(DeleteCartItems({cartId}))
+   console.log(res)
+     
+      navigate(0)
     } catch (error) {
       console.error("Error removing item:", error);
     }
@@ -139,7 +144,7 @@ const CartPage = () => {
 
 
   return (
-    <div className="max-w-6xl mx-auto p-4">
+    <div className="max-w-6xl mx-auto p-4 mt-20">
       <h1 className="text-3xl font-bold mb-6 text-center">Your Shopping Cart</h1>
 
       {cartItems.length === 0 ? (
@@ -149,6 +154,7 @@ const CartPage = () => {
           {/* Cart Items */}
           <div className="flex-1">
             {cartItems.map((item) => (
+              
               <div
                 key={item._id}
                 className="flex flex-col sm:flex-row items-center border-b py-4"
@@ -172,7 +178,7 @@ const CartPage = () => {
                       }
                       className="border w-16 text-center rounded px-2 py-1"
                     />
-                    <Link key={item._id} to={`/cart-page/${item._id}`}>
+                    <Link key={item._id}>
                       <button
                         onClick={() => removeItem(item._id)}
                         className="bg-red-500 text-white px-3 py-1 rounded"

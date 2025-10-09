@@ -38,7 +38,7 @@ const ProfilePage = () => {
   if (!profileData) return <p className="text-center mt-10 text-red-500">No profile data found.</p>;
 
   return (
-    <div className="max-w-4xl mx-auto my-10 p-6 bg-white shadow-lg rounded-lg">
+    <div className="max-w-4xl mx-auto my-35 p-6 bg-white shadow-lg rounded-lg">
       <h2 className="text-2xl font-bold mb-6 text-gray-800">My Profile</h2>
       <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
         {/* Profile Picture Placeholder */}

@@ -67,7 +67,7 @@ const ProfileUpdate = () => {
                 }}
             >
                 {({ values, handleChange, handleBlur, errors, touched, isSubmitting, status }) => (
-                    <Form className="max-w-lg mx-auto mt-10 p-6 bg-white shadow rounded flex flex-col gap-4">
+                    <Form className="max-w-lg mx-auto mt-25 p-6 bg-white shadow rounded flex flex-col gap-4">
                         <h2 className="text-2xl font-bold mb-4">Update Profile</h2>
 
                         {status && status.success && <p className="text-green-600">{status.success}</p>}

@@ -12,6 +12,11 @@ const ProductDetails = () => {
   const { id } = useParams();
   const { SingleProduct } = useSelector((state) => state.product);
 
+  useEffect(()=>{
+    window.scrollTo({top:0,behavior:"smooth"})
+  },[])
+
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -43,7 +48,7 @@ const ProductDetails = () => {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="max-w-6xl mx-auto mt-10 p-5 flex flex-col md:flex-row gap-10"
+      className="max-w-6xl mx-auto mt-20 p-5 flex flex-col md:flex-row gap-10"
     >
       {/* Left Images */}
       <div className="flex gap-4 flex-1">

@@ -91,14 +91,9 @@ return res.status(201).json(new ApiResponse(200,product,"Product successfully cr
 
 const GetProducts = asyncHandler(async(req,res)=>{
 
-const user =   await User.findById(req.user?._id)
-
-if(!user){
-    throw new ApiError(401,"Unauthorized, please login")
-}
 
 
-const products = await Product.find()
+const products = await Product.find({})
 
 
 

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCategories } from "../redux/slices/categorySlice.jsx";
 import { PaginationProducts } from "../redux/slices/productSlice.jsx";
 import CategoriesDropdown from "../components/navigation/CategoriesDropdown.jsx";
+import getCookie from "../../../Backend/src/utils/GetToken.js";
 
 const ProductPage = () => {
   const dispatch = useDispatch();
@@ -16,6 +17,12 @@ const ProductPage = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSort, setSelectedSort] = useState("latest");
 
+  useEffect(()=>{
+    window.scrollTo({top:0,behavior:"smooth"})
+  },[])
+
+  const token = getCookie("accessToken")
+
   // Fetch categories
   useEffect(() => {
     dispatch(getCategories()).unwrap().catch(console.log);
@@ -23,12 +30,17 @@ const ProductPage = () => {
 
   // Fetch products whenever page/category/sort changes
   useEffect(() => {
+    if(token){
+
+    
     fetchProducts();
-  }, [page, selectedCategory, selectedSort]);
+    }
+  }, [token,page, selectedCategory, selectedSort]);
 
   const fetchProducts = async () => {
     try {
-      const res = await dispatch(
+     if(token){
+       const res = await dispatch(
         PaginationProducts({
           page,
           limit: 2,
@@ -38,6 +50,10 @@ const ProductPage = () => {
       ).unwrap();
 
       setTotalPages(res.totalPages || 1);
+
+     }
+
+      
     } catch (error) {
       console.log("Error fetching products:", error);
     }
