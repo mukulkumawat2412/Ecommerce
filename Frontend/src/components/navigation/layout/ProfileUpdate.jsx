@@ -4,6 +4,8 @@ import * as Yup from 'yup';
 import { TextField, Button } from '@mui/material';
 import axios from 'axios';
 import getCookie from '../../../../../Backend/src/utils/GetToken.js';
+import { useDispatch } from 'react-redux';
+import { profileFetch, updateProfile } from '../../../redux/slices/authSlice.jsx';
 
 const ProfileUpdate = () => {
     const [initialValues, setInitialValues] = useState({
@@ -11,6 +13,8 @@ const ProfileUpdate = () => {
         fullName: '',
         email: ''
     });
+
+    const dispatch = useDispatch()
     const [loading, setLoading] = useState(true);
 
   
@@ -23,11 +27,9 @@ const ProfileUpdate = () => {
 
     const fetchProfile = async () => {
         try {
-            const res = await axios.get("http://localhost:8000/api/v1/users/profile", {
-                headers: { Authorization: `Bearer ${token}` },
-                withCredentials: true
-            });
-            setInitialValues(res.data.data);
+       const res =     await dispatch(profileFetch())
+      
+            setInitialValues(res.payload);
         } catch (error) {
             console.log("Error fetching profile:", error);
         } finally {
@@ -50,13 +52,23 @@ const ProfileUpdate = () => {
                 enableReinitialize
                 initialValues={initialValues}
                
-                onSubmit={async (values, { setSubmitting, setStatus }) => {
+                onSubmit={async (values, {resetForm, setSubmitting, setStatus }) => {
                     try {
-                        await axios.put("http://localhost:8000/api/v1/users/profile-update", values, {
-                            headers: { Authorization: `Bearer ${token}` },
-                            withCredentials: true
-                        });
-                        setStatus({ success: "Profile updated successfully!" });
+                       
+             const res =    await dispatch(updateProfile(values))
+
+             console.log(res)
+                            
+                    
+                        setStatus({ success: res.payload.message || "Profile updated successfully!" });
+
+                        resetForm({
+                            values:{
+                                username:'',
+                                fullName:'',
+                                email:''
+                            }
+                        })
 
                     } catch (err) {
                         console.error(err);

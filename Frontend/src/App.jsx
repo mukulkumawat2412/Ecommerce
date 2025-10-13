@@ -28,6 +28,7 @@ import ProductForm from "./Admin/ProductForm";
 import UpdateProductForm from "./Admin/UpdateProductForm";
 import Notfound from "./pages/Notfound";
 import WishlistPage from "./components/navigation/layout/WishlistPage";
+import TopProducts from "./Product/TopProducts";
 
 function App() {
   const [cartCount, setCartCount] = useState(0);
@@ -47,9 +48,10 @@ function App() {
 
           {/* Products */}
           <Route path="products" element={<ProductList setCartCount={setCartCount} />} />
-          <Route path="product-page" element={<ProductPage />} />
+          <Route path="product-page" element={<ProductPage setCartCount={setCartCount} />} />
           <Route path="product-details/:id" element={<ProductDetails setCartCount={setCartCount} />} />
           <Route path="category-by-products/:categoryId" element={<CategoryByProducts />} />
+          <Route path="/top-products" element={<TopProducts/>}/>
 
           {/* Cart */}
           <Route path="cart-page" element={<CartPage />} />

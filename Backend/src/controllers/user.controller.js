@@ -193,7 +193,7 @@ const Profile = asyncHandler(async(req,res)=>{
 
    const userId = req.user?._id
 
-const user =   await User.findById(userId).select("-password")
+const user =   await User.findById(userId).select("-password -refreshToken")
 
 if(!user){
    throw new ApiError(404,"User not found")

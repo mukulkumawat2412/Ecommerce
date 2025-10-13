@@ -2,10 +2,18 @@ import React, { useEffect, useState } from 'react';
 import getCookie from '../../../../../Backend/src/utils/GetToken.js';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { profileFetch } from '../../../redux/slices/authSlice.jsx';
 
 const ProfilePage = () => {
   const [loading, setLoading] = useState(true);
-  const [profileData, setProfileData] = useState(null);
+ 
+
+  const dispatch = useDispatch()
+  const {profileData} = useSelector((state)=>state.auth)
+
+
+  console.log(profileData)
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -16,13 +24,11 @@ const ProfilePage = () => {
       }
 
       try {
-        const res = await axios.get("http://localhost:8000/api/v1/users/profile", {
-          headers: {  // corrected "header" to "headers"
-            Authorization: `Bearer ${token}`
-          },
-          withCredentials: true
-        });
-        setProfileData(res.data.data);
+
+      const res =   await dispatch(profileFetch())
+
+      console.log(res)
+    
       } catch (error) {
         console.log("Error fetching profile", error);
       } finally {

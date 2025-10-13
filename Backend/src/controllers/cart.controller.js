@@ -99,7 +99,9 @@ if(!user){
     throw new ApiError(401,"Unauthorized, please login")
 }
 
+
 const {id} = req.params
+
 
 const cartItems = await Cart.findByIdAndDelete(
     id

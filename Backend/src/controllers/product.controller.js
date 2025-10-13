@@ -292,6 +292,43 @@ return res.status(200).json(new ApiResponse(200,products,`Products of category: 
 
 })
 
+
+
+
+const TopProducts = asyncHandler(async(req,res)=>{
+
+const user =  await User.findById(req.user?._id)
+
+if(!user){
+  throw new ApiError(401,"Unauthorized, please login")
+}
+
+
+const topProducts = await Product.aggregate([
+  {
+    $match:{price:{$gt:10000}}
+  },
+
+  {
+    $sort:{price:-1}
+  },
+
+  {
+    $limit:3
+  },
+
+  {
+    $project:{name:1,price:1,image:1,_id:0}
+  }
+
+
+
+])
+
+return res.status(200).json(new ApiResponse(200,topProducts,"Top 5 products fetched successfully"))
+
+})
+
  
 
 
@@ -301,4 +338,4 @@ return res.status(200).json(new ApiResponse(200,products,`Products of category: 
 
 
 
-export {CreateProduct,GetProducts,getSingleProduct,ProductSearch,PaginationProducts,GetProductsByCategory}
+export {CreateProduct,GetProducts,getSingleProduct,ProductSearch,PaginationProducts,GetProductsByCategory,TopProducts}

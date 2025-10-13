@@ -1,7 +1,7 @@
 import {Router} from "express"
 import verifyToken from "../middleware/auth.middleware.js"
 import { upload } from "../middleware/multer.middleware.js"
-import { CreateProduct, GetProducts,GetProductsByCategory,getSingleProduct, PaginationProducts, ProductSearch } from "../controllers/product.controller.js"
+import { CreateProduct, GetProducts,GetProductsByCategory,getSingleProduct, PaginationProducts, ProductSearch, TopProducts } from "../controllers/product.controller.js"
 import authorizeRoles from "../middleware/checkRole.js"
 
 
@@ -15,6 +15,7 @@ router.route("/Pagination-products").get(verifyToken,authorizeRoles("user"),Pagi
 router.route("/categoryBy-products/:categoryId").get(verifyToken,authorizeRoles("user"),GetProductsByCategory)
 router.route("/single-product/:id").get(verifyToken,authorizeRoles("user"),getSingleProduct)
 router.route("/search").get(verifyToken,authorizeRoles("user"),ProductSearch)
+router.route("/topProducts-ByPrice").get(verifyToken,authorizeRoles("user"),TopProducts)
 
 
 

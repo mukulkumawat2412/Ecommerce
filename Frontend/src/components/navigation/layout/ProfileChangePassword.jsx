@@ -4,9 +4,13 @@ import * as Yup from 'yup';
 import { TextField, Button } from '@mui/material';
 import getCookie from '../../../../../Backend/src/utils/GetToken.js';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { profileChangePassword } from '../../../redux/slices/authSlice.jsx';
 
 const ProfileChangePassword = () => {
   const token = getCookie("accessToken");
+
+  const dispatch = useDispatch()
 
   if (!token) {
     alert("User not logged in");
@@ -24,24 +28,19 @@ const ProfileChangePassword = () => {
 
   const handleSubmit = async (values, { setSubmitting, setStatus, resetForm }) => {
     try {
-      const res = await axios.put(
-        "http://localhost:8000/api/v1/users/profile-change-password",
-        {
+    
+    const res =   await dispatch(profileChangePassword({
           oldPassword: values.oldPassword,
           newPassword: values.newPassword,
           confirmNewPassword: values.confirmNewPassword
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-          withCredentials: true
-        }
-      );
+        }))
 
-      setStatus({ success: res.data.message || "Profile password changed successfully!" });
+    
+       setStatus({ success: res.payload.message || "Profile password changed successfully!" });
       resetForm();
     } catch (error) {
       console.error(error);
-      setStatus({ error: error.response?.data?.message || "Error changing password" });
+      setStatus({ error: error.res?.payload?.message || "Error changing password" });
     } finally {
       setSubmitting(false);
     }

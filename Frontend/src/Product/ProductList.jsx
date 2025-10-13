@@ -5,8 +5,9 @@ import { Link } from "react-router-dom";
 import { getProducts } from "../redux/slices/productSlice";
 import getCookie from "../../../Backend/src/utils/GetToken.js";
 import { AddToCart } from "../redux/slices/cartSlice.jsx";
-import { FaRegHeart } from "react-icons/fa";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai"; // ✅ icons change
 import { addWishlistProduct } from "../redux/slices/wishlistSlice.jsx";
+import TopProducts from "./TopProducts.jsx";
 
 const ProductList = ({ setCartCount }) => {
   const [loading, setLoading] = useState(true);
@@ -16,25 +17,18 @@ const ProductList = ({ setCartCount }) => {
   const { products } = useSelector((state) => state.product);
   const { cartItems } = useSelector((state) => state.cart);
 
-
-  const token = getCookie("accessToken")
-
+  const token = getCookie("accessToken");
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-
-
         await dispatch(getProducts()).unwrap();
-
-
       } catch (err) {
         console.error("Error fetching products:", err);
       } finally {
         setLoading(false);
       }
     };
-
     fetchProducts();
   }, [dispatch]);
 
@@ -61,28 +55,25 @@ const ProductList = ({ setCartCount }) => {
   };
 
   const toggleWishlist = async (productId) => {
-
     try {
+      const res = await dispatch(addWishlistProduct({ productId }));
+      console.log("Wishlist response:", res);
 
-
-      const res = await dispatch(addWishlistProduct({ productId }))
-
-      console.log(res)
-
-      // Toggle wishlist locally
+      // Toggle wishlist icon locally
       setWishlist((prev) =>
         prev.includes(productId)
           ? prev.filter((id) => id !== productId)
           : [...prev, productId]
       );
-
     } catch (error) {
       console.error("Error updating wishlist:", error);
     }
   };
 
   return (
+    
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+    <TopProducts/>
       <h1 className="text-2xl font-bold mb-6 text-gray-800">Our Products</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -90,42 +81,25 @@ const ProductList = ({ setCartCount }) => {
           products.map((product) => (
             <Link key={product._id} to={`/product-details/${product._id}`}>
               <div className="relative bg-white shadow-lg rounded-xl p-4 hover:shadow-xl transition transform hover:-translate-y-1 flex flex-col h-full">
-
-              {
-                token && (
-                   <div
-                  className="absolute top-3 right-3 cursor-pointer"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    toggleWishlist(product._id);
-                  }}
-                >
-
-
+                {/* ❤️ Wishlist Icon */}
+                {token && (
                   <div
-                    className={`p-2 rounded-full transition ${wishlist.includes(product._id)
-                      ? "bg-red-100 text-red-500"
-                      : "bg-gray-100 text-gray-400"
-                      } hover:bg-red-200`}
+                    className="absolute top-3 right-3 cursor-pointer"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      toggleWishlist(product._id);
+                    }}
                   >
-                    <FaRegHeart
-                      size={20}
-                      className={`transition ${wishlist.includes(product._id) ? "text-red-600" : "text-gray-500"
-                        }`}
-                    />
+                    {wishlist.includes(product._id) ? (
+                      <AiFillHeart className="text-red-500 text-2xl transition transform hover:scale-110" />
+                    ) : (
+                      <AiOutlineHeart className="text-gray-400 text-2xl transition transform hover:scale-110 hover:text-red-500" />
+                    )}
                   </div>
-                </div>
+                )}
 
-
-                )
-              }
-
-
-
-               
-
-                {/* Product Image */}
+                {/* 🖼 Product Image */}
                 <div className="flex justify-center items-center h-48 mb-4">
                   <img
                     src={product.image[0]}
@@ -134,48 +108,48 @@ const ProductList = ({ setCartCount }) => {
                   />
                 </div>
 
-                {/* Product Info */}
+                {/* 🧾 Product Info */}
                 <div className="flex-1 flex flex-col">
-                  <h2 className="text-lg font-semibold text-gray-800">{product.name}</h2>
+                  <h2 className="text-lg font-semibold text-gray-800">
+                    {product.name}
+                  </h2>
                   <p className="text-gray-500 text-sm mt-1">{product.title}</p>
-                  <p className="text-gray-900 font-bold mt-2 text-lg">₹{product.price}</p>
+                  <p className="text-gray-900 font-bold mt-2 text-lg">
+                    ₹{product.price}
+                  </p>
 
-
-                  {
-                    token ? (
-                      <div className="mt-auto">
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            addToCart(product._id);
-                          }}
-                          className="w-full bg-slate-500 text-white py-2 rounded-lg hover:bg-slate-700 transition"
-                        >
-                          Add to Cart
-                        </button>
-                      </div>
-
-                    ) : (
-                      <div className="mt-auto">
-                        <Link
-                          to="/login"
-                          className="w-full block text-center bg-green-500 text-black py-2 rounded-lg hover:bg-violet-500 transition"
-                        >
-                          Login to Add
-                        </Link>
-                      </div>
-                    )
-
-                  }
-                  {/* Add to Cart Button */}
-
+                  {/* 🛒 Add to Cart Button */}
+                  {token ? (
+                    <div className="mt-auto">
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          addToCart(product._id);
+                        }}
+                        className="w-full bg-slate-500 text-white py-2 rounded-lg hover:bg-slate-700 transition"
+                      >
+                        Add to Cart
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="mt-auto">
+                      <Link
+                        to="/login"
+                        className="w-full block text-center bg-green-500 text-black py-2 rounded-lg hover:bg-violet-500 transition"
+                      >
+                        Login to Add
+                      </Link>
+                    </div>
+                  )}
                 </div>
               </div>
             </Link>
           ))
         ) : (
-          <p className="text-center text-gray-500 col-span-4">No products available</p>
+          <p className="text-center text-gray-500 col-span-4">
+            No products available
+          </p>
         )}
       </div>
     </div>

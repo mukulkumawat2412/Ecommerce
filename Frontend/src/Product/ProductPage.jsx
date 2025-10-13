@@ -5,12 +5,15 @@ import { getCategories } from "../redux/slices/categorySlice.jsx";
 import { PaginationProducts } from "../redux/slices/productSlice.jsx";
 import CategoriesDropdown from "../components/navigation/CategoriesDropdown.jsx";
 import getCookie from "../../../Backend/src/utils/GetToken.js";
+import { AddToCart } from "../redux/slices/cartSlice.jsx";
 
-const ProductPage = () => {
+const ProductPage = ({setCartCount}) => {
   const dispatch = useDispatch();
 
   const { products } = useSelector((state) => state.product);
   const { categories } = useSelector((state) => state.category);
+
+  const {cartItems} = useSelector((state)=>state.cart)
 
   const [page, setPage] = useState(1); // local page state
   const [totalPages, setTotalPages] = useState(1);
@@ -66,6 +69,26 @@ const ProductPage = () => {
     return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   };
 
+
+   const addToCart = async (productId) => {
+      try {
+        const alreadyInCart = cartItems.some(
+          (item) => item.product._id.toString() === productId.toString()
+        );
+  
+        const res = await dispatch(AddToCart({ productId, quantity: 1 })).unwrap();
+        console.log("AddToCart response:", res);
+  
+        if (!alreadyInCart) {
+          setCartCount((prev) => prev + 1);
+          console.log("✅ New product added, count increased");
+        } else {
+          console.log("⚠️ Existing product, quantity updated, count unchanged");
+        }
+      } catch (error) {
+        console.log("Error adding to cart:", error);
+      }
+    };
 
 
   
@@ -130,7 +153,10 @@ const ProductPage = () => {
             <div className="p-4">
               <h3 className="font-semibold text-lg">{p.name}</h3>
               <p className="text-gray-600 mt-1">₹{p.price}</p>
-              <button className="mt-3 w-full bg-slate-400 text-white py-2 rounded-lg hover:bg-slate-500 transition">
+              <button onClick={(e)=>{ e.preventDefault();
+                            e.stopPropagation();
+                            addToCart(p._id)
+                            }} className="mt-3 w-full bg-slate-400 text-white py-2 rounded-lg hover:bg-slate-500 transition">
                 Add to Cart
               </button>
             </div>

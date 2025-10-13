@@ -79,8 +79,9 @@ const CartPage = () => {
     try {
    const res =    await dispatch(DeleteCartItems({cartId}))
    console.log(res)
+   navigate(0)
      
-      navigate(0)
+    
     } catch (error) {
       console.error("Error removing item:", error);
     }
@@ -178,14 +179,14 @@ const CartPage = () => {
                       }
                       className="border w-16 text-center rounded px-2 py-1"
                     />
-                    <Link key={item._id}>
+                  
                       <button
                         onClick={() => removeItem(item._id)}
                         className="bg-red-500 text-white px-3 py-1 rounded"
                       >
                         Remove
                       </button>
-                    </Link>
+                    
                   </div>
                 </div>
                 <div className="mt-2 sm:mt-0 sm:ml-4 font-semibold">
