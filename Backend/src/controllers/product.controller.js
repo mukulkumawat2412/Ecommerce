@@ -329,6 +329,161 @@ return res.status(200).json(new ApiResponse(200,topProducts,"Top 5 products fetc
 
 })
 
+
+
+
+const TopCategoryByProducts  = asyncHandler(async(req,res)=>{
+
+const user =  await User.findById(req.user?._id)
+
+if(!user){
+  throw new ApiError(401,"Unauthorized, please login")
+}
+
+
+const electronicsProducts = await Product.aggregate([
+  {
+    $lookup:{
+      from:"categories",
+      localField:"category",
+      foreignField:"_id",
+      as:"categoryDetails"
+    }
+  },
+
+
+  {
+    $unwind:"$categoryDetails"
+  },
+
+
+  // const categoryDetails = {
+  //   _id:"68d3b15554baeadfc9e20fb8",
+  //   name:"Electronics",
+  //   slug:"electronics"
+  // }
+
+
+  {
+
+    $match:{"categoryDetails.name":{$in:["Electronics","Clothing"]}}
+
+  },
+
+
+  {
+
+    $sort:{price:-1}
+  },
+
+
+  // const groups = [
+
+  //   // Electronics category products 
+
+
+
+  //   // {
+  //   //   _id:"Electronics",
+  //   //   products:[
+  //   //     {
+  //   //       name:"samsung",
+  //   //       title:"samsung mobile",
+  //   //       description:"best mobile"
+  //   //     },
+
+
+  //   //      {
+  //   //       name:"oppo",
+  //   //       title:"oppo mobile",
+  //   //       description:"best mobile"
+  //   //     }
+  //   //   ]
+  //   // }
+
+
+
+  //   // Clothing category products
+
+  //   // {
+  //   //   _id:"Clothing",
+  //   //   products:[
+  //   //     {
+  //   //       name:"Tshirt",
+  //   //       title:"tshirt",
+  //   //       description:"Best tshirt"
+  //   //     },
+
+
+
+  //   //      {
+  //   //       name:"jeans",
+  //   //       title:"Jeans",
+  //   //       description:"Best Jeans"
+  //   //     }
+  //   //   ]
+
+
+
+  //   // }
+
+
+  // ]
+
+
+
+
+  {
+    $group:{
+      _id:"$categoryDetails.name",
+      products:{
+        $push:{
+          name:"$name",
+          title:"$title",
+          image:"$image",
+          description:"$description",
+          price:"$price"
+        }
+
+      }
+    }
+
+
+  },
+
+
+
+{
+  $project:{
+    _id:0,
+   category:"$_id",
+   products:{$slice:["$products",3]}
+
+  }
+}
+
+
+
+
+
+
+
+
+
+])
+
+
+
+
+
+
+
+
+return res.status(200).json(new ApiResponse(200,electronicsProducts,"Electronics products fetched successfully"))
+
+
+})
+
  
 
 
@@ -338,4 +493,4 @@ return res.status(200).json(new ApiResponse(200,topProducts,"Top 5 products fetc
 
 
 
-export {CreateProduct,GetProducts,getSingleProduct,ProductSearch,PaginationProducts,GetProductsByCategory,TopProducts}
+export {CreateProduct,GetProducts,getSingleProduct,ProductSearch,PaginationProducts,GetProductsByCategory,TopProducts,TopCategoryByProducts}

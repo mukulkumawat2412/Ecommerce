@@ -8,6 +8,7 @@ import { AddToCart } from "../redux/slices/cartSlice.jsx";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai"; // ✅ icons change
 import { addWishlistProduct } from "../redux/slices/wishlistSlice.jsx";
 import TopProducts from "./TopProducts.jsx";
+import TopCategoryByProducts from "./TopCategoryByProducts.jsx";
 
 const ProductList = ({ setCartCount }) => {
   const [loading, setLoading] = useState(true);
@@ -73,6 +74,7 @@ const ProductList = ({ setCartCount }) => {
   return (
     
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+    <TopCategoryByProducts/>
     <TopProducts/>
       <h1 className="text-2xl font-bold mb-6 text-gray-800">Our Products</h1>
 

@@ -29,6 +29,7 @@ import UpdateProductForm from "./Admin/UpdateProductForm";
 import Notfound from "./pages/Notfound";
 import WishlistPage from "./components/navigation/layout/WishlistPage";
 import TopProducts from "./Product/TopProducts";
+import TopCategoryByProducts from "./Product/TopCategoryByProducts";
 
 function App() {
   const [cartCount, setCartCount] = useState(0);
@@ -52,6 +53,7 @@ function App() {
           <Route path="product-details/:id" element={<ProductDetails setCartCount={setCartCount} />} />
           <Route path="category-by-products/:categoryId" element={<CategoryByProducts />} />
           <Route path="/top-products" element={<TopProducts/>}/>
+          <Route path="/top-electronics-products" element={<TopCategoryByProducts/>}/>
 
           {/* Cart */}
           <Route path="cart-page" element={<CartPage />} />

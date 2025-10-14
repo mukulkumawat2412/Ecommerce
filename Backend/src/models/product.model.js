@@ -20,9 +20,7 @@ const productSchema = new Schema({
     },
 
     category:{
-        // {
-        //     _id:"68jksldjr33jk3b8"
-        // }
+       
         type:mongoose.Schema.Types.ObjectId,
         ref:"Category",
         required:true

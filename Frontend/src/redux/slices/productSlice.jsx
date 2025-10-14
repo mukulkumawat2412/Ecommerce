@@ -11,6 +11,8 @@ const initialState = {
     loading:false,
     error:null,
     products:[],
+    TopProducts:[],
+    TopCategoryProducts:[],
     SingleProduct:null,
       currentPage: 1,
   totalPages: 1,
@@ -104,6 +106,45 @@ try {
 
 
 
+export const topProductsByPrice = createAsyncThunk("/top_products",async(_,{rejectWithValue})=>{
+    try {
+
+     const res =    await axios.get("http://localhost:8000/api/v1/product/topProducts-ByPrice",{
+            withCredentials:true
+        })
+
+
+        console.log(res)
+        return res.data.data
+        
+    } catch (error) {
+        return rejectWithValue(error)
+    }
+
+})
+
+
+
+export const TopCategoryBy_Products = createAsyncThunk("/top_category_Products",async(_,{rejectWithValue})=>{
+    try {
+     const res =    await axios.get("http://localhost:8000/api/v1/product/topProducts-ByCategory",{
+            withCredentials:true
+        })
+
+       
+
+        return res.data.data
+        
+    } catch (error) {
+       return rejectWithValue(error)
+        
+    }
+
+})
+
+
+
+
 const productSlice = createSlice({
     name:"product",
     initialState,
@@ -160,6 +201,27 @@ const productSlice = createSlice({
             state.loading = false,
             console.log(action.payload)
 
+        }).addCase(topProductsByPrice.pending,(state)=>{
+            state.loading = true
+
+        }).addCase(topProductsByPrice.fulfilled,(state,action)=>{
+            state.loading = false
+            console.log(action.payload)
+            state.TopProducts = (action.payload)
+
+        }).addCase(topProductsByPrice.rejected,(state)=>{
+            state.loading = false
+
+        }).addCase(TopCategoryBy_Products.pending,(state)=>{
+            state.loading = true
+
+        }).addCase(TopCategoryBy_Products.fulfilled,(state,action)=>{
+            state.loading = false
+            console.log(action.payload)
+         state.TopCategoryProducts = action.payload
+
+        }).addCase(TopCategoryBy_Products.rejected,(state)=>{
+            state.loading = false
         })
     }
 })

@@ -2,23 +2,22 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import getCookie from "../../../Backend/src/utils/GetToken.js";
 import { Star } from "lucide-react"; // for rating icon
+import { useDispatch, useSelector } from 'react-redux';
+import { topProductsByPrice } from "../redux/slices/productSlice.jsx";
 
 const TopProducts = () => {
-  const [products, setProducts] = useState([]);
-  const token = getCookie("accessToken");
 
+
+
+  const dispatch = useDispatch()
+  const {TopProducts} = useSelector((state)=>state.product)
+console.log(TopProducts)
   useEffect(() => {
     const fetchTopProducts = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:8000/api/v1/product/topProducts-ByPrice",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setProducts(res.data.data);
+    const res =   await dispatch(topProductsByPrice())
+    console.log(res)
+      
       } catch (error) {
         console.log("Error fetching top products", error);
       }
@@ -34,7 +33,7 @@ const TopProducts = () => {
       </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-        {products.map((p, i) => (
+        {TopProducts.map((p, i) => (
           <div
             key={i}
             className="bg-white shadow-md hover:shadow-xl rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer hover:-translate-y-1"
@@ -77,7 +76,7 @@ const TopProducts = () => {
         ))}
       </div>
 
-      {products.length === 0 && (
+      {TopProducts.length === 0 && (
         <p className="text-center text-gray-500 mt-10">
           No products found above ₹10,000 😅
         </p>
