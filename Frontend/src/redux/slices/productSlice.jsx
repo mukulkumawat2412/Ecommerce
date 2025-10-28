@@ -1,5 +1,6 @@
 import {createSlice,createAsyncThunk} from "@reduxjs/toolkit"
 import axios from "axios"
+import api from "../../utils/axiosInstance.js"
 
 
 
@@ -29,7 +30,7 @@ const initialState = {
 export const getProducts = createAsyncThunk("/get-product",async(_,{rejectWithValue})=>{
     try {
 
-       const res =  await axios.get("http://localhost:8000/api/v1/product/products",{
+       const res =  await api.get("/product/products",{
             withCredentials:true
         })
 
@@ -48,7 +49,7 @@ export const getProducts = createAsyncThunk("/get-product",async(_,{rejectWithVa
 
 export const PaginationProducts = createAsyncThunk("/pagination-product",async({page=1, limit=2, category="", sort="latest"},{rejectWithValue})=>{
     try {
-  const res =  await axios.get("http://localhost:8000/api/v1/product/Pagination-products",{
+  const res =  await api.get("/product/Pagination-products",{
         params:{
             page,limit,category,sort
         },
@@ -74,7 +75,7 @@ export const PaginationProducts = createAsyncThunk("/pagination-product",async({
 export const categoryByProducts = createAsyncThunk("/categoryBy-product",async({categoryId},{rejectWithValue})=>{
     console.log(categoryId)
     try {
-    const res =     await axios.get(`http://localhost:8000/api/v1/product/categoryBy-products/${categoryId}`,{
+    const res =     await api.get(`/product/categoryBy-products/${categoryId}`,{
         withCredentials:true
     })
         
@@ -90,7 +91,7 @@ export const categoryByProducts = createAsyncThunk("/categoryBy-product",async({
 export const singleProduct = createAsyncThunk("/single-Product",async({id},{rejectWithValue})=>{
 
 try {
-    const res =     await axios.get(`http://localhost:8000/api/v1/product/single-product/${id}`,{
+    const res =     await api.get(`/product/single-product/${id}`,{
         withCredentials:true
     })
     console.log(res)
@@ -109,7 +110,7 @@ try {
 export const topProductsByPrice = createAsyncThunk("/top_products",async(_,{rejectWithValue})=>{
     try {
 
-     const res =    await axios.get("http://localhost:8000/api/v1/product/topProducts-ByPrice",{
+     const res =    await api.get("/product/topProducts-ByPrice",{
             withCredentials:true
         })
 
@@ -127,7 +128,7 @@ export const topProductsByPrice = createAsyncThunk("/top_products",async(_,{reje
 
 export const TopCategoryBy_Products = createAsyncThunk("/top_category_Products",async(_,{rejectWithValue})=>{
     try {
-     const res =    await axios.get("http://localhost:8000/api/v1/product/topProducts-ByCategory",{
+     const res =    await api.get("/product/topProducts-ByCategory",{
             withCredentials:true
         })
 
@@ -148,7 +149,10 @@ export const TopCategoryBy_Products = createAsyncThunk("/top_category_Products",
 const productSlice = createSlice({
     name:"product",
     initialState,
-    reducers:{},
+    reducers:{
+
+       
+    },
 
     extraReducers:(builder)=>{
        builder.addCase(getProducts.pending,(state)=>{

@@ -1,6 +1,7 @@
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "sonner";
+import api from "../../utils/axiosInstance.js";
 
 
 
@@ -17,7 +18,7 @@ const initialState = {
 
 export const addWishlistProduct = createAsyncThunk("/add_wishlist",async({productId},{rejectWithValue})=>{
     try {
-  const res =   await axios.post(`http://localhost:8000/api/v1/cart/add-wishlist/${productId}`,{},{
+  const res =   await api.post(`/cart/add-wishlist/${productId}`,{},{
     withCredentials:true
   })
         
@@ -36,7 +37,7 @@ export const addWishlistProduct = createAsyncThunk("/add_wishlist",async({produc
 
 export const wishlistProducts = createAsyncThunk("/wishlist",async(_,{rejectWithValue})=>{
     try {
-   const res =      await axios.get("http://localhost:8000/api/v1/cart/wishlist-products",{
+   const res =      await api.get("/cart/wishlist-products",{
             withCredentials:true
         })
         
@@ -52,7 +53,7 @@ export const wishlistProducts = createAsyncThunk("/wishlist",async(_,{rejectWith
 
 export const DeleteWishlistProduct = createAsyncThunk("/wishlist_delete",async({itemId},{rejectWithValue})=>{
   try {
-  const res =   await axios.delete(`http://localhost:8000/api/v1/cart/delete-wishlistItems/${itemId}`,{
+  const res =   await api.delete(`/cart/delete-wishlistItems/${itemId}`,{
       withCredentials:true
     })
 

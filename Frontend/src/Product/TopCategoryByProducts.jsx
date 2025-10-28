@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import getCookie from '../../../Backend/src/utils/GetToken.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { TopCategoryBy_Products } from '../redux/slices/productSlice.jsx';
+import { Link } from 'react-router-dom';
 
 
 const TopCategoryByProducts = () => {
@@ -11,6 +12,8 @@ const TopCategoryByProducts = () => {
 
   const dispatch = useDispatch()
 
+  const token = getCookie("accessToken")
+
    const {TopCategoryProducts} = useSelector((state)=>state.product)
 
  console.log(TopCategoryProducts)
@@ -18,9 +21,14 @@ const TopCategoryByProducts = () => {
   useEffect(() => {
     const fetchTopCategoryByProducts = async () => {
       try { 
-     const res =    await dispatch(TopCategoryBy_Products())
+
+        
+             const res =    await dispatch(TopCategoryBy_Products())
        
         console.log(res)
+
+      
+  
        
       } catch (error) {
         console.log("Error fetching Category Products", error);
@@ -30,6 +38,8 @@ const TopCategoryByProducts = () => {
   }, []);
 
   return (
+
+    
     <div className="p-6 bg-gray-50 min-h-screen">
       <h2 className="text-3xl font-bold mb-8 text-gray-800 border-b pb-2">
         Top Products by Category
@@ -72,14 +82,31 @@ const TopCategoryByProducts = () => {
                     )}
                   </div>
 
-                  <div className="mt-4 flex gap-2">
-                    <button className="flex-1 bg-gradient-to-r from-purple-600 to-purple-500 text-white py-2 rounded-lg hover:from-purple-700 hover:to-purple-600 transition">
-                      View
-                    </button>
+                  {
+                    token ? (
+                      <div className="mt-4 flex gap-2">
+                  
+                    
                     <button className="flex-1 border border-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-100 transition">
                       Add to Cart
                     </button>
+                      <Link to={`/product-details/${product._id}`}>
+                       <button className="flex-1 bg-gradient-to-r from-violet-600 to-violet-500 text-white py-2 rounded-lg hover:from-violet-700 hover:to-violet-600 transition">
+                      View
+                    </button>
+                    </Link>
+
+                  
                   </div>
+                    ) :(
+                         <button className="flex-1 bg-gradient-to-r from-violet-600 to-violet-500 text-white py-2 rounded-lg hover:from-violet-700 hover:to-violet-600 transition">
+                      View
+                    </button>
+
+                    )
+                  }
+
+                  
                 </div>
               </div>
             ))}

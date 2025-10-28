@@ -17,11 +17,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const token = getCookie("accessToken");
-      if (!token) {
-        setLoading(false);
-        return;
-      }
+    
 
       try {
 

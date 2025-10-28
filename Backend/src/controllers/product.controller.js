@@ -262,7 +262,7 @@ if(!user){
 
 const {categoryId} = req.params
 
-console.log(categoryId)
+// console.log(categoryId)
 const category = await Category.findById(categoryId)
 
 
@@ -334,11 +334,11 @@ return res.status(200).json(new ApiResponse(200,topProducts,"Top 5 products fetc
 
 const TopCategoryByProducts  = asyncHandler(async(req,res)=>{
 
-const user =  await User.findById(req.user?._id)
+// const user =  await User.findById(req.user?._id)
 
-if(!user){
-  throw new ApiError(401,"Unauthorized, please login")
-}
+// if(!user){
+//   throw new ApiError(401,"Unauthorized, please login")
+// }
 
 
 const electronicsProducts = await Product.aggregate([
@@ -438,6 +438,7 @@ const electronicsProducts = await Product.aggregate([
       _id:"$categoryDetails.name",
       products:{
         $push:{
+          _id:"$_id",
           name:"$name",
           title:"$title",
           image:"$image",

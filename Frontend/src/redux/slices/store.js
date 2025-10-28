@@ -9,10 +9,12 @@ import wishlistReducer from "./wishlistSlice.jsx"
 
 
 
+
 const store = configureStore({
     reducer:{
         auth:authReducer,
         product:productReducer,
+        
         category:categoryReducer,
         search:searchReducer,
         cart:cartReducer,

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import api from "../../utils/axiosInstance.js";
 
 const initialState = {
   loading: false,
@@ -12,7 +13,7 @@ const initialState = {
 
 export const createCategory = createAsyncThunk("/category/createCategories",async(createCategory,{rejectWithValue})=>{
     try {
-    const res =     await axios.post("http://localhost:8000/api/v1/category/create-category",createCategory,{
+    const res =     await api.post("/category/create-category",createCategory,{
             withCredentials:true
         })
 
@@ -34,8 +35,8 @@ export const getCategories = createAsyncThunk(
   "category/getCategories",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await axios.get(
-        "http://localhost:8000/api/v1/category/categories",
+      const res = await api.get(
+        "/category/categories",
         {
           withCredentials: true, 
           headers: {

@@ -1,6 +1,7 @@
 import {createAsyncThunk,createSlice} from "@reduxjs/toolkit"
 import axios from "axios"
 import { toast } from "sonner"
+import api from "../../utils/axiosInstance.js"
 
 
 
@@ -14,10 +15,32 @@ const initialState = {
 
 
 
+export const refreshAccessToken = createAsyncThunk("/Refresh_Token",async(_,{rejectWithValue})=>{
+    try {
+
+    const res =     await api.post("/users/refresh-token",{},{
+        withCredentials:true
+    })
+ console.log(res)
+    return res.data.data
+    
+        
+   
+    } catch (error) {
+        return rejectWithValue(error)
+    }
+
+})
+
+
+
+
+
+
 
 export const Register = createAsyncThunk("/signup",async(RegisterData,{rejectWithValue})=>{
     try {
-    const res =     await axios.post("http://localhost:8000/api/v1/users/register",RegisterData)
+    const res =     await api.post("/users/register",RegisterData)
 
    return res.data.data
 
@@ -31,7 +54,7 @@ export const Register = createAsyncThunk("/signup",async(RegisterData,{rejectWit
 
 export const Login = createAsyncThunk("/login",async(loginData,{rejectWithValue})=>{
     try {
-    const res =    await axios.post("http://localhost:8000/api/v1/users/login",loginData,{
+    const res =    await api.post("/users/login",loginData,{
         withCredentials:true
     })
 
@@ -50,7 +73,7 @@ export const Login = createAsyncThunk("/login",async(loginData,{rejectWithValue}
 
 export const Logout = createAsyncThunk("/logout",async(_,{rejectWithValue})=>{
     try {
-      const res =   await axios.post("http://localhost:8000/api/v1/users/logout",{},{withCredentials:true})
+      const res =   await api.post("/users/logout",{},{withCredentials:true})
         
         return res.data.data
 
@@ -65,7 +88,7 @@ export const Logout = createAsyncThunk("/logout",async(_,{rejectWithValue})=>{
 
 export const profileChangePassword = createAsyncThunk("/profile-password",async(profilePasswordData,{rejectWithValue})=>{
     try {
-      const res =   await axios.put("http://localhost:8000/api/v1/users/profile-change-password",profilePasswordData,{
+      const res =   await api.put("/users/profile-change-password",profilePasswordData,{
         withCredentials:true
       })
       console.log(res)
@@ -85,7 +108,7 @@ export const profileChangePassword = createAsyncThunk("/profile-password",async(
 
 export const profileFetch = createAsyncThunk("/profile-fetch",async(_,{rejectWithValue})=>{
     try {
-      const res =   await axios.get("http://localhost:8000/api/v1/users/profile",{
+      const res =   await api.get("/users/profile",{
             withCredentials:true
         })
 
@@ -105,7 +128,7 @@ export const profileFetch = createAsyncThunk("/profile-fetch",async(_,{rejectWit
 export const updateProfile = createAsyncThunk("/profile_update",async(ProfileUpdateData,{rejectWithValue})=>{
     try {
 
-     const res =    await axios.put("http://localhost:8000/api/v1/users/profile-update",ProfileUpdateData,{
+     const res =    await api.put("/users/profile-update",ProfileUpdateData,{
             withCredentials:true
         })
 
@@ -144,7 +167,7 @@ const authSlice = createSlice({
         }).addCase(Login.pending,(state)=>{
             state.loading = true
 
-        }).addCase(Login.fulfilled,(action,state)=>{
+        }).addCase(Login.fulfilled,(state,action)=>{
             state.loading = false,
             console.log(action.payload)
             toast.success("Login successfully")
@@ -186,6 +209,17 @@ const authSlice = createSlice({
 
            
         }).addCase(updateProfile.rejected,(state)=>{
+            state.loading = false
+
+        }).addCase(refreshAccessToken.pending,(state)=>{
+            state.loading = true
+
+        }).addCase(refreshAccessToken.fulfilled,(state,action)=>{
+            state.loading = false
+            console.log(action.payload)
+                 toast.success("Access token refreshed successfully");
+
+        }).addCase(refreshAccessToken.rejected,(state)=>{
             state.loading = false
 
         })

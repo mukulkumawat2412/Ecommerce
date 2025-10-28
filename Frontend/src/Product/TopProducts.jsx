@@ -10,13 +10,22 @@ const TopProducts = () => {
 
 
   const dispatch = useDispatch()
+
+  const token = getCookie("accessToken")
+
+
+
   const {TopProducts} = useSelector((state)=>state.product)
 console.log(TopProducts)
   useEffect(() => {
     const fetchTopProducts = async () => {
       try {
-    const res =   await dispatch(topProductsByPrice())
+        if(token){
+           const res =   await dispatch(topProductsByPrice())
     console.log(res)
+
+        }
+   
       
       } catch (error) {
         console.log("Error fetching top products", error);
@@ -24,10 +33,13 @@ console.log(TopProducts)
     };
 
     fetchTopProducts();
-  }, []);
+  }, [token]);
 
   return (
-    <div className="px-6 py-10 bg-gray-50 min-h-screen">
+    <>
+    {
+      token && (
+         <div className="px-6 py-10 bg-gray-50 min-h-screen">
       <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
         💎 Top 5 Premium Products (Price &gt; ₹10,000)
       </h2>
@@ -82,6 +94,11 @@ console.log(TopProducts)
         </p>
       )}
     </div>
+      )
+      
+    }
+    </>
+   
   );
 };
 

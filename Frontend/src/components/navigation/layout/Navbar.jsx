@@ -28,12 +28,15 @@ function Navbar() {
 
   const token = getCookie("accessToken")
 
+  console.log(token)
+
   
   let username = null
   let role = null
 
   try {
     const decoded = jwtDecode(token)
+    console.log(decoded)
     username = decoded.username
     role = decoded.role
   } catch (error) {

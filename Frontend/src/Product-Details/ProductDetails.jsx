@@ -22,7 +22,9 @@ const ProductDetails = () => {
   useEffect(() => {
     const fetchSingleProduct = async () => {
       try {
-        const res = await dispatch(singleProduct({ id }));
+         await dispatch(singleProduct({ id }));
+     
+     
         setLoading(false);
       } catch (error) {
         console.log("Error fetching product", error);
@@ -31,7 +33,7 @@ const ProductDetails = () => {
     };
 
     fetchSingleProduct();
-  }, [id, dispatch]);
+  }, [id, dispatch,SingleProduct]);
 
  
   useEffect(() => {

@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import api from "../../utils/axiosInstance.js";
+
 
 const initialState = {
   cartItems: [],
@@ -13,8 +15,8 @@ export const AddToCart = createAsyncThunk(
   async ({ productId, quantity }, { rejectWithValue }) => {
     console.log(productId)
     try {
-      const res = await axios.post(
-        `http://localhost:8000/api/v1/cart/add-to-cart/${productId}`,
+      const res = await api.post(
+        `/cart/add-to-cart/${productId}`,
         { quantity },
         {withCredentials:true} 
       
@@ -33,7 +35,7 @@ export const AddToCart = createAsyncThunk(
 
 export const getCartItems = createAsyncThunk("/cart",async(_,{rejectWithValue})=>{
     try {
-   const res =      await axios.get("http://localhost:8000/api/v1/cart/cartItem",{
+   const res =      await api.get("/cart/cartItem",{
             withCredentials:true
         })
         console.log(res)
@@ -54,7 +56,7 @@ export const getCartItems = createAsyncThunk("/cart",async(_,{rejectWithValue})=
 export const DeleteCartItems = createAsyncThunk("/cartItems_delete",async({cartId},{rejectWithValue})=>{
   console.log(cartId)
   try {
-   const res =  await axios.delete(`http://localhost:8000/api/v1/cart/removeCartItem/${cartId}`,{
+   const res =  await api.delete(`/cart/removeCartItem/${cartId}`,{
       withCredentials:true
     })
 
@@ -81,7 +83,7 @@ export const DeleteCartItems = createAsyncThunk("/cartItems_delete",async({cartI
 export const createCheckOut = createAsyncThunk("/checkout",async(cartItemsData,{rejectWithValue})=>{
   
   try {
-  const res =   await axios.post("http://localhost:8000/api/v1/cart/create-checkout-session",cartItemsData,{
+  const res =   await api.post("/cart/create-checkout-session",cartItemsData,{
       withCredentials:true,
       headers:{
         "Content-Type":"application/json"

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import api from "../../utils/axiosInstance.js";
 
 const initialState = {
   error: null,
@@ -11,7 +12,7 @@ const initialState = {
 
 export const createProduct = createAsyncThunk("/create-product",async (productData, { rejectWithValue }) => {
     try {
-      const res = await axios.post("http://localhost:8000/api/v1/product/create-product", productData,
+      const res = await api.post("/product/create-product", productData,
         { withCredentials: true }
       );
       return res.data.data;
@@ -24,7 +25,7 @@ export const createProduct = createAsyncThunk("/create-product",async (productDa
 
 export const getProducts = createAsyncThunk("/product",async (_, { rejectWithValue }) => {
     try {
-      const res = await axios.get("http://localhost:8000/api/v1/admin/get-products",
+      const res = await api.get("/admin/get-products",
         { withCredentials: true }
       );
       return res.data.data;
@@ -37,7 +38,7 @@ export const getProducts = createAsyncThunk("/product",async (_, { rejectWithVal
 
 export const deleteProduct = createAsyncThunk("/del_product",async ({ id }, { rejectWithValue }) => {
     try {
-      const res = await axios.delete(`http://localhost:8000/api/v1/admin/Delete-products/${id}`,
+      const res = await api.delete(`/admin/Delete-products/${id}`,
         { withCredentials: true }
       );
       return res.data.data;
@@ -50,7 +51,7 @@ export const deleteProduct = createAsyncThunk("/del_product",async ({ id }, { re
 
 export const updateProduct = createAsyncThunk("/update_product",async ({ id, updateData }, { rejectWithValue }) => {
     try {
-      const res = await axios.put(`http://localhost:8000/api/v1/admin/product-update/${id}`,
+      const res = await api.put(`/admin/product-update/${id}`,
         updateData,
         {
           headers: {
@@ -69,8 +70,8 @@ export const updateProduct = createAsyncThunk("/update_product",async ({ id, upd
 
 export const getProducts_ById = createAsyncThunk("/get_product_id",async ({ id }, { rejectWithValue }) => {
     try {
-      const res = await axios.get(
-        `http://localhost:8000/api/v1/admin/get-products/${id}`,
+      const res = await api.get(
+        `/admin/get-products/${id}`,
         { withCredentials: true }
       );
       return res.data.data;
