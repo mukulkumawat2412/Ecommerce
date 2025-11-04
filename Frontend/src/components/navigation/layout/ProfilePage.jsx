@@ -45,7 +45,7 @@ const ProfilePage = () => {
       <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
         {/* Profile Picture Placeholder */}
         <div className="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 text-xl font-semibold">
-          {profileData.username ? profileData.username[0].toUpperCase() : 'A'}
+          {profileData.username ? profileData.username[0].toUpperCase():""}
         </div>
 
         {/* Profile Details */}

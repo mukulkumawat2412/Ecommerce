@@ -45,12 +45,14 @@ import productRouter  from "./Routes/product.route.js"
 import categoryRouter from "./Routes/category.route.js"
 import cartRouter from "./Routes/cart.route.js"
 import adminRouter from "./Routes/admin.route.js"
+import couponRouter from "./Routes/coupon.route.js"
 
 app.use("/api/v1/users",userRouter)
 app.use("/api/v1/product",productRouter)
 app.use("/api/v1/category",categoryRouter)
 app.use("/api/v1/cart",cartRouter)
 app.use("/api/v1/admin",adminRouter)
+app.use("/api/v1/coupon",couponRouter)
 
 
 

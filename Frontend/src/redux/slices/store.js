@@ -6,6 +6,7 @@ import searchReducer from "./searchSlice.jsx"
 import cartReducer from "./cartSlice.jsx"
 import adminReducer from "./admin.productSlice.jsx"
 import wishlistReducer from "./wishlistSlice.jsx"
+import couponReducer from "./couponSlice..jsx"
 
 
 
@@ -14,7 +15,7 @@ const store = configureStore({
     reducer:{
         auth:authReducer,
         product:productReducer,
-        
+        coupon:couponReducer,
         category:categoryReducer,
         search:searchReducer,
         cart:cartReducer,

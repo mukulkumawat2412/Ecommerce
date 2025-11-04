@@ -31,8 +31,17 @@ import WishlistPage from "./components/navigation/layout/WishlistPage";
 import TopProducts from "./Product/TopProducts";
 import TopCategoryByProducts from "./Product/TopCategoryByProducts";
 
+import { useEffect } from "react";
+import { refreshAccessTokenOnLoad } from "./utils/axiosInstance.js";
+import AboutUsPage from "./pages/AboutUsPage.jsx";
+import AdminCreateCoupon from "./Admin/AdminCreateCoupon.jsx";
+
 function App() {
   const [cartCount, setCartCount] = useState(0);
+
+    useEffect(() => {
+   refreshAccessTokenOnLoad();
+  }, [])
 
   return (
     <>
@@ -56,8 +65,10 @@ function App() {
           <Route path="/top-electronics-products" element={<TopCategoryByProducts/>}/>
 
           {/* Cart */}
+          <Route path="/about-us" element={<AboutUsPage/>}/>
           <Route path="cart-page" element={<CartPage />} />
               <Route path="/wishlist-page" element={<WishlistPage/>}/>
+
          
           <Route path="success" element={<Success />} />
           <Route path="cancel" element={<Cancel />} />
@@ -77,6 +88,7 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="product-form" element={<ProductForm />} />
           <Route path="update-product/:id" element={<UpdateProductForm />} />
+          <Route path="create-coupon" element={<AdminCreateCoupon/>}/>
         </Route>
         </Route>
       </Routes>

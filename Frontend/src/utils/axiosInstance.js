@@ -9,7 +9,7 @@
 // // --------------------------------------------
 // // ✅ PAGE REFRESH hone par accessToken auto-refresh
 // // --------------------------------------------
-// async function refreshAccessTokenOnLoad() {
+// export async function refreshAccessTokenOnLoad() {
 //   try {
 //     // Jaise hi page reload ho, refresh-token API call karo
 //     const res = await api.post("/users/refresh-token", {}, { withCredentials: true });
@@ -93,6 +93,24 @@ const api = axios.create({
   withCredentials: true, // cookies bhejne ke liye
 });
 
+
+export async function refreshAccessTokenOnLoad() {
+  try {
+    // 🛑 Check if refreshToken cookie exists before calling API
+    const isLoggedIn = document.cookie.includes("refreshToken=");
+    if (!isLoggedIn) {
+      console.log("⚠️ User not logged in — skipping refresh-token API call");
+      return;
+    }
+
+    // ✅ Agar user logged in hai tabhi API call karein
+    const res = await api.get("/users/refresh-token");
+    console.log("🔁 Access token refreshed successfully:", res.data);
+  } catch (err) {
+    console.error("❌ Refresh token failed:", err.response?.data || err.message);
+  }
+}
+
 // --------------------------------------------
 // ✅ PAGE LOAD hone par ek baar token refresh karo
 // --------------------------------------------
@@ -161,5 +179,18 @@ api.interceptors.response.use(
   }
 );
 
+
 export default api;
+
+
+
+
+
+
+
+
+
+
+
+
 

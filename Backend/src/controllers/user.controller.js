@@ -81,7 +81,7 @@ const Login = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Password does not match");
   }
 
-  const { accessToken, refreshToken } = await generateAccessTokenAndRefreshToken(user._id);
+  const { accessToken, refreshToken: newRefreshToken} = await generateAccessTokenAndRefreshToken(user._id);
 
   const loggedIn = await User.findById(user._id).select("-password -refreshToken");
 
@@ -91,7 +91,7 @@ const Login = asyncHandler(async (req, res) => {
     secure: process.env.NODE_ENV === "production" ? true : false,
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     path: "/",
-    maxAge:20 * 1000  // 30 seconds
+    maxAge:20 * 1000  // 20 seconds
   };
 
   // ✅ 2. Refresh Token Options (1 day)
@@ -107,11 +107,11 @@ const Login = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .cookie("accessToken", accessToken, accessTokenOptions)
-    .cookie("refreshToken", refreshToken, refreshTokenOptions)
+    .cookie("refreshToken", newRefreshToken, refreshTokenOptions)
     .json(
       new ApiResponse(
         200,
-        { loggedIn, accessToken, refreshToken },
+        { loggedIn, accessToken, newRefreshToken },
         "User login successfully"
       )
     );
@@ -125,7 +125,7 @@ const RefreshAccessToken = asyncHandler(async (req, res) => {
 //   console.log("received token by backend refreshTOken",req.cookies)
   const incomingRefreshToken =  req.cookies?.refreshToken || req.body?.refreshToken;
 
-  
+ 
   if (!incomingRefreshToken) {
     throw new ApiError(401, "Unauthorized request - No refresh token found");
   }
@@ -148,8 +148,7 @@ const RefreshAccessToken = asyncHandler(async (req, res) => {
     }
 
     // 🔹 4. New Access & Refresh Tokens
-    const { accessToken, refreshToken: newRefreshToken } =
-      await generateAccessTokenAndRefreshToken(user._id);
+    const { accessToken, refreshToken: newRefreshToken } = await generateAccessTokenAndRefreshToken(user._id);
 
     // 🔹 5. Cookie options
     const accessTokenOptions = {
@@ -169,7 +168,7 @@ const RefreshAccessToken = asyncHandler(async (req, res) => {
     };
 
     // 🔹 6. Return New Tokens
-    return res
+    return res 
       .status(200)
       .cookie("accessToken", accessToken, accessTokenOptions)
       .cookie("refreshToken", newRefreshToken, refreshTokenOptions)

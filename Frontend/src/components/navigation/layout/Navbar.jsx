@@ -13,6 +13,7 @@ import { getCartItems } from '../../../redux/slices/cartSlice.jsx';
 import { wishlistProducts } from '../../../redux/slices/wishlistSlice.jsx'; // Add this
 import { FaRegHeart } from "react-icons/fa6";
 
+
 function Navbar() {
   const [showNavbar, setShowNavbar] = useState(true);
   const [navbarStyle, setNavbarStyle] = useState("black");
@@ -126,6 +127,7 @@ function Navbar() {
               <Link to={"/dashboard"}><li className='hover:text-purple-300 cursor-pointer'>Dashboard</li></Link>
               <Link to={"/add-category"}><li className='hover:text-purple-300 cursor-pointer'>AddCategory</li></Link>
               <Link to={"/product-form"}><li>ProductForm</li></Link>
+              <Link to={"/create-coupon"}><li className='hover:text-purple-300 cursor-pointer'>Coupon</li></Link>
             </>
           ) : (
             <>
