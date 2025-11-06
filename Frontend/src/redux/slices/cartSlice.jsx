@@ -82,6 +82,7 @@ export const DeleteCartItems = createAsyncThunk("/cartItems_delete",async({cartI
 
 export const createCheckOut = createAsyncThunk("/checkout",async(cartItemsData,{rejectWithValue})=>{
   
+  console.log(cartItemsData)
   try {
   const res =   await api.post("/cart/create-checkout-session",cartItemsData,{
       withCredentials:true,
@@ -141,7 +142,7 @@ const cartSlice = createSlice({
 
       }).addCase(createCheckOut.fulfilled,(state,action)=>{
         state.loading = false,
-        // state.checkoutSession = action.payload
+       state.checkoutSession = action.payload
         console.log(action.payload)
 
       }).addCase(createCheckOut.rejected,(state,action)=>{

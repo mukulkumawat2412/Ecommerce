@@ -125,33 +125,40 @@ if(!cartItems){
 
 const Checkout = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user?._id);
-
   if (!user) {
     throw new ApiError(401, "Unauthorized, please login");
   }
 
-  const { products } = req.body;
-  console.log("Products received:", products);
+  const { products, amount } = req.body;
 
-  const lineItems = products.map((item) => {
-    const price = parseInt(item.product.price); 
+  console.log("✅ Discounted amount received from frontend:", amount);
+  console.log("🛒 Products received:", products.length);
 
-    if (isNaN(price)) {
-      throw new Error(`Invalid price for product: ${item.product.name}`);
-    }
+  if (!amount || amount <= 0) {
+    throw new ApiError(400, "Invalid amount received");
+  }
 
-    return {
+  const finalAmount = Math.max(amount, 1);
+
+  // 🔹 Collect all images from all products
+  const images = products.flatMap((item) =>
+    item.product.image ? item.product.image : []
+  );
+
+  const lineItems = [
+    {
       price_data: {
         currency: "inr",
         product_data: {
-          name: item.product.name,
-          images: item.product.image ? [item.product.image[0]] : [],
+          name: "Your Cart (Discount Applied)",
+          description: "Final total after discount applied",
+          images: images, // ✅ all product images
         },
-        unit_amount: price * 100, 
+        unit_amount: Math.round(finalAmount * 100),
       },
-      quantity: item.quantity,
-    };
-  });
+      quantity: 1,
+    },
+  ];
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
@@ -159,13 +166,16 @@ const Checkout = asyncHandler(async (req, res) => {
     mode: "payment",
     success_url: "http://localhost:5173/success",
     cancel_url: "http://localhost:5173/cancel",
-
   });
+
+  console.log("✅ Stripe checkout created for ₹", finalAmount);
 
   return res
     .status(201)
     .json(new ApiResponse(201, session, "Payment session created successfully"));
 });
+
+
 
 
 

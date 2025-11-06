@@ -1,5 +1,6 @@
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../utils/axiosInstance.js";
+import { toast } from "sonner";
 
 
 
@@ -28,7 +29,9 @@ export const CreateCoupon  = createAsyncThunk("/create_coupon",async(CData,{reje
             withCredentials:true
         })
 
-        return res.data.data
+
+    console.log(res)
+        return res.data.data.coupon
        
         
     } catch (error) {
@@ -37,6 +40,57 @@ export const CreateCoupon  = createAsyncThunk("/create_coupon",async(CData,{reje
     }
 
 })
+
+
+
+
+export const AllCoupons = createAsyncThunk("/Coupons",async(_,{rejectWithValue})=>{
+    try {
+
+   const res =      await api.get("/coupon/all/coupons",{
+            withCredentials:true
+        })
+
+
+        console.log(res)
+
+        return res.data.data
+        
+    } catch (error) {
+        return rejectWithValue(error)
+    }
+
+})
+
+
+
+export const Delete_Coupons = createAsyncThunk("/delete_coupon",async({id},{rejectWithValue})=>{
+    console.log(id)
+    try {
+
+    const res =     await api.delete(`/coupon/delete/coupon/${id}`,{
+            withCredentials:true
+        })
+
+        console.log(res)
+
+        return res.data
+        
+    } catch (error) {
+        return rejectWithValue(error)
+    }
+
+})
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -102,7 +156,30 @@ const couponSlice = createSlice({
             state.loading = false
             console.log(action.payload)
 
+        }).addCase(AllCoupons.pending,(state)=>{
+            state.loading = true
+
+        }).addCase(AllCoupons.fulfilled,(state,action)=>{
+            state.loading = false
+            state.couponData = action.payload
+
+        }).addCase(AllCoupons.rejected,(state)=>{
+            state.loading = false
+
+        }).addCase(Delete_Coupons.pending,(state)=>{
+            state.loading = true
+
+        }).addCase(Delete_Coupons.fulfilled,(state,action)=>{
+            state.loading = false
+            console.log(action.payload)
+             state.couponData  = state.couponData.filter((c)=>c._id !== action.payload.data._id)
+            toast.success(action.payload.message)
+
+        }).addCase(Delete_Coupons.rejected,(state)=>{
+            state.loading = false
+
         })
+        
 
     }
 

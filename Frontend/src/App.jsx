@@ -35,6 +35,8 @@ import { useEffect } from "react";
 import { refreshAccessTokenOnLoad } from "./utils/axiosInstance.js";
 import AboutUsPage from "./pages/AboutUsPage.jsx";
 import AdminCreateCoupon from "./Admin/AdminCreateCoupon.jsx";
+import AdminCoupons from "./Admin/AdminCoupons.jsx";
+
 
 function App() {
   const [cartCount, setCartCount] = useState(0);
@@ -50,6 +52,7 @@ function App() {
       <Routes>
         <Route path="login" element={<LoginForm />} />
         <Route path="signup" element={<SignUp />} />
+           
      
         {/* ✅ All pages with Navbar + Footer */}
         <Route element={<MainLayout />}>
@@ -57,6 +60,7 @@ function App() {
 
 
           {/* Products */}
+     
           <Route path="products" element={<ProductList setCartCount={setCartCount} />} />
           <Route path="product-page" element={<ProductPage setCartCount={setCartCount} />} />
           <Route path="product-details/:id" element={<ProductDetails setCartCount={setCartCount} />} />
@@ -89,6 +93,7 @@ function App() {
           <Route path="product-form" element={<ProductForm />} />
           <Route path="update-product/:id" element={<UpdateProductForm />} />
           <Route path="create-coupon" element={<AdminCreateCoupon/>}/>
+          <Route path="/admin-coupons" element={<AdminCoupons/>}/>
         </Route>
         </Route>
       </Routes>

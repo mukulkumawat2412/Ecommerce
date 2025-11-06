@@ -27,6 +27,10 @@ function Navbar() {
   const { cartItems } = useSelector((state) => state.cart)
   const { wishlistItems } = useSelector((state) => state.wishlist)
 
+
+  console.log(cartItems)
+  
+
   const token = getCookie("accessToken")
 
   console.log(token)

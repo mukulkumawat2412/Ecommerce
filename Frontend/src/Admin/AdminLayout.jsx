@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiMenu, FiHome, FiBox, FiUsers, FiSettings } from "react-icons/fi";
+import { RiCouponLine } from "react-icons/ri";
 import { MdCategory } from "react-icons/md";
 
 const AdminLayout = ({ children }) => {
@@ -44,6 +45,9 @@ const AdminLayout = ({ children }) => {
             <MdCategory size={20} />
             {isOpen && <span>Add Category</span>}
           </Link>
+
+          <Link to="/admin-coupons"  className="flex items-center gap-4 p-4 hover:bg-gray-700 transition"><RiCouponLine size={20}/>Coupons</Link>
+
           <Link
             to="/users"
             className="flex items-center gap-4 p-4 hover:bg-gray-700 transition"

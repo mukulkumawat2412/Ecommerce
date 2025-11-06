@@ -11,8 +11,10 @@ import couponReducer from "./couponSlice..jsx"
 
 
 
+
 const store = configureStore({
     reducer:{
+      
         auth:authReducer,
         product:productReducer,
         coupon:couponReducer,

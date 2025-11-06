@@ -61,6 +61,66 @@ const istToDate = new Date(toDate.getTime() + IST_OFFSET);
 
 
 
+const GetCoupons = asyncHandler(async(req,res)=>{
+
+  const AllCoupons = await  Coupon.find({})
+
+
+  if(!AllCoupons){
+   throw new ApiError(404,"Coupons not found")
+  }
+
+
+  return res.status(200).json(new ApiResponse(200,AllCoupons,"Coupons fetched successfully"))
+
+})
+
+
+
+
+const DeleteCoupon = asyncHandler(async(req,res)=>{
+
+const user =  await User.findById(req.user?._id)
+
+if(!user){
+  throw new ApiError(401,"Unauthorized, please login")
+}
+
+const {id} = req.params
+
+
+
+const coupon = await Coupon.findById(req.params.id)
+
+
+if(!coupon){
+  throw new ApiError(404,"Coupon not found")
+}
+
+
+
+const DeletedCoupon = await Coupon.findByIdAndDelete(id)
+
+return res.status(200).json(new ApiResponse(200,DeletedCoupon,"Coupon successfully deleted"))
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const ApplyCoupons = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user?._id);
   if (!user) throw new ApiError(401, "Unauthorized, please login");
@@ -139,4 +199,4 @@ const ApplyCoupons = asyncHandler(async (req, res) => {
 
 
 
-export {CreateCoupons,ApplyCoupons}
+export {CreateCoupons,GetCoupons,DeleteCoupon,ApplyCoupons}

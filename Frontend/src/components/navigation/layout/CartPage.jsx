@@ -31,8 +31,9 @@ const CartPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+ 
 
-
+console.log(cartItems)
   const {discount,message,couponCode,totalAfterDiscount} = useSelector((state)=>state.coupon)
 
 
@@ -50,6 +51,7 @@ const CartPage = () => {
     const fetchCart = async () => {
       try {
         const res = await dispatch(getCartItems());
+        console.log(res)
         setCartItems(res.payload);
       } catch (error) {
         console.error("Error fetching cart:", error);
@@ -136,11 +138,13 @@ const handleApplyCoupon = async () => {
 
 
 
+
+
   // 🔹 Checkout
   const handleCheckout = async () => {
     try {
       const response = await dispatch(
-        createCheckOut({ products: cartItems })
+        createCheckOut({ products: cartItems,amount:totalAfterDiscount })
       ).unwrap();
 
       if (response?.url) {
@@ -256,7 +260,7 @@ const handleApplyCoupon = async () => {
                   {message}
                 </p>
               )}
-              
+
             </div>
 
             {/* 💰 Coupon Details */}
