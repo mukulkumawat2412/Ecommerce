@@ -3,34 +3,49 @@ import axios from "axios";
 import getCookie from "../../../../../Backend/src/utils/GetToken.js";
 import { useNavigate } from "react-router-dom";
 import { parseInt } from "lodash";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   createCheckOut,
   DeleteCartItems,
   getCartItems,
 } from "../../../redux/slices/cartSlice.jsx";
 import api from "../../../utils/axiosInstance.js";
+import { ApplyCoupon } from "../../../redux/slices/couponSlice..jsx";
+
+
+
+
+
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
-  const [discount, setDiscount] = useState(0);
-  const [finalTotal, setFinalTotal] = useState(0);
-  const [couponCode, setCouponCode] = useState("");
+
+ 
+  const [MYCouponCode, setCouponCode] = useState("");
   const [couponMessage, setCouponMessage] = useState("");
-  const [couponDetails, setCouponDetails] = useState(null);
+
   const [isApplying, setIsApplying] = useState(false);
 
   const token = getCookie("accessToken");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Scroll to top
+
+
+  const {discount,message,couponCode,totalAfterDiscount} = useSelector((state)=>state.coupon)
+
+
+  useEffect(() => {
+ 
+}, [cartItems]);
+
+  // 🔹 Scroll to top on load
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  // Fetch Cart Items
+  // 🔹 Fetch cart items
   useEffect(() => {
     const fetchCart = async () => {
       try {
@@ -43,17 +58,19 @@ const CartPage = () => {
     fetchCart();
   }, [token, dispatch]);
 
-  // Calculate subtotal
+  // 🔹 Calculate subtotal & total (always correct)
   useEffect(() => {
     const total = cartItems.reduce(
       (sum, item) => sum + item.product.price * item.quantity,
       0
     );
     setSubtotal(total);
-    setFinalTotal(total + 50 - discount);
+
+    // Recalculate total when discount/subtotal changes
+   
   }, [cartItems, discount]);
 
-  // Update quantity
+  // 🔹 Update product quantity
   const updateQuantity = async (cartId, newQty) => {
     if (newQty < 1) return;
     try {
@@ -72,7 +89,7 @@ const CartPage = () => {
     }
   };
 
-  // Remove item
+  // 🔹 Remove item from cart
   const removeItem = async (cartId) => {
     try {
       await dispatch(DeleteCartItems({ cartId }));
@@ -82,48 +99,44 @@ const CartPage = () => {
     }
   };
 
-  // ✅ Apply Coupon
-  const handleApplyCoupon = async () => {
-    if (!couponCode.trim()) {
-      setCouponMessage("Please enter a coupon code");
-      
-      return;
-    }
+  // 🔹 Apply Coupon
+ // 🔹 Apply Coupon (Fixed)
+const handleApplyCoupon = async () => {
+  if (!MYCouponCode.trim()) {
+    setCouponMessage("Please enter a coupon code");
+    return;
+  }
+  
+   setCouponCode("")
+   setCouponMessage("")
 
-    setIsApplying(true);
-    try {
-      const res = await api.post("/coupon/apply-coupons", {
-        coupon_code: couponCode,
-        cartTotal: subtotal,
-      });
+  setIsApplying(true);
+  try {
+  const res =  await dispatch(ApplyCoupon({  coupon_code: MYCouponCode,
+      cartTotal: subtotal}))
 
-      const data = res.data.data;
-      console.log(data)
+      console.log(res.payload)
 
-      if (data.success) {
-        setDiscount(data.discountAmount);
-        setFinalTotal(data.finalTotal + 50);
-        setCouponCode("")
-        setCouponDetails({
-          code: data.coupon_code,
-         
-          discount: data.discountAmount,
-          newTotal: data.finalTotal + 50,
-        });
-        setCouponMessage(`Coupon "${data.coupon_code}" applied successfully!`);
-      }
-    } catch (error) {
-      setDiscount(0);
-      setCouponDetails(null);
-      setCouponMessage(
-        error.response?.data?.message || "Error applying coupon"
-      );
-    } finally {
-      setIsApplying(false);
-    }
-  };
+    const data = res.payload; // ✅ actual response object
+    console.log("Coupon Response:", data);
+    
+   
+    
+  
+  } catch (error) {
+    console.error("Coupon error:", error);
+ 
+   
+  } finally {
+    setIsApplying(false);
+  }
+};
 
-  // Checkout
+
+
+
+
+  // 🔹 Checkout
   const handleCheckout = async () => {
     try {
       const response = await dispatch(
@@ -209,15 +222,20 @@ const CartPage = () => {
               <span>₹50</span>
             </div>
 
+            
+
             {/* 🏷️ Coupon Section */}
             <div className="mt-4">
+             {couponMessage ? <span className="text-red-500 font-semibold">{couponMessage}</span>:""}
               <input
                 type="text"
                 placeholder="Enter coupon code"
-                value={couponCode}
+                value={MYCouponCode}
                 onChange={(e) => setCouponCode(e.target.value)}
                 className="border p-2 rounded w-full mb-2"
               />
+
+             
               <button
                 onClick={handleApplyCoupon}
                 disabled={isApplying}
@@ -227,7 +245,7 @@ const CartPage = () => {
               </button>
 
               {/* 🔹 Coupon Message */}
-              {couponMessage && (
+              {message && (
                 <p
                   className={`text-sm mt-2 text-center ${
                     discount > 0
@@ -235,33 +253,33 @@ const CartPage = () => {
                       : "text-red-500"
                   }`}
                 >
-                  {couponMessage}
+                  {message}
                 </p>
               )}
+              
             </div>
 
             {/* 💰 Coupon Details */}
-            {couponDetails && (
+          
               <div className="mt-4 border-t pt-3">
                 <h3 className="text-lg font-semibold text-green-700 mb-2">
                   Coupon Applied
                 </h3>
                 <div className="flex justify-between">
                   <span>CouponCode:</span>
-                  <span className="font-medium">{couponDetails.code}</span>
+                  <span className="font-medium">{couponCode}</span>
                 </div>
-                
                 <div className="flex justify-between text-green-600 font-semibold">
                   <span>You Saved:</span>
-                  <span>₹{couponDetails.discount}</span>
+                  <span>₹{discount}</span>
                 </div>
               </div>
-            )}
+            
 
-            {/* 💵 Total */}
+            {/* 💵 Final Total */}
             <div className="flex justify-between font-bold text-lg border-t pt-2 mt-3">
               <span>Total:</span>
-              <span>₹{finalTotal}</span>
+              <span>₹{totalAfterDiscount}</span>
             </div>
 
             <button

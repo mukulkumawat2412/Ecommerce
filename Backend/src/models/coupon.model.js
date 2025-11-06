@@ -23,7 +23,6 @@ const couponSchema = new Schema({
     discount_type:{
         type:String,
         enum:["fixedAmount","percentageDiscount"],
-        default:"fixedAmount",
         required:true
     },
 

@@ -61,72 +61,78 @@ const istToDate = new Date(toDate.getTime() + IST_OFFSET);
 
 
 
- const ApplyCoupons = asyncHandler(async (req, res) => {
+const ApplyCoupons = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user?._id);
-  if (!user) {
-    throw new ApiError(401, "Unauthorized, please login");
-  }
+  if (!user) throw new ApiError(401, "Unauthorized, please login");
 
   const { coupon_code, cartTotal } = req.body;
 
-  if (!coupon_code || !cartTotal) {
-    throw new ApiError(400, "Coupon code and cart total are required");
-  }
+ 
 
-  const existingCoupon = await Coupon.findOne({
+  if (!coupon_code || cartTotal == null)
+    throw new ApiError(400, "Coupon code and cart total are required");
+
+  const total = Number(cartTotal);
+  if (isNaN(total) || total <= 0)
+    throw new ApiError(400, "Invalid cart total");
+
+  const coupon = await Coupon.findOne({
     coupon_code: coupon_code.toUpperCase(),
   });
 
-  if (!existingCoupon) {
-    throw new ApiError(400, "Invalid coupon code");
-  }
+  if (!coupon) throw new ApiError(400, "Invalid coupon code");
 
-  // 🔹 Date check
-
-  const today = new Date();
-const istTime = new Date(today.getTime() + (5.5 * 60 * 60 * 1000));
- 
-  console.log(istTime)
-
-  console.log(existingCoupon.valid_from)
-  console.log(existingCoupon.valid_to)
-
-  if (  istTime < existingCoupon.valid_from &&  istTime > existingCoupon.valid_to ){
-throw new ApiError(400, "This coupon is not valid at this time");
-  }
-
-
-
-
-  if (existingCoupon.status !== "Active") {
+  // 🔹 Date and status validation
+  const now = new Date();
+  const istNow = new Date(now.getTime() + 5.5 * 60 * 60 * 1000);
+  if (istNow < coupon.valid_from || istNow > coupon.valid_to)
+    throw new ApiError(400, "This coupon is not valid right now");
+  if (coupon.status !== "Active")
     throw new ApiError(400, "This coupon is not active");
-  }
 
+  // 💰 Discount calculation
+  const couponValue = Number(coupon.coupon_amount) || 0;
   let discountAmount = 0;
 
-  // 🔹 Calculate discount
-  if (existingCoupon.discount_type === "fixedAmount") {
-    discountAmount = existingCoupon.coupon_amount;
-  } else if (existingCoupon.discount_type === "percentageDiscount") {
-    discountAmount = (cartTotal * existingCoupon.coupon_amount) / 100;
+
+  // console.log(coupon)
+
+  if (coupon.discount_type === "fixedAmount") {
+    // e.g. ₹200 off
+    discountAmount = Math.min(couponValue, total);
+
+    // console.log(discountAmount)
+  } else if (coupon.discount_type === "percentageDiscount") {
+    // e.g. 10% off
+ 
+    discountAmount = Math.min(couponValue,total);
   }
 
-  // Total should not go negative
-  const finalTotal = Math.max(cartTotal - discountAmount, 0);
+  const totalAfterDiscount = Math.max(total - discountAmount, 0);
 
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(200, {
-        success: true,
-        coupon_code,
-        // discount_type,
-        discountAmount,
-        finalTotal,
-        message: `Coupon applied successfully! You saved ₹${discountAmount}`,
-      })
-    );
+  console.log("✅ Discount Applied:", {
+    total,
+    discountAmount,
+    totalAfterDiscount,
+  });
+
+  return res.status(200).json(
+    new ApiResponse(200, {
+      success: true,
+      coupon_code: coupon.coupon_code,
+      discount_type: coupon.discount_type,
+      discountAmount,
+      totalAfterDiscount,
+      message: `Coupon Applied successfully! You saved ₹${discountAmount}`,
+    })
+  );
 });
+
+
+
+
+
+
 
 
 
