@@ -17,10 +17,6 @@ const AdminCoupons = () => {
     dispatch(AllCoupons());
   }, [dispatch]);
 
-  const handleEdit = (coupon) => {
-    console.log("Edit coupon:", coupon);
-    // navigate(`/admin/edit-coupon/${coupon._id}`)
-  };
 
   const handleDelete = async(id) => {
     console.log("Delete coupon with ID:", id);
@@ -29,6 +25,11 @@ const AdminCoupons = () => {
  console.log(res)
 
   };
+
+
+  useEffect(()=>{
+    window.scrollTo({top:0,behavior:"smooth"})
+  },[])
 
   return (
     <div className="p-8 bg-gray-50 min-h-screen mt-15">
@@ -116,12 +117,14 @@ const AdminCoupons = () => {
                       </span>
                     </td>
                     <td className="p-4 flex justify-center gap-3">
+                    <Link to={`/update-coupon/${c._id}`}>
                       <button
-                        onClick={() => handleEdit(c)}
+                        
                         className="bg-blue-100 hover:bg-blue-200 p-2 rounded-md transition"
                       >
                         <FiEdit className="text-blue-600" size={18} />
                       </button>
+                      </Link>
                       <button
                         onClick={() => handleDelete(c._id)}
                         className="bg-red-100 hover:bg-red-200 p-2 rounded-md transition"

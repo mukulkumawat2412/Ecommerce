@@ -36,6 +36,7 @@ import { refreshAccessTokenOnLoad } from "./utils/axiosInstance.js";
 import AboutUsPage from "./pages/AboutUsPage.jsx";
 import AdminCreateCoupon from "./Admin/AdminCreateCoupon.jsx";
 import AdminCoupons from "./Admin/AdminCoupons.jsx";
+import UpdateCouponForm from "./Admin/UpdateCouponForm.jsx";
 
 
 function App() {
@@ -93,7 +94,9 @@ function App() {
           <Route path="product-form" element={<ProductForm />} />
           <Route path="update-product/:id" element={<UpdateProductForm />} />
           <Route path="create-coupon" element={<AdminCreateCoupon/>}/>
-          <Route path="/admin-coupons" element={<AdminCoupons/>}/>
+          <Route path="update-coupon/:id" element={<UpdateCouponForm/>}/>
+          <Route path="admin-coupons" element={<AdminCoupons/>}/>
+
         </Route>
         </Route>
       </Routes>

@@ -108,6 +108,53 @@ return res.status(200).json(new ApiResponse(200,DeletedCoupon,"Coupon successful
 
 
 
+const GetCouponById = asyncHandler(async(req,res)=>{
+
+  const {id} = req.params
+
+ 
+
+ const coupon =  await Coupon.findById(id)
+
+ if(!coupon){
+  throw new ApiError(404,"Coupon not found")
+ }
+
+
+ return res.status(200).json(new ApiResponse(200,coupon,"Coupon fetched By Id"))
+
+})
+
+
+
+
+
+const UpdateCoupon = asyncHandler(async(req,res)=>{
+
+  const {id} = req.params
+  console.log(id)
+
+ const coupon =  await Coupon.findById(id)
+
+ if(!coupon){
+  throw new ApiError(404,"Coupon not found")
+ }
+
+const {coupon_code,coupon_description,discount_type,coupon_amount,valid_from,valid_to,status} = req.body
+const updatedCoupon =  await Coupon.findByIdAndUpdate(id,{
+  coupon_code,
+  coupon_description,
+  coupon_amount,
+  discount_type,
+  valid_from,
+  valid_to,
+  status
+
+},{new:true})
+
+return res.status(200).json(new ApiResponse(200,updatedCoupon,"Coupon updated successfully"))
+})
+
 
 
 
@@ -199,4 +246,4 @@ const ApplyCoupons = asyncHandler(async (req, res) => {
 
 
 
-export {CreateCoupons,GetCoupons,DeleteCoupon,ApplyCoupons}
+export {CreateCoupons,GetCoupons,DeleteCoupon,GetCouponById,UpdateCoupon,ApplyCoupons}

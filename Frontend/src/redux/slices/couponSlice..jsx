@@ -13,6 +13,7 @@ const initialState = {
     couponCode:"",
     message:"",
     couponData:[],
+    selectedCoupon:null
    
 
 
@@ -117,6 +118,48 @@ export const ApplyCoupon = createAsyncThunk("/apply_coupon",async(ApplyData,{rej
 
 
 
+export const getCoupon_ById = createAsyncThunk("/GetCouponId",async({id},{rejectWithValue})=>{
+    
+    try {
+
+    const res =     await api.get(`/coupon/get-coupon/${id}`,{
+            withCredentials:true
+        })
+        console.log(res)
+
+    return res.data.data
+
+
+        
+        
+    } catch (error) {
+        return rejectWithValue(error)
+    }
+
+})
+
+
+
+
+
+export const updateCoupon = createAsyncThunk("/update_coupon",async({id,couponData},{rejectWithValue})=>{
+    try {
+
+     const res =    await api.put(`/coupon/update-coupon/${id}`,couponData,{
+            withCredentials:true
+        })
+
+        console.log(res)
+
+        return res.data.data
+    } catch (error) {
+        return rejectWithValue(error)
+    }
+
+})
+
+
+
 
 
 
@@ -176,6 +219,27 @@ const couponSlice = createSlice({
             toast.success(action.payload.message)
 
         }).addCase(Delete_Coupons.rejected,(state)=>{
+            state.loading = false
+
+        }).addCase(getCoupon_ById.pending,(state)=>{
+            state.loading = true
+
+        }).addCase(getCoupon_ById.fulfilled,(state,action)=>{
+            state.loading = false
+            console.log(action.payload)
+            state.selectedCoupon = action.payload
+            
+        }).addCase(getCoupon_ById.rejected,(state)=>{
+            state.loading = false
+
+        }).addCase(updateCoupon.pending,(state)=>{
+            state.loading = true
+
+        }).addCase(updateCoupon.fulfilled,(state,action)=>{
+            state.loading = false
+            console.log(action.payload)
+           state.couponData = state.couponData.map((c)=>c._id === action.payload._id ? action.payload : c)
+        }).addCase(updateCoupon.rejected,(state)=>{
             state.loading = false
 
         })
