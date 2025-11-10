@@ -15,7 +15,7 @@ const initialState = {
 
 
 
-export const refreshAccessToken = createAsyncThunk("/Refresh_Token",async(_,{rejectWithValue})=>{
+export const RefreshAccessToken = createAsyncThunk("/Refresh_Token",async(_,{rejectWithValue})=>{
     try {
 
     const res =     await api.post("/users/refresh-token",{},{
@@ -211,15 +211,15 @@ const authSlice = createSlice({
         }).addCase(updateProfile.rejected,(state)=>{
             state.loading = false
 
-        }).addCase(refreshAccessToken.pending,(state)=>{
+        }).addCase(RefreshAccessToken.pending,(state)=>{
             state.loading = true
 
-        }).addCase(refreshAccessToken.fulfilled,(state,action)=>{
+        }).addCase(RefreshAccessToken.fulfilled,(state,action)=>{
             state.loading = false
             console.log(action.payload)
                  toast.success("Access token refreshed successfully");
 
-        }).addCase(refreshAccessToken.rejected,(state)=>{
+        }).addCase(RefreshAccessToken.rejected,(state)=>{
             state.loading = false
 
         })

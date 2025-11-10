@@ -91,7 +91,7 @@ const Login = asyncHandler(async (req, res) => {
     secure: process.env.NODE_ENV === "production" ? true : false,
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     path: "/",
-    maxAge:20 * 1000  // 20 seconds
+    maxAge:24 * 60 * 60 * 1000  // 20 seconds
   };
 
   // ✅ 2. Refresh Token Options (1 day)
@@ -136,6 +136,8 @@ const RefreshAccessToken = asyncHandler(async (req, res) => {
       incomingRefreshToken,
       process.env.REFRESH_TOKEN_SECRET
     );
+
+    
 
     const user = await User.findById(decodedRefreshToken._id);
     if (!user) {

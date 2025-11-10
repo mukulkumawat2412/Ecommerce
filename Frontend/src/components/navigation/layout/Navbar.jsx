@@ -66,6 +66,7 @@ function Navbar() {
     try {
       if (token) {
         await dispatch(wishlistProducts())
+        
       }
 
 
