@@ -94,6 +94,7 @@ const productSlice = createSlice({
       })
       .addCase(createProduct.fulfilled, (state, action) => {
         state.loading = false;
+        console.log(action.payload)
         state.AdminProducts.push(action.payload);
       })
       .addCase(createProduct.rejected, (state, action) => {

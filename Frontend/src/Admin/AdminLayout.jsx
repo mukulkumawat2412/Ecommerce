@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { FiMenu, FiHome, FiBox, FiUsers, FiSettings } from "react-icons/fi";
 import { RiCouponLine } from "react-icons/ri";
 import { MdCategory } from "react-icons/md";
+import { IoMdContact } from "react-icons/io";
 
 const AdminLayout = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
@@ -47,6 +48,8 @@ const AdminLayout = ({ children }) => {
           </Link>
 
           <Link to="/admin-coupons"  className="flex items-center gap-4 p-4 hover:bg-gray-700 transition"><RiCouponLine size={20}/>Coupons</Link>
+
+            <Link to="/contact-dashboard"  className="flex items-center gap-4 p-4 hover:bg-gray-700 transition"><IoMdContact size={20}/>Contact</Link>
 
           <Link
             to="/users"

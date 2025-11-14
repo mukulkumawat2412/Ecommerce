@@ -91,12 +91,12 @@ const Login = asyncHandler(async (req, res) => {
     secure: process.env.NODE_ENV === "production" ? true : false,
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     path: "/",
-    maxAge:24 * 60 * 60 * 1000  // 20 seconds
+    maxAge:24 * 1000  // 20 seconds
   };
 
   // ✅ 2. Refresh Token Options (1 day)
   const refreshTokenOptions = {
-    httpOnly: true,
+    httpOnly: false,
     secure: process.env.NODE_ENV === "production" ? true : false,
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     path: "/",
@@ -162,7 +162,7 @@ const RefreshAccessToken = asyncHandler(async (req, res) => {
     };
 
     const refreshTokenOptions = {
-      httpOnly: true,
+      httpOnly: false,
       secure: process.env.NODE_ENV === "production" ? true : false,
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       path: "/",

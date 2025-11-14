@@ -132,7 +132,7 @@ const GetCouponById = asyncHandler(async(req,res)=>{
 const UpdateCoupon = asyncHandler(async(req,res)=>{
 
   const {id} = req.params
-  console.log(id)
+  // console.log(id)
 
  const coupon =  await Coupon.findById(id)
 

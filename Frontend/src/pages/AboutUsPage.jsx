@@ -1,4 +1,5 @@
 import React from "react";
+import AboutUsimage from '../../public/aboutUsImage.jpg'
 
 const AboutUsPage = () => {
   return (
@@ -16,7 +17,7 @@ const AboutUsPage = () => {
         {/* Left Side Image */}
         <div>
           <img
-            src="https://images.unsplash.com/photo-1556742400-b5b7c5121f5e?auto=format&fit=crop&w=800&q=80"
+            src={AboutUsimage}
             alt="About Us"
             className="rounded-2xl shadow-lg"
           />
@@ -40,7 +41,7 @@ const AboutUsPage = () => {
             To empower our customers by providing reliable, affordable, and trend-setting
             products that enhance everyday living.
           </p>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition duration-300">
+          <button className="bg-yellow-400 hover:bg-yellow-500 text-white px-6 py-3 rounded-lg transition duration-300">
             Shop Now
           </button>
         </div>

@@ -3,19 +3,30 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { AllCoupons, Delete_Coupons } from "../redux/slices/couponSlice.";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 const AdminCoupons = () => {
   const dispatch = useDispatch();
   const { couponData, loading } = useSelector((state) => state.coupon);
 
+  const navigate = useNavigate()
   console.log(couponData)
 
 
   useEffect(() => {
     dispatch(AllCoupons());
   }, [dispatch]);
+
+
+
+  const handleUpdate = (id)=>{
+    
+    navigate(`/update-coupon/${id}`)
+    
+  }
+
+
 
 
   const handleDelete = async(id) => {
@@ -117,14 +128,14 @@ const AdminCoupons = () => {
                       </span>
                     </td>
                     <td className="p-4 flex justify-center gap-3">
-                    <Link to={`/update-coupon/${c._id}`}>
-                      <button
+                   
+                      <button onClick={()=>handleUpdate(c._id)}
                         
                         className="bg-blue-100 hover:bg-blue-200 p-2 rounded-md transition"
                       >
                         <FiEdit className="text-blue-600" size={18} />
                       </button>
-                      </Link>
+                     
                       <button
                         onClick={() => handleDelete(c._id)}
                         className="bg-red-100 hover:bg-red-200 p-2 rounded-md transition"

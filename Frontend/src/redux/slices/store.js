@@ -7,6 +7,7 @@ import cartReducer from "./cartSlice.jsx"
 import adminReducer from "./admin.productSlice.jsx"
 import wishlistReducer from "./wishlistSlice.jsx"
 import couponReducer from "./couponSlice..jsx"
+import contactReducer from "./contactUsSlice.jsx"
 
 
 
@@ -22,7 +23,8 @@ const store = configureStore({
         search:searchReducer,
         cart:cartReducer,
         adminProduct:adminReducer,
-        wishlist:wishlistReducer
+        wishlist:wishlistReducer,
+        contact:contactReducer
     }
 })
 

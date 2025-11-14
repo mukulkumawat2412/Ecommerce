@@ -37,6 +37,10 @@ import AboutUsPage from "./pages/AboutUsPage.jsx";
 import AdminCreateCoupon from "./Admin/AdminCreateCoupon.jsx";
 import AdminCoupons from "./Admin/AdminCoupons.jsx";
 import UpdateCouponForm from "./Admin/UpdateCouponForm.jsx";
+import ContactUs from "./pages/ContactUs.jsx";
+import Faq from "./pages/FaqPage.jsx";
+import ContactDashboard from "./Admin/ContactDashboard.jsx";
+import UpdateContactRecord from "./Admin/UpdateContactRecords.jsx";
 
 
 function App() {
@@ -71,6 +75,8 @@ function App() {
 
           {/* Cart */}
           <Route path="/about-us" element={<AboutUsPage/>}/>
+          <Route path="/contact-us" element={<ContactUs/>}/>
+          <Route path="/faq" element={<Faq/>}/> 
           <Route path="cart-page" element={<CartPage />} />
               <Route path="/wishlist-page" element={<WishlistPage/>}/>
 
@@ -96,6 +102,8 @@ function App() {
           <Route path="create-coupon" element={<AdminCreateCoupon/>}/>
           <Route path="update-coupon/:id" element={<UpdateCouponForm/>}/>
           <Route path="admin-coupons" element={<AdminCoupons/>}/>
+          <Route path="contact-dashboard" element={<ContactDashboard/>}/>
+          <Route path="update-contactRecord/:cId" element={<UpdateContactRecord/>}/>
 
         </Route>
         </Route>

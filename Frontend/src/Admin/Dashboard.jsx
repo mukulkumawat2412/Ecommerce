@@ -31,6 +31,14 @@ const Dashboard = () => {
     fetchAdminProducts();
   }, []);
 
+
+  const handleUpdate = (id)=>{
+    navigate(`/update-product/${id}`)
+  }
+
+
+
+
   const handleDelete = async (id) => {
     try {
       
@@ -100,13 +108,12 @@ const Dashboard = () => {
                         {p.stock > 0 ? "In Stock" : "Out of Stock"}
                       </span>
                     </td>
-                    <td className="p-3 border-b flex justify-center gap-2">
-                      <Link
-                        to={`/update-product/${p._id}`}
-                        className="bg-blue-100 p-2 rounded-md hover:bg-blue-200 transition flex items-center justify-center"
-                      >
+                    <td className="p-3 border-b flex justify-center gap-2" onClick={()=>handleUpdate(p._id)}>
+                      
+                        
+                        
                         <FiEdit size={18} className="text-blue-600" />
-                      </Link>
+                      
 
                       <button
                         onClick={() => handleDelete(p._id)}
