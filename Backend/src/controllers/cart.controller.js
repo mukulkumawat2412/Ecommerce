@@ -276,6 +276,30 @@ return res.status(200).json(new ApiResponse(200,id,"Product Remove from wishlist
 
 
 
+const UpdateCartQuantity = asyncHandler(async(req,res)=>{
+
+  
+  const {cartId} = req.params
+
+
+const cartItem =    await Cart.findById(cartId)
+
+if(!cartItem){
+  throw new ApiError(404,"Cart item not found")
+}
+
+
+const {quantity} = req.body
+
+cartItem.quantity = quantity
+
+await cartItem.save()
+
+
+return res.status(200).json(new ApiResponse(200,cartItem,"Quantity updated"))
+ 
+
+})
 
 
 
@@ -283,4 +307,7 @@ return res.status(200).json(new ApiResponse(200,id,"Product Remove from wishlist
 
 
 
-export {AddToCart,getCart,removeCartItems,Checkout,AddWishlistProduct,GetWishlistProducts,DeleteWishlistItems}
+
+
+
+export {AddToCart,getCart,removeCartItems,Checkout,AddWishlistProduct,GetWishlistProducts,DeleteWishlistItems,UpdateCartQuantity}

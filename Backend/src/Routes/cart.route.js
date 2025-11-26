@@ -1,7 +1,7 @@
 import {Router} from "express"
 import verifyToken from "../middleware/auth.middleware.js"
 import authorizeRoles from "../middleware/checkRole.js"
-import { AddToCart, AddWishlistProduct, Checkout, DeleteWishlistItems, getCart, GetWishlistProducts, removeCartItems } from "../controllers/cart.controller.js"
+import { AddToCart, AddWishlistProduct, Checkout, DeleteWishlistItems, getCart, GetWishlistProducts, removeCartItems, UpdateCartQuantity } from "../controllers/cart.controller.js"
 
 
 
@@ -16,6 +16,7 @@ router.route("/create-checkout-session").post(verifyToken,authorizeRoles("user")
 router.route("/add-wishlist/:id").post(verifyToken,authorizeRoles("user"),AddWishlistProduct)
 router.route("/wishlist-products").get(verifyToken,authorizeRoles("user"),GetWishlistProducts)
 router.route("/delete-wishlistItems/:id").delete(verifyToken,authorizeRoles("user"),DeleteWishlistItems)
+router.route("/cart-quantityUpdate/:cartId").put(verifyToken,authorizeRoles("user"),UpdateCartQuantity)
 
 
 

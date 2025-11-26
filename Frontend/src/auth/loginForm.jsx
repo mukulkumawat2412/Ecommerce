@@ -18,6 +18,11 @@ const LoginForm = () => {
 
   const dispatch  = useDispatch()
 
+//  const user = useSelector((state)=>state.auth.user)
+
+//  console.log(user)
+//   const role = user?.role
+//   console.log(role)
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -35,15 +40,16 @@ const LoginForm = () => {
     const res =   await dispatch(Login({email,password})).unwrap()
 
     
- 
-     
-      console.log(res)
+      
+
+    const role = res.user.role
+    
 
       setEmail("");
       setPassword("");
 
 
-  const role = res.loggedIn.role
+ 
 
   if(role==="user"){
     navigate("/")

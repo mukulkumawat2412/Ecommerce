@@ -29,32 +29,51 @@ function Navbar() {
 
 
   console.log(cartItems)
-  
-
-  const token = getCookie("accessToken")
-
-  console.log(token)
 
   
-  let username = null
-  let role = null
+  
 
-  try {
-    const decoded = jwtDecode(token)
-    console.log(decoded)
-    username = decoded.username
-    role = decoded.role
-  } catch (error) {
-    username = null
-    role = null
-  }
+  // const token = getCookie("accessToken")
+
+  // console.log(token)
+
+  
+  // let username = null
+  // let role = null
+
+  // try {
+  //   const decoded = jwtDecode(token)
+  //   console.log(decoded)
+  //   username = decoded.username
+  //   role = decoded.role
+  // } catch (error) {
+  //   username = null
+  //   role = null
+  // }
 
   // Fetch cart items
+
+  const {user,accessToken,loading} = useSelector((state)=>state.auth)
+
+
+  console.log(user)
+  console.log(accessToken)
+
+
+  if(loading && (user || accessToken)) return null
+
+
+  const username = user?.username
+  const token = accessToken
+  const role = user?.role
+
+
   const fetchCart = async () => {
     try {
-      if(token){
+     
+      
  await dispatch(getCartItems())
-      }
+      
      
     } catch (error) {
       console.log(error.response?.data || error.message);
@@ -64,10 +83,10 @@ function Navbar() {
 
   const fetchWishlist = async () => {
     try {
-      if (token) {
+     
         await dispatch(wishlistProducts())
         
-      }
+     
 
 
 
@@ -79,7 +98,7 @@ function Navbar() {
   useEffect(() => {
     fetchCart();
     fetchWishlist(); // << Add this
-  }, [dispatch,token]); // token change triggers wishlist fetch
+  }, [dispatch]); // token change triggers wishlist fetch
 
   // Handle dropdown outside click
   useEffect(() => {

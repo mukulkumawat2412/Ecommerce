@@ -91,9 +91,7 @@ const TopCategoryByProducts = () => {
                       Add to Cart
                     </button>
                       <Link to={`/product-details/${product._id}`}>
-                       <button className="flex-1 bg-gradient-to-r from-violet-600 to-violet-500 text-white py-2 rounded-lg hover:from-violet-700 hover:to-violet-600 transition">
-                      View
-                    </button>
+                    
                     </Link>
 
                   

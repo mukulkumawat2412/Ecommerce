@@ -10,6 +10,7 @@ import { addWishlistProduct } from "../redux/slices/wishlistSlice.jsx";
 import TopProducts from "./TopProducts.jsx";
 import TopCategoryByProducts from "./TopCategoryByProducts.jsx";
 
+
 const ProductList = ({ setCartCount }) => {
   const [loading, setLoading] = useState(true);
   const [wishlist, setWishlist] = useState([]);
@@ -17,8 +18,11 @@ const ProductList = ({ setCartCount }) => {
   const dispatch = useDispatch();
   const { products } = useSelector((state) => state.product);
   const { cartItems } = useSelector((state) => state.cart);
+  const token = useSelector((state)=>state.auth.accessToken)
 
-  const token = getCookie("accessToken");
+ 
+
+  // const token = getCookie("accessToken");
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -31,7 +35,7 @@ const ProductList = ({ setCartCount }) => {
       }
     };
     fetchProducts();
-  }, [dispatch]);
+  }, [dispatch,token]);
 
   if (loading) return <p className="text-center text-lg mt-10">Loading...</p>;
 
@@ -72,7 +76,7 @@ const ProductList = ({ setCartCount }) => {
   };
 
   return (
-    
+   
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
     <TopCategoryByProducts/>
     <TopProducts/>

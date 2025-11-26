@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken"
 import User from "../models/user.model.js";
 import bcrypt from "bcrypt"
 import dotenv from "dotenv"
+import crypto from "crypto";
 
 dotenv.config()
 
@@ -64,159 +65,111 @@ return res.status(201).json(new ApiResponse(200,createdUser,"User Register succe
 const Login = asyncHandler(async (req, res) => {
   const { email, username, password } = req.body;
 
-  if (!email && !username) {
-    throw new ApiError(400, "email or username are required");
-  }
+  if (!email && !username) throw new ApiError(400, "Email or Username is required");
 
-  const user = await User.findOne({
-    $or: [{ email }, { username }],
-  });
+  const user = await User.findOne({ $or: [{ email }, { username }] }).select("+password");
+  if (!user) throw new ApiError(404, "User does not exist");
 
-  if (!user) {
-    throw new ApiError(400, "user does not exist");
-  }
+  const isPasswordValid = await user.isPasswordCorrect(password);
+  if (!isPasswordValid) throw new ApiError(400, "Incorrect password");
 
-  const isValidPassword = await user.isPasswordCorrect(password);
-  if (!isValidPassword) {
-    throw new ApiError(400, "Password does not match");
-  }
+  const { accessToken, refreshToken } = await generateAccessTokenAndRefreshToken(user._id);
 
-  const { accessToken, refreshToken: newRefreshToken} = await generateAccessTokenAndRefreshToken(user._id);
+  const sanitizedUser = await User.findById(user._id).select("-password -refreshToken -refreshTokenExpiry");
 
-  const loggedIn = await User.findById(user._id).select("-password -refreshToken");
-
-  // ✅ 1. Access Token Options (30s)
-  const accessTokenOptions = {
-    httpOnly: false,
-    secure: process.env.NODE_ENV === "production" ? true : false,
+  const cookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
     path: "/",
-    maxAge:24 * 1000  // 20 seconds
   };
 
-  // ✅ 2. Refresh Token Options (1 day)
-  const refreshTokenOptions = {
-    httpOnly: false,
-    secure: process.env.NODE_ENV === "production" ? true : false,
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    path: "/",
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 1 day
-  };
-
-  // ✅ 3. Send Both Cookies with Correct Expiry
   return res
     .status(200)
-    .cookie("accessToken", accessToken, accessTokenOptions)
-    .cookie("refreshToken", newRefreshToken, refreshTokenOptions)
-    .json(
-      new ApiResponse(
-        200,
-        { loggedIn, accessToken, newRefreshToken },
-        "User login successfully"
-      )
-    );
+    .cookie("refreshToken", refreshToken, cookieOptions)
+    .cookie("accessToken", accessToken, { ...cookieOptions, maxAge: 20* 1000 }) // 15m access token
+    .json(new ApiResponse(200, { sanitizedUser, accessToken }, "Login successful"));
 });
+
+
+
+
+
 
 
 
 const RefreshAccessToken = asyncHandler(async (req, res) => {
- 
-  
-//   console.log("received token by backend refreshTOken",req.cookies)
-  const incomingRefreshToken =  req.cookies?.refreshToken || req.body?.refreshToken;
-
- 
-  if (!incomingRefreshToken) {
-    throw new ApiError(401, "Unauthorized request - No refresh token found");
-  }
+  const incomingRefreshToken = req.cookies?.refreshToken;
+  if (!incomingRefreshToken) throw new ApiError(401, "Refresh token missing");
 
   try {
-    // 🔹 2. Verify Refresh Token
-    const decodedRefreshToken = jwt.verify(
-      incomingRefreshToken,
-      process.env.REFRESH_TOKEN_SECRET
-    );
+    const decoded = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = await User.findById(decoded._id);
+    if (!user) throw new ApiError(401, "Invalid refresh token: user not found");
 
+    const hashedIncomingToken = crypto.createHash("sha256").update(incomingRefreshToken).digest("hex");
+    if (hashedIncomingToken !== user.refreshToken) throw new ApiError(401, "Refresh token invalid");
+    if (!user.refreshTokenExpiry || user.refreshTokenExpiry < Date.now()) throw new ApiError(401, "Refresh token expired");
     
-
-    const user = await User.findById(decodedRefreshToken._id);
-    if (!user) {
-      throw new ApiError(401, "Invalid refresh token: user not found");
-    }
-
-    // 🔹 3. Compare with database token (to detect logout or reuse)
-    if (incomingRefreshToken !== user.refreshToken) {
-      throw new ApiError(400, "Refresh token expired or already used");
-    }
-
-    // 🔹 4. New Access & Refresh Tokens
     const { accessToken, refreshToken: newRefreshToken } = await generateAccessTokenAndRefreshToken(user._id);
 
-    // 🔹 5. Cookie options
-    const accessTokenOptions = {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === "production" ? true : false,
+    const sanitizedUser = await User.findById(user._id).select("-password -refreshToken -refreshTokenExpiry");
+
+    const cookieOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
       path: "/",
-      maxAge: 24 * 60 * 60 * 1000, // same as login: 1 day 
     };
 
-    const refreshTokenOptions = {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === "production" ? true : false,
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      path: "/",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 day
-    };
-
-    // 🔹 6. Return New Tokens
-    return res 
+    return res
       .status(200)
-      .cookie("accessToken", accessToken, accessTokenOptions)
-      .cookie("refreshToken", newRefreshToken, refreshTokenOptions)
-      .json(
-        new ApiResponse(
-          200,
-          { accessToken, refreshToken: newRefreshToken },
-          "Access token refreshed successfully"
-        )
-      );
+      .cookie("refreshToken", newRefreshToken, cookieOptions)
+      .cookie("accessToken", accessToken, { ...cookieOptions, maxAge: 20 * 1000 }) // 15m access token
+      .json(new ApiResponse(200, { accessToken, user: sanitizedUser }, "Access token refreshed successfully"));
   } catch (error) {
-    throw new ApiError(401, error?.message || "Invalid refresh token");
+    throw new ApiError(401, error?.message || "Invalid or expired refresh token");
   }
 });
 
 
 
-const Logout = asyncHandler(async(req,res)=>{
-
-   const userId = req.user?._id
-
-   await User.findByIdAndUpdate(userId,{
-      $unset:{
-         refreshToken:1
-      },
-
-      
-   },
-
-   {
-      new:true
-   }
 
 
-)
-
-const options = {
-   httpOnly:true,
-   secure:true,
-   
-}
 
 
-return res.status(200).clearCookie("accessToken",options).clearCookie("refreshToken",options).json(new ApiResponse(200,{},"Logout successfully"))
+const Logout = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
 
-})
+  if (!userId) {
+    throw new ApiError(401, "Unauthorized");
+  }
+
+  // 🧹 Remove refresh token from DB
+  await User.findByIdAndUpdate(
+    userId,
+    { $unset: { refreshToken: 1 } },
+    { new: true }
+  );
+
+ 
+
+  const cookieOptions = {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+    path: "/", // important for clearing
+  };
+
+  return res
+    .status(200)
+    .clearCookie("accessToken", cookieOptions)
+    .clearCookie("refreshToken", cookieOptions)
+    .json(new ApiResponse(200, {}, "Logout successful"));
+});
+
 
 
 

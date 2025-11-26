@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
-import { AllCoupons, Delete_Coupons } from "../redux/slices/couponSlice.";
+import { AllCoupons, Delete_Coupons } from "../redux/slices/couponSlice";
 import { Link, useNavigate } from "react-router-dom";
 
 

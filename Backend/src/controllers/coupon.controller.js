@@ -8,6 +8,7 @@ import asyncHandler from "../utils/AsyncHandler.js";
 
 
 const CreateCoupons = asyncHandler(async (req, res) => {
+
   const {
     coupon_code,
     coupon_description,
@@ -169,27 +170,27 @@ return res.status(200).json(new ApiResponse(200,updatedCoupon,"Coupon updated su
 
 
 const ApplyCoupons = asyncHandler(async (req, res) => {
+  // Optional: require auth — remove these lines if guests allowed
   const user = await User.findById(req.user?._id);
   if (!user) throw new ApiError(401, "Unauthorized, please login");
 
-  const { coupon_code, cartTotal } = req.body;
+  const { coupon_code,subTotal } = req.body;
 
- 
-
-  if (!coupon_code || cartTotal == null)
+  console.log(coupon_code,subTotal)
+  if (!coupon_code || subTotal == null)
     throw new ApiError(400, "Coupon code and cart total are required");
 
-  const total = Number(cartTotal);
+  const total = Number(subTotal);
+
+ 
+ 
   if (isNaN(total) || total <= 0)
     throw new ApiError(400, "Invalid cart total");
 
-  const coupon = await Coupon.findOne({
-    coupon_code: coupon_code.toUpperCase(),
-  });
-
+  const coupon = await Coupon.findOne({ coupon_code: coupon_code.toUpperCase() });
   if (!coupon) throw new ApiError(400, "Invalid coupon code");
 
-  // 🔹 Date and status validation
+  // Date validation — using server time (you used IST offset; keep consistent)
   const now = new Date();
   const istNow = new Date(now.getTime() + 5.5 * 60 * 60 * 1000);
   if (istNow < coupon.valid_from || istNow > coupon.valid_to)
@@ -197,31 +198,22 @@ const ApplyCoupons = asyncHandler(async (req, res) => {
   if (coupon.status !== "Active")
     throw new ApiError(400, "This coupon is not active");
 
-  // 💰 Discount calculation
   const couponValue = Number(coupon.coupon_amount) || 0;
   let discountAmount = 0;
 
-
-  // console.log(coupon)
-
   if (coupon.discount_type === "fixedAmount") {
-    // e.g. ₹200 off
+    // fixed rupee off
     discountAmount = Math.min(couponValue, total);
-
-    // console.log(discountAmount)
   } else if (coupon.discount_type === "percentageDiscount") {
-    // e.g. 10% off
- 
-    discountAmount = Math.min(couponValue,total);
+    // percentage (e.g., coupon_amount = 10 means 10%)
+    discountAmount = Math.floor((total * couponValue) / 100); // use rounding you prefer
+    // Optional: if you have a max cap field like coupon.max_discount, apply Math.min(discountAmount, maxCap)
   }
 
+
+  
   const totalAfterDiscount = Math.max(total - discountAmount, 0);
 
-  console.log("✅ Discount Applied:", {
-    total,
-    discountAmount,
-    totalAfterDiscount,
-  });
 
   return res.status(200).json(
     new ApiResponse(200, {
@@ -234,6 +226,7 @@ const ApplyCoupons = asyncHandler(async (req, res) => {
     })
   );
 });
+
 
 
 

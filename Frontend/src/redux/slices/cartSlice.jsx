@@ -5,6 +5,9 @@ import api from "../../utils/axiosInstance.js";
 
 const initialState = {
   cartItems: [],
+  subTotal: 0,      // ⭐ NEW
+  discount: 0,       // coupon ke liye useful
+  totalAfterDiscount: 0,
   checkoutSession:null,
   loading: false,
   error: null,
@@ -61,6 +64,26 @@ export const DeleteCartItems = createAsyncThunk("/cartItems_delete",async({cartI
     })
 
     console.log(res)
+    return res.data.data
+    
+  } catch (error) {
+    return rejectWithValue(error)
+  }
+
+})
+
+
+
+export const UpdateCart_Quantity = createAsyncThunk("/cartQuantity_Update",async({cartId,quantity},{rejectWithValue})=>{
+  console.log(cartId,quantity)
+  try {
+
+ const res =   await api.put(`/cart/cart-quantityUpdate/${cartId}`,{quantity},{
+      withCredentials:true
+    })
+
+    console.log(res)
+
     return res.data.data
     
   } catch (error) {
@@ -131,6 +154,8 @@ const cartSlice = createSlice({
       }).addCase(getCartItems.fulfilled,(state,action)=>{
         state.loading = false,
         state.cartItems = action.payload
+        state.subTotal = state.cartItems.reduce((sum,item,)=> sum + item.product.price * item.quantity,50 )
+        state.totalAfterDiscount = state.subTotal - state.discount
         console.log(action.payload)
 
       }).addCase(getCartItems.rejected,(state,action)=>{

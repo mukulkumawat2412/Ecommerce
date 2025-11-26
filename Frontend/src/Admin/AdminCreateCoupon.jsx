@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import api from "../utils/axiosInstance.js";
 import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
-import { CreateCoupon } from "../redux/slices/couponSlice..jsx";
+import { CreateCoupon } from "../redux/slices/couponSlice.jsx";
 
 const AdminCreateCoupon = () => {
   const [couponData, setCouponData] = useState({

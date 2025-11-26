@@ -1,48 +1,36 @@
-
+import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import asyncHandler from "../utils/AsyncHandler.js";
-import jwt from "jsonwebtoken"
 
+const verifyToken = asyncHandler(async (req, res, next) => {
+  try {
+    // 🔍 Extract token (from cookie first, then Authorization)
+    const token =
+      req.cookies?.accessToken ||
+      req.header("Authorization")?.replace("Bearer ", "");
 
-const verifyToken = asyncHandler(async(req,_,next)=>{
-
- try {
-
-   
-    const token =    req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "")
- 
-   
-    if(!token){
-       throw new ApiError(400,"AccessToken missing")
+    if (!token) {
+      throw new ApiError(401, "Access token missing");
     }
-   
-   const decoded =  jwt.verify(token,process.env.ACCESS_TOKEN_SECRET)
-   
-   
 
-   const user = await User.findById(decoded._id).select("-password -refreshToken")
-   
-   if(!user){
-       throw new ApiError(400,"Invalid accessToken token")
-   }
-   
-   req.user = user
+    // 🔐 Verify token
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
+    // 🔍 Fetch user without password + refreshToken
+    const user = await User.findById(decoded._id).select(
+      "-password -refreshToken"
+    );
 
+    if (!user) {
+      throw new ApiError(401, "Invalid access token");
+    }
 
+    req.user = user;
+    return next();
+  } catch (error) {
+    throw new ApiError(401, error?.message || "Invalid or expired token");
+  }
+});
 
-  
-  
-  
-   next()
-   
- } catch (error) {
-  
-     throw new ApiError(401,error?.message || "Invalid access Token")
- }
-
-})
-
-
-export default verifyToken
+export default verifyToken;

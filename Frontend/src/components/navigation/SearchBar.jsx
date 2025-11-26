@@ -4,14 +4,19 @@ import debounce from "lodash/debounce"
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { searchProducts } from '../../redux/slices/searchSlice.jsx'
-import { jwtDecode } from 'jwt-decode'
-import getCookie from '../../../../Backend/src/utils/GetToken.js'
+
 
 const SearchBar = () => {
     const [query, setQuery] = useState("")
 
     const [showDropdown, setShowDropdown] = useState(false)
-    const token = getCookie("accessToken")
+
+    const user = useSelector((state)=>state.auth.user)
+
+    const role = user?.role
+
+
+    console.log(role)
 
 
 
@@ -28,11 +33,11 @@ const SearchBar = () => {
         }
 
 
-        const decoded = jwtDecode(token)
-        console.log(decoded)
+        // const decoded = jwtDecode(token)
+        // console.log(decoded)
 
 
-        const role = decoded.role
+        // const role = decoded.role
 
      
        

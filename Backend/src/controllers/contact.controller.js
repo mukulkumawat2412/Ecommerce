@@ -6,6 +6,7 @@ import asyncHandler from "../utils/AsyncHandler.js";
 
 
 import { sendEmail } from "../utils/SendEmail.js";
+import  nodemailer  from 'nodemailer';
 
 
 
@@ -70,6 +71,7 @@ const AdminReplyMessage = asyncHandler(async(req,res)=>{
  await contact.save()
 
  await sendEmail({
+  from:process.env.ADMIN_EMAIL,
   to: contact.email,
   subject: `Reply to your message: ${contact.subject || "Contact Form"}`,
   html: `
@@ -189,9 +191,51 @@ return res.status(200).json(new ApiResponse(200,contactRecordUpdated,"Contact re
 })
 
 
+const sendImageOnly = asyncHandler(async (req, res) => {
+  const image = req.file;
+
+  if (!image) {
+    throw new ApiError(400, "Image is required");
+  }
+
+  console.log(image.mimetype)
+
+  // Nodemailer transporter
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,  // smtp.gmail.com
+    port: process.env.SMTP_PORT,  // 587
+    secure: false,
+    auth: {
+      user: process.env.SMTP_USER,   // jis email par bhejna hai
+      pass: process.env.SMTP_PASS      // Gmail app password
+    }
+  });
+
+  await transporter.sendMail({
+    from: process.env.SMTP_USER,
+    to: process.env.ADMIN_EMAIL,       // admin ko send
+    subject: "New Image Received",
+    html: `<h3>User ne ek image bheji hai:</h3>`,
+    attachments: [
+      {
+        filename: image.originalname,  // sahi
+        content: image.buffer,
+        contentType:image.mimetype       // sahi
+      }
+    ]
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Image sent successfully to Admin"));
+});
+
+
+
+
 
 
 export {contactUs,ContactUserDetails,deleteContactRecord,
-GetContactRecordById,updateContactRecord,AdminReplyMessage
+GetContactRecordById,updateContactRecord,AdminReplyMessage,sendImageOnly
 
 }

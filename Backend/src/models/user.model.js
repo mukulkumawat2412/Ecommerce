@@ -35,6 +35,11 @@ const userSchema  =  new Schema({
         type:String
     },
 
+
+    refreshTokenExpiry: {
+  type: Date
+},
+
     role:{
         type:String,
         enum:["admin","user"],

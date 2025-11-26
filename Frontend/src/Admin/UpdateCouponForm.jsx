@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { getCoupon_ById, updateCoupon } from "../redux/slices/couponSlice.";
+import { getCoupon_ById, updateCoupon } from "../redux/slices/couponSlice";
 
 const UpdateCouponForm = () => {
   const { id } = useParams();
