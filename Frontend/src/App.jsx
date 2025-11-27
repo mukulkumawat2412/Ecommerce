@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { Toaster } from "sonner";
-
 import MainLayout from "./components/navigation/layout/MainLayout";
 import ProtectedRoute from "./components/ProtectedRoutes";
 
@@ -31,7 +30,6 @@ import WishlistPage from "./components/navigation/layout/WishlistPage";
 import TopProducts from "./Product/TopProducts";
 import TopCategoryByProducts from "./Product/TopCategoryByProducts";
 
-
 import AboutUsPage from "./pages/AboutUsPage.jsx";
 import AdminCreateCoupon from "./Admin/AdminCreateCoupon.jsx";
 import AdminCoupons from "./Admin/AdminCoupons.jsx";
@@ -42,94 +40,91 @@ import ContactDashboard from "./Admin/ContactDashboard.jsx";
 import UpdateContactRecord from "./Admin/UpdateContactRecords.jsx";
 import ImageUpload from "./pages/ImageUpload.jsx";
 
-
-
-import {useDispatch,useSelector} from "react-redux"
+import { useDispatch, useSelector } from "react-redux";
 import { RefreshAccessToken } from "./redux/slices/authSlice.jsx";
 
-
-
-
-
-
 function App() {
-  const [cartCount, setCartCount] = useState(0);
-
-
   const dispatch = useDispatch();
-// const { loading } = useSelector((state) => state.auth);
+  const location = useLocation();
 
-// ✅ APP START → ALWAYS refresh silently
-useEffect(() => {
-  dispatch(RefreshAccessToken());
-}, [dispatch]);
+  const { user } = useSelector((state) => state.auth);
+  const [initialLoading, setInitialLoading] = useState(true);
 
-// ✅ Jab tak auth decide na ho — kuch bhi render mat karo
-// if (loading) {
-//   return (
-//     <div className="flex items-center justify-center h-screen">
-//       <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-500"></div>
-//     </div>
-//   );
-// }
+  // ✅ Silent refresh only once on app load
+  useEffect(() => {
+    const initAuth = async () => {
+      try {
+      
 
+      
+          await dispatch(RefreshAccessToken()).unwrap();
+        
+      } catch (error) {
+        console.log("Silent refresh failed:", error);
+      } finally {
+        setInitialLoading(false);   // ✅ always stop spinner
+      }
+    };
 
+    initAuth();
+  }, [dispatch]);
 
-
-
-
-
-
-
-
-
+  // ✅ Spinner ONLY during first app boot
+  if (initialLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-500"></div>
+      </div>
+    );
+  }
 
   return (
     <>
       <Toaster richColors position="top-center" />
 
       <Routes>
-        <Route path="login" element={<LoginForm />} />
-        <Route path="signup" element={<SignUp />} />
+        {/* PUBLIC ROUTES */}
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/signup" element={<SignUp />} />
 
-        {/* Layout Pages */}
+        {/* ALL OTHER ROUTES UNDER LAYOUT */}
         <Route element={<MainLayout />}>
           <Route index element={<HomePage />} />
- 
-          <Route path="products" element={<ProductList setCartCount={setCartCount} />} />
-          <Route path="product-page" element={<ProductPage setCartCount={setCartCount} />} />
-          <Route path="product-details/:id" element={<ProductDetails setCartCount={setCartCount} />} />
-          <Route path="category-by-products/:categoryId" element={<CategoryByProducts />} />
+
+          <Route path="/products" element={<ProductList />} />
+          <Route path="/product-page" element={<ProductPage />} />
+          <Route path="/product-details/:id" element={<ProductDetails />} />
+          <Route path="/category-by-products/:categoryId" element={<CategoryByProducts />} />
           <Route path="/top-products" element={<TopProducts />} />
           <Route path="/top-electronics-products" element={<TopCategoryByProducts />} />
 
           {/* Profile */}
-          <Route path="profile" element={<ProfilePage />} />
-          <Route path="update/profile" element={<ProfileUpdate />} />
-          <Route path="changePassword/profile" element={<ProfileChangePassword />} />
-        
-          {/* Other Pages */}
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/update/profile" element={<ProfileUpdate />} />
+          <Route path="/changePassword/profile" element={<ProfileChangePassword />} />
+
+          {/* Pages */}
           <Route path="/about-us" element={<AboutUsPage />} />
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/faq" element={<Faq />} />
-          <Route path="cart-page" element={<CartPage />} />
+          <Route path="/cart-page" element={<CartPage />} />
           <Route path="/wishlist-page" element={<WishlistPage />} />
 
-          <Route path="success" element={<Success />} />
-          <Route path="cancel" element={<Cancel />} />
+          <Route path="/success" element={<Success />} />
+          <Route path="/cancel" element={<Cancel />} />
 
-          {/* Admin Protected Routes */}
+          {/* ADMIN ROUTES */}
           <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
-            <Route path="add-category" element={<AddCategory />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="product-form" element={<ProductForm />} />
-            <Route path="update-product/:id" element={<UpdateProductForm />} />
-            <Route path="create-coupon" element={<AdminCreateCoupon />} />
-            <Route path="update-coupon/:id" element={<UpdateCouponForm />} />
-            <Route path="admin-coupons" element={<AdminCoupons />} />
-            <Route path="contact-dashboard" element={<ContactDashboard />} />
-            <Route path="update-contactRecord/:cId" element={<UpdateContactRecord />} />
-            <Route path="image-upload" element={<ImageUpload />} />
+            <Route path="/add-category" element={<AddCategory />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/product-form" element={<ProductForm />} />
+            <Route path="/update-product/:id" element={<UpdateProductForm />} />
+            <Route path="/create-coupon" element={<AdminCreateCoupon />} />
+            <Route path="/update-coupon/:id" element={<UpdateCouponForm />} />
+            <Route path="/admin-coupons" element={<AdminCoupons />} />
+            <Route path="/contact-dashboard" element={<ContactDashboard />} />
+            <Route path="/update-contactRecord/:cId" element={<UpdateContactRecord />} />
+            <Route path="/image-upload" element={<ImageUpload />} />
           </Route>
 
           <Route path="*" element={<Notfound />} />

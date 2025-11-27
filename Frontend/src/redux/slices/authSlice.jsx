@@ -4,7 +4,8 @@ import { toast } from "sonner";
 
 /* --------------------------------------------------------------------- */
 const initialState = {
-  loading: false,
+  loading: false,        // for buttons like login/register
+  authLoading: false,    // for silent refresh spinner
   error: null,
   user: null,
   accessToken: null,
@@ -18,6 +19,7 @@ export const RefreshAccessToken = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const res = await api.post("/users/refresh-token", {}, { withCredentials: true });
+      console.log(res)
       const { accessToken, user } = res.data.data;
       if (accessToken) api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
       return { accessToken, user };
@@ -48,7 +50,6 @@ export const Login = createAsyncThunk(
   async (loginData, { rejectWithValue }) => {
     try {
       const res = await api.post("/users/login", loginData, { withCredentials: true });
-      console.log(res)
       const { accessToken, sanitizedUser } = res.data.data;
       if (accessToken) api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
       return { accessToken, user: sanitizedUser };
@@ -133,7 +134,7 @@ const authSlice = createSlice({
     builder.addCase(Login.pending, (state) => { state.loading = true; });
     builder.addCase(Login.fulfilled, (state, action) => {
       state.loading = false;
-      
+      state.authLoading = false;
       state.accessToken = action.payload.accessToken;
       state.user = action.payload.user;
       toast.success("Login successful");
@@ -148,24 +149,24 @@ const authSlice = createSlice({
       state.user = null;
       state.accessToken = null;
       state.profileData = null;
+      state.authLoading = false;
       delete api.defaults.headers.common["Authorization"];
-      window.location.href = "/login"; // redirect user
+      // window.location.href = "/login"; // redirect user
     });
 
     /* Refresh Token */
-    builder.addCase(RefreshAccessToken.pending, (state) => { /* silent refresh */ });
+    builder.addCase(RefreshAccessToken.pending, (state) => {
+      state.authLoading = true; // silent refresh spinner
+    });
     builder.addCase(RefreshAccessToken.fulfilled, (state, action) => {
       state.accessToken = action.payload.accessToken;
-      state.loading = false
       state.user = action.payload.user;
+      state.authLoading = false;
       api.defaults.headers.common["Authorization"] = `Bearer ${action.payload.accessToken}`;
     });
     builder.addCase(RefreshAccessToken.rejected, (state) => {
-      state.user = null;
-      state.accessToken = null;
-      state.profileData = null;
-      delete api.defaults.headers.common["Authorization"];
-      window.location.href = "/login"; // redirect user
+      // ❌ Do NOT clear user state, keep navbar/cart/wishlist intact
+      state.authLoading = false;
     });
 
     /* Profile */
