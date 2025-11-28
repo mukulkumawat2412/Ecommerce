@@ -11,7 +11,7 @@ import {
 import { ApplyCoupon, removeCoupon } from "../../../redux/slices/couponSlice.jsx";
 
 const CartPage = () => {
-  const [cartItems, setCartItems] = useState([]);
+ 
   const [MYCouponCode, setMYCouponCode] = useState("");
   const [couponMessage, setCouponMessage] = useState("");
   const [isApplying, setIsApplying] = useState(false);
@@ -22,10 +22,12 @@ const CartPage = () => {
 
   // Redux States
   const subTotal = useSelector((state) => state.cart.subTotal);
+  const cartItems = useSelector((state)=>state.cart.cartItems)
   const { discount, message, totalAfterDiscount } = useSelector(
     (state) => state.coupon
   );
 
+  console.log(subTotal)
   // Scroll to top
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -36,7 +38,7 @@ const CartPage = () => {
     const fetchCart = async () => {
       try {
         const res = await dispatch(getCartItems());
-        setCartItems(res.payload);
+      
       } catch (error) {
         console.error("Error fetching cart:", error);
       }
@@ -45,26 +47,14 @@ const CartPage = () => {
   }, [token, dispatch]);
 
   // Update product quantity
-  const updateQuantity = async (cartId, increment) => {
-    try {
-      const item = cartItems.find((i) => i._id === cartId);
-      if (!item) return;
+ const updateQuantity = (cartId, increment) => {
+  const item = cartItems.find(i => i._id === cartId);
+  if (!item) return;
 
-      const newQty = Math.max(1, item.quantity + increment);
+  const newQty = Math.max(1, item.quantity + increment);
+  dispatch(UpdateCart_Quantity({ cartId, quantity: newQty }));
+};
 
-      // Frontend state update
-      setCartItems((prev) =>
-        prev.map((item) =>
-          item._id === cartId ? { ...item, quantity: newQty } : item
-        )
-      );
-
-      // Backend update
-      await dispatch(UpdateCart_Quantity({ cartId, quantity: newQty }));
-    } catch (error) {
-      console.error("Error updating quantity:", error);
-    }
-  };
 
   // Remove item
   const removeItem = async (cartId) => {

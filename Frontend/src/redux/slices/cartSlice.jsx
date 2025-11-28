@@ -184,7 +184,27 @@ const cartSlice = createSlice({
       }).addCase(DeleteCartItems.rejected,(state)=>{
         state.loading = false
 
-      })
+      }).addCase(UpdateCart_Quantity.pending,(state)=>{
+        state.loading = true
+
+      }).addCase(UpdateCart_Quantity.fulfilled, (state, action) => {
+  const updatedItem = action.payload;
+
+  const index = state.cartItems.findIndex(
+    item => item._id === updatedItem._id
+  );
+
+  if (index !== -1) {
+    state.cartItems[index].quantity = updatedItem.quantity;
+  }
+
+  // ✅ REALTIME SUBTOTAL
+  state.subTotal = state.cartItems.reduce(
+    (sum, item) => sum + item.product.price * item.quantity,
+    0
+  );
+});
+
   },
 });
 

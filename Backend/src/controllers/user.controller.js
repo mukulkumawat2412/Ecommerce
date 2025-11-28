@@ -101,7 +101,7 @@ const Login = asyncHandler(async (req, res) => {
 
 const RefreshAccessToken = asyncHandler(async (req, res) => {
   const incomingRefreshToken = req.cookies?.refreshToken;
-  if (!incomingRefreshToken) throw new ApiError(401, "Refresh token missing");
+  if (!incomingRefreshToken) return res.status(400).json(new ApiError(400,"refreshToken is missing"))
 
   try {
     const decoded = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET);

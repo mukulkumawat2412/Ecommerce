@@ -193,6 +193,7 @@ const ApplyCoupons = asyncHandler(async (req, res) => {
   // Date validation — using server time (you used IST offset; keep consistent)
   const now = new Date();
   const istNow = new Date(now.getTime() + 5.5 * 60 * 60 * 1000);
+
   if (istNow < coupon.valid_from || istNow > coupon.valid_to)
     throw new ApiError(400, "This coupon is not valid right now");
   if (coupon.status !== "Active")

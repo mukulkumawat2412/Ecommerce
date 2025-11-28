@@ -282,7 +282,7 @@ const UpdateCartQuantity = asyncHandler(async(req,res)=>{
   const {cartId} = req.params
 
 
-const cartItem =    await Cart.findById(cartId)
+const cartItem =    await Cart.findById(cartId).populate("product")
 
 if(!cartItem){
   throw new ApiError(404,"Cart item not found")
