@@ -11,7 +11,7 @@ const TopProducts = () => {
 
   const dispatch = useDispatch()
 
-  const token = getCookie("accessToken")
+ const isAuthenticated = useSelector((state)=>state.auth.isAuthenticated)
 
 
 
@@ -20,7 +20,7 @@ console.log(TopProducts)
   useEffect(() => {
     const fetchTopProducts = async () => {
       try {
-        if(token){
+        if(isAuthenticated){
            const res =   await dispatch(topProductsByPrice())
     console.log(res)
 
@@ -33,12 +33,12 @@ console.log(TopProducts)
     };
 
     fetchTopProducts();
-  }, [token]);
+  }, [isAuthenticated]);
 
   return (
     <>
     {
-      token && (
+      isAuthenticated && (
          <div className="px-6 py-10 bg-gray-50 min-h-screen">
       <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
         💎 Top 5 Premium Products (Price &gt; ₹10,000)

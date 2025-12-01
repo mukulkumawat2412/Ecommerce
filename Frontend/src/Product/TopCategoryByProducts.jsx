@@ -12,7 +12,7 @@ const TopCategoryByProducts = () => {
 
   const dispatch = useDispatch()
 
-  const token = getCookie("accessToken")
+ const isAuthenticated = useSelector((state)=>state.auth.isAuthenticated)
 
    const {TopCategoryProducts} = useSelector((state)=>state.product)
 
@@ -83,7 +83,7 @@ const TopCategoryByProducts = () => {
                   </div>
 
                   {
-                    token ? (
+                    isAuthenticated ? (
                       <div className="mt-4 flex gap-2">
                   
                     

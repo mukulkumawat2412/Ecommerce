@@ -14,6 +14,7 @@ export const generateAccessTokenAndRefreshToken = async (userId) => {
     const accessToken = user.generateAccessToken();    // expires in 10–15 min
     const refreshToken = user.generateRefreshToken();  // expires in 7d–30d
 
+
     // ✅ ✅ HASH refresh token before storing (INDUSTRY SECURITY)
     const hashedRefreshToken = crypto
       .createHash("sha256")
@@ -33,6 +34,8 @@ export const generateAccessTokenAndRefreshToken = async (userId) => {
       accessToken,
       refreshToken,
     };
+
+
   } catch (error) {
     console.error("TOKEN GENERATION ERROR:", error);
     throw new ApiError(500, "Something went wrong while generating tokens");

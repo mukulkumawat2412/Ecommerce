@@ -16,7 +16,8 @@ const CartPage = () => {
   const [couponMessage, setCouponMessage] = useState("");
   const [isApplying, setIsApplying] = useState(false);
 
-  const token = getCookie("accessToken");
+
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -26,6 +27,8 @@ const CartPage = () => {
   const { discount, message, totalAfterDiscount } = useSelector(
     (state) => state.coupon
   );
+  console.log(cartItems)
+    const isAuthenticated = useSelector((state)=>state.auth.isAuthenticated)
 
   console.log(subTotal)
   // Scroll to top
@@ -37,14 +40,15 @@ const CartPage = () => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const res = await dispatch(getCartItems());
+
+         await dispatch(getCartItems());
       
       } catch (error) {
         console.error("Error fetching cart:", error);
       }
     };
     fetchCart();
-  }, [token, dispatch]);
+  }, [isAuthenticated, dispatch]);
 
   // Update product quantity
  const updateQuantity = (cartId, increment) => {

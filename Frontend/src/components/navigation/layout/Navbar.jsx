@@ -20,24 +20,27 @@ function Navbar() {
 
   const { cartItems } = useSelector((state) => state.cart);
   const { wishlistItems } = useSelector((state) => state.wishlist);
-  const { user, accessToken, authLoading, initialLoading } = useSelector((state) => state.auth);
+  const { user, authLoading,isAuthenticated } = useSelector((state) => state.auth);
+  console.log(isAuthenticated,user)
 
-  const token = accessToken;
+
   const username = user?.username;
   const role = user?.role;
 
+ 
+
   // ✅ Silent refresh on mount (optional if not done globally)
   useEffect(() => {
-    if (!token) dispatch(RefreshAccessToken());
-  }, [dispatch, token]);
+    if (!isAuthenticated) dispatch(RefreshAccessToken());
+  }, [dispatch, isAuthenticated]);
 
   // ✅ Cart & Wishlist fetch
   useEffect(() => {
-    if (token) {
+    if (isAuthenticated) {
       dispatch(getCartItems());
       dispatch(wishlistProducts());
     }
-  }, [dispatch, token]);
+  }, [dispatch, isAuthenticated]);
 
   // ✅ Dropdown outside click
   useEffect(() => {
@@ -52,8 +55,11 @@ function Navbar() {
 
   const handleLogout = async () => {
     try {
-      await dispatch(Logout()).unwrap();
-      navigate("/");
+      
+
+      
+     await dispatch(Logout())
+      
     } catch (error) {
       console.log("Logout error:", error);
       document.cookie = "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -62,7 +68,7 @@ function Navbar() {
   };
 
   // ✅ Show spinner while authLoading OR initialLoading
-  if (authLoading || initialLoading) {
+  if (authLoading){
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-500"></div>
@@ -96,7 +102,7 @@ function Navbar() {
               <Link to="/about-us"><li className='hover:text-purple-300 cursor-pointer'>About Us</li></Link>
               <Link to="/contact-us"><li className='hover:text-purple-300 cursor-pointer'>Contact</li></Link>
               <Link to="/faq"><li className='hover:text-purple-300 cursor-pointer'>FAQ</li></Link>
-              {token && (
+              {isAuthenticated && (
                 <>
                   <Link to="/product-page"><li className='hover:text-purple-300 cursor-pointer'>Products</li></Link>
                   <Link to="/cart-page">
@@ -127,7 +133,7 @@ function Navbar() {
 
         {/* User login/logout */}
         <div ref={dropdownRef} style={{ position: "relative" }}>
-          {!token ? (
+          {!isAuthenticated ? (
             <div className="flex gap-4">
               <Link to="/login" className='text-green-500 font-semibold'>Login</Link>
               <Link to="/signup" className='text-red-500 font-semibold'>Register</Link>

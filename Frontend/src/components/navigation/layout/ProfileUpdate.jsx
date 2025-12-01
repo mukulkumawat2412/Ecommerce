@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import { TextField, Button } from '@mui/material';
 import axios from 'axios';
 import getCookie from '../../../../../Backend/src/utils/GetToken.js';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { profileFetch, updateProfile } from '../../../redux/slices/authSlice.jsx';
 
 const ProfileUpdate = () => {
@@ -17,10 +17,11 @@ const ProfileUpdate = () => {
     const dispatch = useDispatch()
     const [loading, setLoading] = useState(true);
 
-  
+    
+    const isAuthenticated = useSelector((state)=>state.auth.isAuthenticated)
 
-    const token = getCookie("accessToken");
-    if (!token) {
+   
+    if (!isAuthenticated) {
         alert("User not logged in!");
         return null;
     }

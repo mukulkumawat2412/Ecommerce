@@ -18,7 +18,7 @@ const ProductList = ({ setCartCount }) => {
   const dispatch = useDispatch();
   const { products } = useSelector((state) => state.product);
   const { cartItems } = useSelector((state) => state.cart);
-  const token = useSelector((state)=>state.auth.accessToken)
+  const isAuthenticated = useSelector((state)=>state.auth.isAuthenticated)
 
  
 
@@ -35,7 +35,7 @@ const ProductList = ({ setCartCount }) => {
       }
     };
     fetchProducts();
-  }, [dispatch,token]);
+  }, [dispatch,isAuthenticated]);
 
   if (loading) return <p className="text-center text-lg mt-10">Loading...</p>;
 
@@ -88,7 +88,7 @@ const ProductList = ({ setCartCount }) => {
             <Link key={product._id} to={`/product-details/${product._id}`}>
               <div className="relative bg-white shadow-lg rounded-xl p-4 hover:shadow-xl transition transform hover:-translate-y-1 flex flex-col h-full">
                 {/* ❤️ Wishlist Icon */}
-                {token && (
+                {isAuthenticated && (
                   <div
                     className="absolute top-3 right-3 cursor-pointer"
                     onClick={(e) => {
@@ -125,7 +125,7 @@ const ProductList = ({ setCartCount }) => {
                   </p>
 
                   {/* 🛒 Add to Cart Button */}
-                  {token ? (
+                  {isAuthenticated ? (
                     <div className="mt-auto">
                       <button
                         onClick={(e) => {

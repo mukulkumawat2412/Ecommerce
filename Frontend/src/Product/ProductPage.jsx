@@ -14,6 +14,7 @@ const ProductPage = ({setCartCount}) => {
   const { categories } = useSelector((state) => state.category);
 
   const {cartItems} = useSelector((state)=>state.cart)
+  const isAuthenticated  = useSelector((state)=>state.auth.isAuthenticated)
 
   const [page, setPage] = useState(1); // local page state
   const [totalPages, setTotalPages] = useState(1);
@@ -24,7 +25,8 @@ const ProductPage = ({setCartCount}) => {
     window.scrollTo({top:0,behavior:"smooth"})
   },[])
 
-  const token = getCookie("accessToken")
+
+
 
   // Fetch categories
   useEffect(() => {
@@ -33,16 +35,16 @@ const ProductPage = ({setCartCount}) => {
 
   // Fetch products whenever page/category/sort changes
   useEffect(() => {
-    if(token){
+    if(isAuthenticated){
 
     
     fetchProducts();
     }
-  }, [token,page, selectedCategory, selectedSort]);
+  }, [isAuthenticated,page, selectedCategory, selectedSort]);
 
   const fetchProducts = async () => {
     try {
-     if(token){
+     if(isAuthenticated){
        const res = await dispatch(
         PaginationProducts({
           page,

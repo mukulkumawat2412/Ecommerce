@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import asyncHandler from "../utils/AsyncHandler.js";
+import crypto from "crypto";
 
 const verifyToken = asyncHandler(async (req, res, next) => {
   try {
@@ -34,24 +35,39 @@ const verifyToken = asyncHandler(async (req, res, next) => {
 
     } catch (accessError) {
 
+
       // ✅ 3. If Access Token Expired → Auto Refresh
       if (accessError.name === "TokenExpiredError") {
 
         const refreshToken = req.cookies?.refreshToken;
+
         if (!refreshToken) {
           throw new ApiError(401, "Session expired. Please login again.");
         }
 
-        // ✅ 4. Verify Refresh Token
-        const refreshDecoded = jwt.verify(
-          refreshToken,
-          process.env.REFRESH_TOKEN_SECRET
-        );
 
-        const user = await User.findById(refreshDecoded._id);
-        if (!user) {
-          throw new ApiError(401, "Invalid refresh token");
+        const hashedRefreshToken = crypto.createHash("sha256").update(refreshToken).digest("hex")
+
+
+        const decoded = jwt.verify(refreshToken
+          ,process.env.REFRESH_TOKEN_SECRET
+        )
+
+
+      const user =  await User.findById(decoded._id)
+
+
+
+        if(user.refreshToken !== hashedRefreshToken){
+             throw new ApiError(401, "Invalid refresh Token")
         }
+
+        // const user = await User.findOne({ refreshToken: hashedRefreshToken }).select("-refreshToken -password")
+
+        // if (!user) {
+        //
+        // }
+
 
         // ✅ 5. Generate NEW Access Token
         const newAccessToken = jwt.sign(
@@ -60,28 +76,23 @@ const verifyToken = asyncHandler(async (req, res, next) => {
           { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
         );
 
-                
-        // ✅ SAFE COOKIE OPTIONS (ALWAYS OBJECT)
-const cookieOptions = {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-  path: "/",
-  maxAge: 20 * 1000,
-};
 
-res.cookie("accessToken", newAccessToken, cookieOptions);
+        // ✅ SAFE COOKIE OPTIONS (ALWAYS OBJECT)
+        const cookieOptions = {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production" ? true :false,
+          sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+          path: "/",
+          maxAge: 20 * 1000,
+        };
+
+        res.cookie("accessToken", newAccessToken, cookieOptions);
 
 
         // ✅ 6. Set New Cookie
-        // res.cookie("accessToken", newAccessToken, {
-        //   httpOnly: true,
-        //   secure: false,
-        //   sameSite: "none",
-        //   maxAge: 15 * 60 * 1000
-        // });
 
         req.user = user;
+
         return next(); // ✅ REQUEST CONTINUES WITHOUT ERROR
       }
 

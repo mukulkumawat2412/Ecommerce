@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import axios from "axios";
 import { motion } from "framer-motion"; // ✅ framer-motion import
 import { useNavigate } from "react-router-dom";
@@ -6,6 +6,7 @@ import {Link} from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux";
 import { Login } from "../redux/slices/authSlice";
 import { CircularProgress } from "@mui/material";
+
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -18,11 +19,11 @@ const LoginForm = () => {
 
   const dispatch  = useDispatch()
 
-//  const user = useSelector((state)=>state.auth.user)
+ const {user,isAuthenticated,authLoading} = useSelector((state)=>state.auth)
 
-//  console.log(user)
-//   const role = user?.role
-//   console.log(role)
+
+  const role = user?.role
+  console.log(role)
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -37,40 +38,35 @@ const LoginForm = () => {
     try {
      
       
-    const res =   await dispatch(Login({email,password})).unwrap()
+     await dispatch(Login({email,password})).unwrap()
 
     
-      
-
-    const role = res.user.role
     
-
       setEmail("");
       setPassword("");
-
-
- 
-
-  if(role==="user"){
-    navigate("/")
-  }
-
-
-      if(role==="admin"){
-        navigate("/dashboard")
-      }
-
-        
-
 
 
     } catch (err) {
       console.error("Login Error:", err);
      
     } 
-      
+
     
   };
+
+
+useEffect(() => {
+  if (isAuthenticated && user?.role) {
+    if (user.role === "admin") {
+      navigate("/dashboard");
+    } else {
+      navigate("/");
+    }
+  }
+}, [isAuthenticated, user, navigate]);
+// ✅ dependency: user
+
+
 
   return (
     <motion.div

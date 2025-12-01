@@ -5,10 +5,10 @@ import { toast } from "sonner";
 /* --------------------------------------------------------------------- */
 const initialState = {
   loading: false,        // for buttons like login/register
-  authLoading: false,    // for silent refresh spinner
+  authLoading: true,    // for silent refresh spinner
   error: null,
   user: null,
-  accessToken: null,
+  isAuthenticated:false,
   profileData: null,
 };
 
@@ -50,6 +50,8 @@ export const Login = createAsyncThunk(
   async (loginData, { rejectWithValue }) => {
     try {
       const res = await api.post("/users/login", loginData, { withCredentials: true });
+
+      console.log(res)
       const { accessToken, sanitizedUser } = res.data.data;
       if (accessToken) api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
       return { accessToken, user: sanitizedUser };
@@ -131,27 +133,31 @@ const authSlice = createSlice({
     });
 
     /* Login */
-    builder.addCase(Login.pending, (state) => { state.loading = true; });
+    builder.addCase(Login.pending, (state) => { state.loading = true;
+      state.authLoading = true
+     });
     builder.addCase(Login.fulfilled, (state, action) => {
+      console.log(action.payload)
       state.loading = false;
       state.authLoading = false;
-      state.accessToken = action.payload.accessToken;
+      state.isAuthenticated = true
       state.user = action.payload.user;
       toast.success("Login successful");
     });
     builder.addCase(Login.rejected, (state, action) => {
       state.loading = false;
+      state.authLoading = false
       toast.error(action.payload?.message || "Login failed");
     });
 
     /* Logout */
     builder.addCase(Logout.fulfilled, (state) => {
       state.user = null;
-      state.accessToken = null;
+      state.isAuthenticated = false
       state.profileData = null;
       state.authLoading = false;
       delete api.defaults.headers.common["Authorization"];
-      // window.location.href = "/login"; // redirect user
+      window.location.href = "/login"; // redirect user
     });
 
     /* Refresh Token */
@@ -159,13 +165,15 @@ const authSlice = createSlice({
       state.authLoading = true; // silent refresh spinner
     });
     builder.addCase(RefreshAccessToken.fulfilled, (state, action) => {
-      state.accessToken = action.payload.accessToken;
+      state.isAuthenticated = true
       state.user = action.payload.user;
       state.authLoading = false;
       api.defaults.headers.common["Authorization"] = `Bearer ${action.payload.accessToken}`;
     });
     builder.addCase(RefreshAccessToken.rejected, (state) => {
       // ❌ Do NOT clear user state, keep navbar/cart/wishlist intact
+      // state.user = null
+      // state.isAuthenticated = false
       state.authLoading = false;
     });
 

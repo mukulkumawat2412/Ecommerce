@@ -75,11 +75,13 @@ const Login = asyncHandler(async (req, res) => {
 
   const { accessToken, refreshToken } = await generateAccessTokenAndRefreshToken(user._id);
 
+
   const sanitizedUser = await User.findById(user._id).select("-password -refreshToken -refreshTokenExpiry");
+
 
   const cookieOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: process.env.NODE_ENV === "production" ? true :false,
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000,
     path: "/",
@@ -99,40 +101,72 @@ const Login = asyncHandler(async (req, res) => {
 
 
 
+
 const RefreshAccessToken = asyncHandler(async (req, res) => {
   const incomingRefreshToken = req.cookies?.refreshToken;
-  if (!incomingRefreshToken) return res.status(400).json(new ApiError(400,"refreshToken is missing"))
+
+ 
+  if (!incomingRefreshToken)
+    return res.status(400).json(new ApiError(400, "refreshToken is missing"));
 
   try {
+    // 1️⃣ Verify the plain incoming refresh token
     const decoded = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+    // 2️⃣ Get user
     const user = await User.findById(decoded._id);
     if (!user) throw new ApiError(401, "Invalid refresh token: user not found");
 
-    const hashedIncomingToken = crypto.createHash("sha256").update(incomingRefreshToken).digest("hex");
-    if (hashedIncomingToken !== user.refreshToken) throw new ApiError(401, "Refresh token invalid");
-    if (!user.refreshTokenExpiry || user.refreshTokenExpiry < Date.now()) throw new ApiError(401, "Refresh token expired");
-    
-    const { accessToken, refreshToken: newRefreshToken } = await generateAccessTokenAndRefreshToken(user._id);
 
+    // 3️⃣ Compare hashed token in DB
+    const hashedIncomingToken = crypto
+      .createHash("sha256")
+      .update(incomingRefreshToken)
+      .digest("hex");
+
+  
+
+    if (hashedIncomingToken !== user.refreshToken)
+      throw new ApiError(401, "Refresh token invalid");
+
+    // 4️⃣ Check expiry
+    if (!user.refreshTokenExpiry || user.refreshTokenExpiry.getTime() < Date.now())
+      throw new ApiError(401, "Refresh token expired");
+
+    // 5️⃣ Generate new tokens
+    const { accessToken, refreshToken: newRefreshToken } =
+      await generateAccessTokenAndRefreshToken(user._id);
+
+    // 6️⃣ Hash and save new refresh token in DB
+    const hashedNewToken = crypto.createHash("sha256").update(newRefreshToken).digest("hex");
+    user.refreshToken = hashedNewToken;
+    user.refreshTokenExpiry = Date.now() + 7 * 24 * 60 * 60 * 1000; // 7 days
+    await user.save();
+
+    // 7️⃣ Remove sensitive fields for response
     const sanitizedUser = await User.findById(user._id).select("-password -refreshToken -refreshTokenExpiry");
 
+    // 8️⃣ Set cookies
     const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       path: "/",
     };
 
     return res
       .status(200)
       .cookie("refreshToken", newRefreshToken, cookieOptions)
-      .cookie("accessToken", accessToken, { ...cookieOptions, maxAge: 20 * 1000 }) // 15m access token
+      .cookie("accessToken", accessToken, { ...cookieOptions, maxAge: 15 * 60 * 1000 }) // 15 min
       .json(new ApiResponse(200, { accessToken, user: sanitizedUser }, "Access token refreshed successfully"));
   } catch (error) {
-    throw new ApiError(401, error?.message || "Invalid or expired refresh token");
+     return res.status(401).json(new ApiError(401, error?.message || "Invalid or expired refresh token"))
   }
 });
+
+export default RefreshAccessToken;
+
 
 
 

@@ -155,7 +155,7 @@ const cartSlice = createSlice({
         state.loading = false,
         state.cartItems = action.payload
         state.subTotal = state.cartItems.reduce((sum,item,)=> sum + item.product.price * item.quantity,50 )
-        state.totalAfterDiscount = state.subTotal - state.discount
+        state.totalAfterDiscount = state.subTotal - state.discount-50
         console.log(action.payload)
 
       }).addCase(getCartItems.rejected,(state,action)=>{

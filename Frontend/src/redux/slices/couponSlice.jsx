@@ -142,11 +142,11 @@ const couponSlice = createSlice({
                 state.loading = true;
             })
             .addCase(ApplyCoupon.fulfilled, (state, action) => {
-               
+               const shipping = 50
                 state.couponCode = action.payload.couponCode;
                 state.discount = action.payload.discountAmount;
                 console.log(action.payload.totalAfterDiscount)
-                state.totalAfterDiscount = action.payload.totalAfterDiscount;
+                state.totalAfterDiscount = action.payload.totalAfterDiscount + shipping;
 
                 state.message = action.payload.message;
             })

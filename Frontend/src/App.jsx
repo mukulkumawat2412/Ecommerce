@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { Toaster } from "sonner";
+import { useDispatch, useSelector } from "react-redux";
+import { RefreshAccessToken } from "./redux/slices/authSlice.jsx";
+
 import MainLayout from "./components/navigation/layout/MainLayout";
 import ProtectedRoute from "./components/ProtectedRoutes";
 
 import HomePage from "./pages/HomePage";
 import LoginForm from "./auth/loginForm";
 import SignUp from "./auth/SignUp";
-
 import ProductList from "./Product/ProductList";
 import ProductPage from "./Product/ProductPage";
 import ProductDetails from "./Product-Details/ProductDetails";
 import CategoryByProducts from "./Product/CategoryByProducts";
-
 import ProfilePage from "./components/navigation/layout/ProfilePage";
 import ProfileUpdate from "./components/navigation/layout/ProfileUpdate";
 import ProfileChangePassword from "./components/navigation/layout/ProfileChangePassword";
-
 import CartPage from "./components/navigation/layout/cartPage";
 import Success from "./components/navigation/layout/Success";
 import Cancel from "./components/navigation/layout/Cancel";
-
 import AddCategory from "./Admin/AddCategory";
 import Dashboard from "./Admin/Dashboard";
 import ProductForm from "./Admin/ProductForm";
@@ -29,7 +28,6 @@ import Notfound from "./pages/Notfound";
 import WishlistPage from "./components/navigation/layout/WishlistPage";
 import TopProducts from "./Product/TopProducts";
 import TopCategoryByProducts from "./Product/TopCategoryByProducts";
-
 import AboutUsPage from "./pages/AboutUsPage.jsx";
 import AdminCreateCoupon from "./Admin/AdminCreateCoupon.jsx";
 import AdminCoupons from "./Admin/AdminCoupons.jsx";
@@ -40,42 +38,37 @@ import ContactDashboard from "./Admin/ContactDashboard.jsx";
 import UpdateContactRecord from "./Admin/UpdateContactRecords.jsx";
 import ImageUpload from "./pages/ImageUpload.jsx";
 
-import { useDispatch, useSelector } from "react-redux";
-import { RefreshAccessToken } from "./redux/slices/authSlice.jsx";
+
+// Full page spinner component
+const FullPageSpinner = () => (
+  <div className="flex items-center justify-center h-screen">
+    <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-500"></div>
+  </div>
+);
 
 function App() {
   const dispatch = useDispatch();
-  const location = useLocation();
+  const [initialLoading, setInitialLoading] = useState(false);
 
-  const { user } = useSelector((state) => state.auth);
-  const [initialLoading, setInitialLoading] = useState(true);
+  const { authLoading} = useSelector((state) => state.auth);
 
   // ✅ Silent refresh only once on app load
   useEffect(() => {
     const initAuth = async () => {
       try {
-      
-
-      
-          await dispatch(RefreshAccessToken()).unwrap();
-        
+        await dispatch(RefreshAccessToken()).unwrap();
       } catch (error) {
         console.log("Silent refresh failed:", error);
       } finally {
-        setInitialLoading(false);   // ✅ always stop spinner
+        setInitialLoading(false); // ✅ always stop spinner
       }
     };
-
     initAuth();
   }, [dispatch]);
 
-  // ✅ Spinner ONLY during first app boot
-  if (initialLoading) {
-    return null
-    //   <div className="flex items-center justify-center h-screen">
-    //     <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-500"></div>
-    //   </div>
-    // );
+  // ✅ Show spinner while initial app load or silent refresh
+  if  (authLoading && initialLoading) {
+    return <FullPageSpinner />;
   }
 
   return (
@@ -125,6 +118,7 @@ function App() {
             <Route path="/contact-dashboard" element={<ContactDashboard />} />
             <Route path="/update-contactRecord/:cId" element={<UpdateContactRecord />} />
             <Route path="/image-upload" element={<ImageUpload />} />
+           
           </Route>
 
           <Route path="*" element={<Notfound />} />

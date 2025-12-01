@@ -1,55 +1,25 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import {jwtDecode} from "jwt-decode";
-import getCookie from "../../../Backend/src/utils/GetToken.js";
 import { useSelector } from "react-redux";
 
-
 function ProtectedRoutes({ allowedRoles }) {
+  const { user, isAuthenticated, authLoading } = useSelector(state => state.auth);
 
+  // ✅ Show spinner while auth state is loading
+  if (authLoading) return (
+    <div className="flex items-center justify-center h-screen">
+      <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-500"></div>
+    </div>
+  );
 
-  const Accesstoken = getCookie("accessToken");
-  console.log(Accesstoken)
+  // ❌ Not authenticated → redirect to login
+  if (!isAuthenticated || !user) return <Navigate to="/login" replace />;
 
-  const token = useSelector((state)=>state.auth.accessToken)
-  const user = useSelector((state)=>state.auth.user)
+  // ❌ Role not allowed → redirect to login
+  if (!allowedRoles.includes(user.role)) return <Navigate to="/login" replace />;
 
-  const role = user?.role
-
-  if (!token) {
-    return <Navigate to="/login" />;
-  }
-
-
-
-
-  try {
-   
-  
-    
-    
- 
-
-   if(!allowedRoles.includes(role)){
-    return <Navigate to={"/login"}/>
-  }
-
-
-  return <Outlet/>
-  
-
-
-  } catch (err) {
-    console.log(err)
-    return <Navigate to="/login" />;
-
-  }
-
-
-  
-
- 
-
+  // ✅ All good → render child routes
+  return <Outlet />;
 }
 
 export default ProtectedRoutes;
