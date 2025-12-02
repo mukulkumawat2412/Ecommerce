@@ -5,7 +5,7 @@ import { TextField, Button, MenuItem } from '@mui/material';
 import axios from 'axios';
 import getCookie from '../../../Backend/src/utils/GetToken.js';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { createProduct } from '../redux/slices/admin.productSlice.jsx';
 import { getCategories } from '../redux/slices/categorySlice.jsx';
 
@@ -19,8 +19,10 @@ const ProductForm = () => {
 
     console.log(categories)
 
-    const token = getCookie("accessToken");
-    if (!token) {
+    
+    const {isAuthenticated} = useSelector((state)=>state.auth)
+
+    if (!isAuthenticated) {
         alert("User not logged in! Token missing.");
 
     }
