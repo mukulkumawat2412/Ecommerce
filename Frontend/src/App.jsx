@@ -6,7 +6,7 @@ import { RefreshAccessToken } from "./redux/slices/authSlice.jsx";
 
 import MainLayout from "./components/navigation/layout/MainLayout";
 import ProtectedRoute from "./components/ProtectedRoutes";
-import OpenRoutes from "./components/openRoutes.jsx";
+import OpenRoutes from "./components/OpenRoutes.jsx";
 
 import HomePage from "./pages/HomePage";
 import LoginForm from "./auth/loginForm";
