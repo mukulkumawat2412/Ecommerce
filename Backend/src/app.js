@@ -17,6 +17,13 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
 
+
+app.options("*", cors({
+  origin: process.env.CORS_ORIGIN,
+  credentials: true,
+}));
+
+
 app.use(cookieParser());
 
 // ✅ ROUTES
