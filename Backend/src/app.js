@@ -18,7 +18,7 @@ app.use(cors({
 }));
 
 // ✅ Preflight fix (VERY IMPORTANT FOR VERCEL)
-app.options("*", cors());
+
 
 
 app.use(cookieParser());
