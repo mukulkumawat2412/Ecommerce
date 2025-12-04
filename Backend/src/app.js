@@ -48,6 +48,13 @@ import adminRouter from "./Routes/admin.route.js"
 import couponRouter from "./Routes/coupon.route.js"
 import contactRouter from "./Routes/contact.route.js"
 
+
+
+app.get("/",()=>{
+    res.send("HomePage")
+})
+
+
 app.use("/api/v1/users",userRouter)
 app.use("/api/v1/product",productRouter)
 app.use("/api/v1/category",categoryRouter)
