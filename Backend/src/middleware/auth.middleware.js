@@ -83,7 +83,7 @@ const verifyToken = asyncHandler(async (req, res, next) => {
           secure: process.env.NODE_ENV === "production" ? true :false,
           sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
           path: "/",
-          maxAge: 20 * 1000,
+          maxAge: 15 * 60 * 1000,
         };
 
         res.cookie("accessToken", newAccessToken, cookieOptions);

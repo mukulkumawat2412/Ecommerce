@@ -25,7 +25,7 @@ import adminRouter from "./Routes/admin.route.js";
 import couponRouter from "./Routes/coupon.route.js";
 import contactRouter from "./Routes/contact.route.js";
 
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
     res.send("HomePage");
 });
 
