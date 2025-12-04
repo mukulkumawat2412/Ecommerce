@@ -11,12 +11,14 @@ app.use(express.json());
 app.use("/uploads", express.static("public/temp"));
 
 app.use(cors({
-  origin: process.env.CORS_ORIGIN,
+  origin: "https://ecommerce-rosy-three.vercel.app",
   credentials: true,
- 
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 }));
 
-
+// ✅ Preflight fix (VERY IMPORTANT FOR VERCEL)
+app.options("*", cors());
 
 
 app.use(cookieParser());
