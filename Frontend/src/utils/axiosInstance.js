@@ -1,5 +1,8 @@
 import axios from "axios";
 import { RefreshAccessToken, Logout } from "../redux/slices/authSlice.jsx";
+import dotenv from "dotenv"
+
+dotenv.config()
 
 const api = axios.create({
   baseURL: `${import.meta.env.VITE_API_BASE_URL}`,
