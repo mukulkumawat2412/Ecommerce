@@ -49,7 +49,7 @@ export const Login = createAsyncThunk(
   "/login",
   async (loginData, { rejectWithValue }) => {
     try {
-      const res = await api.post(`/users/login`, loginData, { withCredentials: true });
+      const res = await api.post(`${import.meta.env.VITE_API_BASE_URL}/users/login`, loginData, { withCredentials: true });
 
       console.log(res)
       const { accessToken, sanitizedUser } = res.data.data;
