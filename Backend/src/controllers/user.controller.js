@@ -2,7 +2,9 @@ import asyncHandler from "../utils/AsyncHandler.js";
 
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { generateAccessTokenAndRefreshToken } from "../utils/generateAccessAndRefreshToken.js";
+import { GenerateAccessTokenAndRefreshToken } from "../utils/GenerateAccessAndRefreshToken.js";
+
+
 import jwt from "jsonwebtoken"
 import User from "../models/user.model.js";
 import bcrypt from "bcrypt"
@@ -73,7 +75,7 @@ const Login = asyncHandler(async (req, res) => {
   const isPasswordValid = await user.isPasswordCorrect(password);
   if (!isPasswordValid) throw new ApiError(400, "Incorrect password");
 
-  const { accessToken, refreshToken } = await generateAccessTokenAndRefreshToken(user._id);
+  const { accessToken, refreshToken } = await GenerateAccessTokenAndRefreshToken(user._id);
 
 
   const sanitizedUser = await User.findById(user._id).select("-password -refreshToken -refreshTokenExpiry");
@@ -135,7 +137,7 @@ const RefreshAccessToken = asyncHandler(async (req, res) => {
 
     // 5️⃣ Generate new tokens
     const { accessToken, refreshToken: newRefreshToken } =
-      await generateAccessTokenAndRefreshToken(user._id);
+      await GenerateAccessTokenAndRefreshToken(user._id);
 
     // 6️⃣ Hash and save new refresh token in DB
     const hashedNewToken = crypto.createHash("sha256").update(newRefreshToken).digest("hex");
@@ -195,7 +197,8 @@ const Logout = asyncHandler(async (req, res) => {
     secure: false,
     sameSite: "lax",
     path: "/", // important for clearing
-  };
+  }
+
 
   return res
     .status(200)

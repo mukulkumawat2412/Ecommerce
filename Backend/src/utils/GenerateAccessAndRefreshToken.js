@@ -2,7 +2,7 @@ import crypto from "crypto";
 import User from "../models/user.model.js";
 import { ApiError } from "./ApiError.js";
 
-export const generateAccessTokenAndRefreshToken = async (userId) => {
+export const GenerateAccessTokenAndRefreshToken = async (userId) => {
   try {
     const user = await User.findById(userId);
 

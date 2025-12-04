@@ -6,11 +6,11 @@ function ProtectedRoutes({ allowedRoles }) {
   const { user, isAuthenticated, authLoading } = useSelector(state => state.auth);
 
   // ✅ Show spinner while auth state is loading
-  // if (authLoading) return (
-  //   <div className="flex items-center justify-center h-screen">
-  //     <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-500"></div>
-  //   </div>
-  // );
+  if (authLoading) return (
+    <div className="flex items-center justify-center h-screen">
+      <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-500"></div>
+    </div>
+  );
 
   // ❌ Not authenticated → redirect to login
   if (!isAuthenticated || !user) return <Navigate to="/login" replace />;
