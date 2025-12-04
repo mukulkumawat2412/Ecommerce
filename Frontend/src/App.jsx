@@ -18,7 +18,7 @@ import CategoryByProducts from "./Product/CategoryByProducts";
 import ProfilePage from "./components/navigation/layout/ProfilePage";
 import ProfileUpdate from "./components/navigation/layout/ProfileUpdate";
 import ProfileChangePassword from "./components/navigation/layout/ProfileChangePassword";
-import CartPage from "./components/navigation/layout/cartPage";
+import CartPage from "./components/navigation/layout/CartPage";
 import Success from "./components/navigation/layout/Success";
 import Cancel from "./components/navigation/layout/Cancel";
 import AddCategory from "./Admin/AddCategory";
