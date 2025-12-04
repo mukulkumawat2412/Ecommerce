@@ -4,7 +4,7 @@ import { RefreshAccessToken, Logout } from "../redux/slices/authSlice.jsx";
 
 
 const api = axios.create({
-  baseURL: "https://ecommerce-cuf3.vercel.app",
+  baseURL: "https://ecommerce-cuf3.vercel.app/api/v1",
   withCredentials: true,
 });
 
