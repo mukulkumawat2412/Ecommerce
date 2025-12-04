@@ -30,11 +30,13 @@ const SignUp = () => {
 
 
 
-  return (
+ return (
+  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300 px-4">
     <motion.div
       initial={{ opacity: 0, y: -30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
+      className="w-full max-w-sm md:max-w-md"
     >
       <Formik
         initialValues={{
@@ -46,10 +48,7 @@ const SignUp = () => {
         validationSchema={validationSchema}
         onSubmit={async (values, { resetForm, setSubmitting }) => {
           try {
-            
-            await dispatch(Register(values)).unwrap()
-
-          
+            await dispatch(Register(values)).unwrap();
             alert("✅ Registration successful! Please login.");
             resetForm();
           } catch (error) {
@@ -61,21 +60,13 @@ const SignUp = () => {
         }}
       >
         {({ values, handleChange, handleBlur, errors, touched, isSubmitting }) => (
-          <Form
-            style={{
-              maxWidth: "400px",
-              margin: "auto",
-              padding: "20px",
-              borderRadius: "12px",
-              boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-            }}
-          >
+          <Form className="bg-white p-6 md:p-8 rounded-xl shadow-lg">
             {/* Heading */}
             <motion.h2
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.5 }}
-              style={{ textAlign: "center", marginBottom: "20px" }}
+              className="text-center text-xl md:text-2xl font-semibold mb-6"
             >
               Register
             </motion.h2>
@@ -85,7 +76,7 @@ const SignUp = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
-              style={{ marginBottom: "15px" }}
+              className="mb-4"
             >
               <Field
                 as={TextField}
@@ -105,7 +96,7 @@ const SignUp = () => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4 }}
-              style={{ marginBottom: "15px" }}
+              className="mb-4"
             >
               <Field
                 as={TextField}
@@ -125,7 +116,7 @@ const SignUp = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.5 }}
-              style={{ marginBottom: "15px" }}
+              className="mb-4"
             >
               <Field
                 as={TextField}
@@ -146,7 +137,7 @@ const SignUp = () => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.6 }}
-              style={{ marginBottom: "15px" }}
+              className="mb-4"
             >
               <Field
                 as={TextField}
@@ -167,7 +158,7 @@ const SignUp = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
-              style={{ marginTop: "20px" }}
+              className="mt-5"
             >
               <Button
                 type="submit"
@@ -180,12 +171,12 @@ const SignUp = () => {
               </Button>
             </motion.div>
 
-            {/* Already have account link */}
+            {/* Login Link */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9, duration: 0.5 }}
-              style={{ textAlign: "center", marginTop: "15px" }}
+              className="text-center mt-4 text-sm md:text-base"
             >
               <Link component={RouterLink} to="/login" underline="hover">
                 Already have an account? Login here
@@ -195,7 +186,9 @@ const SignUp = () => {
         )}
       </Formik>
     </motion.div>
-  );
+  </div>
+);
+
 };
 
 export default SignUp;

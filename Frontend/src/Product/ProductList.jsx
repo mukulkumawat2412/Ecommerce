@@ -75,91 +75,93 @@ const ProductList = ({ setCartCount }) => {
     }
   };
 
-  return (
-   
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
-    <TopCategoryByProducts/>
-    <TopProducts/>
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">Our Products</h1>
+return (
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+    {/* Top Category & Top Products Sections */}
+    <TopCategoryByProducts />
+    <TopProducts />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {products.length > 0 ? (
-          products.map((product) => (
-            <Link key={product._id} to={`/product-details/${product._id}`}>
-              <div className="relative bg-white shadow-lg rounded-xl p-4 hover:shadow-xl transition transform hover:-translate-y-1 flex flex-col h-full">
-                {/* ❤️ Wishlist Icon */}
-                {isAuthenticated && (
-                  <div
-                    className="absolute top-3 right-3 cursor-pointer"
+    <h1 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800">
+      Our Products
+    </h1>
+
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {products.length > 0 ? (
+        products.map((product) => (
+          <Link key={product._id} to={`/product-details/${product._id}`}>
+            <div className="relative bg-white shadow-lg rounded-xl p-4 hover:shadow-xl transition transform hover:-translate-y-1 flex flex-col h-full">
+              {/* Wishlist Icon */}
+              {isAuthenticated && (
+                <div
+                  className="absolute top-3 right-3 cursor-pointer"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleWishlist(product._id);
+                  }}
+                >
+                  {wishlist.includes(product._id) ? (
+                    <AiFillHeart className="text-red-500 text-2xl transition transform hover:scale-110" />
+                  ) : (
+                    <AiOutlineHeart className="text-gray-400 text-2xl transition transform hover:scale-110 hover:text-red-500" />
+                  )}
+                </div>
+              )}
+
+              {/* Product Image */}
+              <div className="flex justify-center items-center h-48 mb-4">
+                <img
+                  src={product.image[0]}
+                  alt={product.name}
+                  className="max-h-full object-contain rounded-md"
+                />
+              </div>
+
+              {/* Product Info */}
+              <div className="flex-1 flex flex-col">
+                <h2 className="text-lg md:text-xl font-semibold text-gray-800">
+                  {product.name}
+                </h2>
+                <p className="text-gray-500 text-sm md:text-base mt-1">
+                  {product.title?.slice(0, 50)}...
+                </p>
+                <p className="text-gray-900 font-bold mt-2 text-lg md:text-xl">
+                  ₹{product.price}
+                </p>
+
+                {/* Add to Cart / Login Button */}
+                {isAuthenticated ? (
+                  <button
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      toggleWishlist(product._id);
+                      addToCart(product._id);
                     }}
+                    className="mt-auto w-full bg-slate-500 text-white py-2 rounded-lg hover:bg-slate-700 transition text-sm md:text-base"
                   >
-                    {wishlist.includes(product._id) ? (
-                      <AiFillHeart className="text-red-500 text-2xl transition transform hover:scale-110" />
-                    ) : (
-                      <AiOutlineHeart className="text-gray-400 text-2xl transition transform hover:scale-110 hover:text-red-500" />
-                    )}
-                  </div>
+                    Add to Cart
+                  </button>
+                ) : (
+                  <Link
+                    to="/login"
+                    className="mt-auto w-full block text-center bg-green-500 text-black py-2 rounded-lg hover:bg-violet-500 transition text-sm md:text-base"
+                  >
+                    Login to Add
+                  </Link>
                 )}
-
-                {/* 🖼 Product Image */}
-                <div className="flex justify-center items-center h-48 mb-4">
-                  <img
-                    src={product.image[0]}
-                    alt={product.name}
-                    className="max-h-full object-contain rounded-md"
-                  />
-                </div>
-
-                {/* 🧾 Product Info */}
-                <div className="flex-1 flex flex-col">
-                  <h2 className="text-lg font-semibold text-gray-800">
-                    {product.name}
-                  </h2>
-                  <p className="text-gray-500 text-sm mt-1">{product.title}</p>
-                  <p className="text-gray-900 font-bold mt-2 text-lg">
-                    ₹{product.price}
-                  </p>
-
-                  {/* 🛒 Add to Cart Button */}
-                  {isAuthenticated ? (
-                    <div className="mt-auto">
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          addToCart(product._id);
-                        }}
-                        className="w-full bg-slate-500 text-white py-2 rounded-lg hover:bg-slate-700 transition"
-                      >
-                        Add to Cart
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="mt-auto">
-                      <Link
-                        to="/login"
-                        className="w-full block text-center bg-green-500 text-black py-2 rounded-lg hover:bg-violet-500 transition"
-                      >
-                        Login to Add
-                      </Link>
-                    </div>
-                  )}
-                </div>
               </div>
-            </Link>
-          ))
-        ) : (
-          <p className="text-center text-gray-500 col-span-4">
-            No products available
-          </p>
-        )}
-      </div>
+            </div>
+          </Link>
+        ))
+      ) : (
+        <p className="text-center text-gray-500 col-span-4">
+          No products available
+        </p>
+      )}
     </div>
-  );
+  </div>
+);
+
 };
 
 export default ProductList;

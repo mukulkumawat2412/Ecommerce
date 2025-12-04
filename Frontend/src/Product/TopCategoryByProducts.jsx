@@ -38,14 +38,15 @@ const TopCategoryByProducts = () => {
   }, []);
 
   return (
+  <div className="p-6 bg-gray-50 min-h-screen">
+    <h2 className="text-3xl font-bold mb-8 text-gray-800 border-b pb-2">
+      Top Products by Category
+    </h2>
 
-    
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <h2 className="text-3xl font-bold mb-8 text-gray-800 border-b pb-2">
-        Top Products by Category
-      </h2>
-
-      {TopCategoryProducts.map((category, idx) => (
+    {TopCategoryProducts.length === 0 ? (
+      <p className="text-gray-500 text-lg">No top category products available.</p>
+    ) : (
+      TopCategoryProducts.map((category, idx) => (
         <div key={idx} className="mb-12">
           <h3 className="text-2xl font-semibold text-gray-700 mb-4">
             {category.category}
@@ -74,7 +75,6 @@ const TopCategoryByProducts = () => {
                     </p>
                     <span className="text-blue-600 font-medium">{product.title}</span>
 
-                    
                     {product.price && (
                       <div className="text-xl font-bold text-gray-800 mt-2">
                         ₹{product.price}
@@ -82,37 +82,33 @@ const TopCategoryByProducts = () => {
                     )}
                   </div>
 
-                  {
-                    isAuthenticated ? (
-                      <div className="mt-4 flex gap-2">
-                  
-                    
-                    <button className="flex-1 border border-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-100 transition">
-                      Add to Cart
-                    </button>
-                      <Link to={`/product-details/${product._id}`}>
-                    
-                    </Link>
-
-                  
-                  </div>
-                    ) :(
-                         <button className="flex-1 bg-gradient-to-r from-violet-600 to-violet-500 text-white py-2 rounded-lg hover:from-violet-700 hover:to-violet-600 transition">
+                  {isAuthenticated ? (
+                    <div className="mt-4 flex gap-2">
+                      <button className="flex-1 border border-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-100 transition">
+                        Add to Cart
+                      </button>
+                      <Link
+                        to={`/product-details/${product._id}`}
+                        className="flex-1 bg-indigo-600 text-white py-2 rounded-lg text-center hover:bg-indigo-700 transition"
+                      >
+                        View
+                      </Link>
+                    </div>
+                  ) : (
+                    <button className="mt-4 w-full bg-gradient-to-r from-violet-600 to-violet-500 text-white py-2 rounded-lg hover:from-violet-700 hover:to-violet-600 transition">
                       View
                     </button>
-
-                    )
-                  }
-
-                  
+                  )}
                 </div>
               </div>
             ))}
           </div>
         </div>
-      ))}
-    </div>
-  );
+      ))
+    )}
+  </div>
+);
+
 };
 
 export default TopCategoryByProducts;

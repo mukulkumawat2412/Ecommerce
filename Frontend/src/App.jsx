@@ -68,9 +68,9 @@ function App() {
   }, [dispatch]);
 
   // ✅ Global spinner
-  if (authLoading && initialLoading) {
-    return <FullPageSpinner />;
-  }
+  // if (authLoading && initialLoading) {
+  //   return <FullPageSpinner />;
+  // }
 
   return (
     <>

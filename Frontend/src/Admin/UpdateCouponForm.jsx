@@ -69,36 +69,40 @@ const UpdateCouponForm = () => {
     }
   };
 
-  return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-200">
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="w-full max-w-3xl bg-white shadow-xl rounded-3xl overflow-hidden border border-gray-100"
-      >
-        {/* Header */}
-        <div className="bg-gradient-to-r from-green-600 to-emerald-600 py-5 px-8 mt-20">
-          <h2 className="text-2xl font-semibold text-white tracking-wide">
-            ✏️ Update Coupon
-          </h2>
-          <p className="text-green-100 text-sm mt-1">
-            Modify the coupon details below and save the changes.
-          </p>
-        </div>
+return (
+  <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 p-4 md:p-8">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      className="w-full max-w-4xl bg-white shadow-xl rounded-3xl overflow-hidden border border-gray-100"
+    >
+      {/* Header */}
+      <div className="bg-gradient-to-r from-green-600 to-emerald-600 py-6 px-6 md:px-10">
+        <h2 className="text-2xl md:text-3xl font-semibold text-white tracking-wide">
+          ✏️ Update Coupon
+        </h2>
+        <p className="text-green-100 text-sm md:text-base mt-1">
+          Modify the coupon details below and save the changes.
+        </p>
+      </div>
 
-        {/* Loader (optional) */}
+      {/* Add extra spacing below header */}
+      <div className="mt-8 md:mt-12">
+        {/* Loader */}
         {loading && (
-          <p className="text-center text-gray-500 mt-5">Loading coupon...</p>
+          <p className="text-center text-gray-500 mt-5 text-base md:text-lg">
+            Loading coupon...
+          </p>
         )}
 
         {/* Form */}
         {!loading && (
-          <div className="p-8">
-            <form onSubmit={handleSubmit}  className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="p-6 md:p-10">
+            <form className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6" onSubmit={handleSubmit}>
               {/* Coupon Code */}
               <div>
-                <label className="block text-gray-700 font-medium mb-1">
+                <label className="block text-gray-700 font-medium mb-2 text-sm md:text-base">
                   Coupon Code
                 </label>
                 <input
@@ -107,20 +111,20 @@ const UpdateCouponForm = () => {
                   value={couponData.coupon_code}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-green-400 outline-none"
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-green-400 outline-none text-sm md:text-base"
                 />
               </div>
 
               {/* Discount Type */}
               <div>
-                <label className="block text-gray-700 font-medium mb-1">
+                <label className="block text-gray-700 font-medium mb-2 text-sm md:text-base">
                   Discount Type
                 </label>
                 <select
                   name="discount_type"
                   value={couponData.discount_type}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-green-400 outline-none"
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-green-400 outline-none text-sm md:text-base"
                 >
                   <option value="fixedAmount">Fixed Amount</option>
                   <option value="percentageDiscount">Percentage Discount</option>
@@ -129,7 +133,7 @@ const UpdateCouponForm = () => {
 
               {/* Coupon Amount */}
               <div>
-                <label className="block text-gray-700 font-medium mb-1">
+                <label className="block text-gray-700 font-medium mb-2 text-sm md:text-base">
                   Coupon Amount
                 </label>
                 <input
@@ -138,20 +142,20 @@ const UpdateCouponForm = () => {
                   value={couponData.coupon_amount}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-green-400 outline-none"
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-green-400 outline-none text-sm md:text-base"
                 />
               </div>
 
               {/* Status */}
               <div>
-                <label className="block text-gray-700 font-medium mb-1">
+                <label className="block text-gray-700 font-medium mb-2 text-sm md:text-base">
                   Status
                 </label>
                 <select
                   name="status"
                   value={couponData.status}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-green-400 outline-none"
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-green-400 outline-none text-sm md:text-base"
                 >
                   <option value="Active">Active</option>
                   <option value="Expired">Expired</option>
@@ -160,7 +164,7 @@ const UpdateCouponForm = () => {
 
               {/* Valid From */}
               <div>
-                <label className="block text-gray-700 font-medium mb-1">
+                <label className="block text-gray-700 font-medium mb-2 text-sm md:text-base">
                   Valid From
                 </label>
                 <input
@@ -169,13 +173,13 @@ const UpdateCouponForm = () => {
                   value={couponData.valid_from}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-green-400 outline-none"
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-green-400 outline-none text-sm md:text-base"
                 />
               </div>
 
               {/* Valid To */}
               <div>
-                <label className="block text-gray-700 font-medium mb-1">
+                <label className="block text-gray-700 font-medium mb-2 text-sm md:text-base">
                   Valid To
                 </label>
                 <input
@@ -184,13 +188,13 @@ const UpdateCouponForm = () => {
                   value={couponData.valid_to}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-green-400 outline-none"
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-green-400 outline-none text-sm md:text-base"
                 />
               </div>
 
               {/* Description */}
               <div className="md:col-span-2">
-                <label className="block text-gray-700 font-medium mb-1">
+                <label className="block text-gray-700 font-medium mb-2 text-sm md:text-base">
                   Description
                 </label>
                 <textarea
@@ -198,17 +202,17 @@ const UpdateCouponForm = () => {
                   value={couponData.coupon_description}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-green-400 outline-none min-h-[100px]"
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-green-400 outline-none min-h-[120px] text-sm md:text-base"
                 ></textarea>
               </div>
 
               {/* Submit Button */}
-              <div className="md:col-span-2 flex justify-end">
+              <div className="md:col-span-2 flex justify-end mt-6">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   type="submit"
-                  className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-2.5 rounded-lg font-medium shadow-md hover:shadow-lg transition-all"
+                  className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-8 py-3 rounded-lg font-medium shadow-md hover:shadow-lg transition-all text-sm md:text-base"
                 >
                   Update Coupon
                 </motion.button>
@@ -216,9 +220,13 @@ const UpdateCouponForm = () => {
             </form>
           </div>
         )}
-      </motion.div>
-    </div>
-  );
+      </div>
+    </motion.div>
+  </div>
+);
+
+
+
 };
 
 export default UpdateCouponForm;

@@ -101,101 +101,114 @@ const ProductPage = ({setCartCount}) => {
 
 
 
-  return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      {/* Filter + Sort */}
-      <div className="flex flex-wrap items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold">Shop Products</h2>
+ return (
+  <div className="p-6 bg-gray-50 min-h-screen">
+    {/* Filter + Sort */}
+    <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
+      <h2 className="text-2xl md:text-3xl font-bold">Shop Products</h2>
 
-    <CategoriesDropdown/>
-        <div className="flex gap-4">
-          <select
-            value={selectedCategory}
-            onChange={(e) => {
-              setSelectedCategory(e.target.value);
-              setPage(1); // reset to first page on filter change
-            }}
-            className="border rounded-lg p-2 bg-white shadow-sm"
-          >
-            <option value="">All Categories</option>
-            {categories.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
+      <CategoriesDropdown />
 
-          <select
-            value={selectedSort}
-            onChange={(e) => {
-              setSelectedSort(e.target.value);
-              setPage(1); // reset to first page on sort change
-            }}
-            className="border rounded-lg p-2 bg-white shadow-sm"
-          >
-            <option value="latest">Latest</option>
-            <option value="priceAsc">Price Low → High</option>
-            <option value="priceDesc">Price High → Low</option>
-          </select>
-        </div>
+      <div className="flex flex-wrap gap-4">
+        <select
+          value={selectedCategory}
+          onChange={(e) => {
+            setSelectedCategory(e.target.value);
+            setPage(1); // reset to first page on filter change
+          }}
+          className="border rounded-lg p-2 bg-white shadow-sm"
+        >
+          <option value="">All Categories</option>
+          {categories.map((cat) => (
+            <option key={cat._id} value={cat._id}>
+              {cat.name}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={selectedSort}
+          onChange={(e) => {
+            setSelectedSort(e.target.value);
+            setPage(1); // reset to first page on sort change
+          }}
+          className="border rounded-lg p-2 bg-white shadow-sm"
+        >
+          <option value="latest">Latest</option>
+          <option value="priceAsc">Price Low → High</option>
+          <option value="priceDesc">Price High → Low</option>
+        </select>
       </div>
+    </div>
 
-      {/* Product Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 h-90">
-        {products.map((p) => (
+    {/* Product Grid */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {products.length > 0 ? (
+        products.map((p) => (
           <div
             key={p._id}
-            className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
+            className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition flex flex-col"
           >
             <img
               src={p.image[0]}
               alt={p.name}
               className="w-full h-56 object-contain bg-gray-100"
             />
-            <div className="p-4">
-              <h3 className="font-semibold text-lg">{p.name}</h3>
+            <div className="p-4 flex-1 flex flex-col">
+              <h3 className="font-semibold text-lg md:text-xl">{p.name}</h3>
               <p className="text-gray-600 mt-1">₹{p.price}</p>
-              <button onClick={(e)=>{ e.preventDefault();
-                            e.stopPropagation();
-                            addToCart(p._id)
-                            }} className="mt-3 w-full bg-slate-400 text-white py-2 rounded-lg hover:bg-slate-500 transition">
+
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  addToCart(p._id);
+                }}
+                className="mt-auto w-full bg-slate-400 text-white py-2 rounded-lg hover:bg-slate-500 transition text-sm md:text-base"
+              >
                 Add to Cart
               </button>
             </div>
           </div>
-        ))}
-      </div>
-
-      {/* Pagination */}
-      <div className="flex justify-center items-center gap-2 mt-8">
-        <button
-          disabled={page === 1}
-          onClick={() => setPage(page - 1)}
-          className={`px-4 py-2 rounded-lg border ${page === 1 ? "bg-gray-200 cursor-not-allowed" : "hover:bg-gray-100"}`}
-        >
-          Prev
-        </button>
-
-        {getPageNumbers().map((num) => (
-          <button
-            key={num}
-            onClick={() => setPage(num)}
-            className={`px-4 py-2 rounded-lg border cursor-pointer ${page === num ? "bg-violet-500 text-white" : "hover:bg-gray-100"}`}
-          >
-            {num}
-          </button>
-        ))}
-
-        <button
-          disabled={page === totalPages}
-          onClick={() => setPage(page + 1)}
-          className={`px-4 py-2 rounded-lg border ${page === totalPages ? "bg-gray-200 cursor-not-allowed" : "hover:bg-gray-100"}`}
-        >
-          Next
-        </button>
-      </div>
+        ))
+      ) : (
+        <p className="text-center text-gray-500 col-span-4">
+          No products available
+        </p>
+      )}
     </div>
-  );
+
+    {/* Pagination */}
+    <div className="flex justify-center items-center gap-2 mt-8 flex-wrap">
+      <button
+        disabled={page === 1}
+        onClick={() => setPage(page - 1)}
+        className={`px-4 py-2 rounded-lg border ${page === 1 ? "bg-gray-200 cursor-not-allowed" : "hover:bg-gray-100"}`}
+      >
+        Prev
+      </button>
+
+      {getPageNumbers().map((num) => (
+        <button
+          key={num}
+          onClick={() => setPage(num)}
+          className={`px-4 py-2 rounded-lg border cursor-pointer ${page === num ? "bg-violet-500 text-white" : "hover:bg-gray-100"}`}
+        >
+          {num}
+        </button>
+      ))}
+
+      <button
+        disabled={page === totalPages}
+        onClick={() => setPage(page + 1)}
+        className={`px-4 py-2 rounded-lg border ${page === totalPages ? "bg-gray-200 cursor-not-allowed" : "hover:bg-gray-100"}`}
+      >
+        Next
+      </button>
+    </div>
+  </div>
+);
+
 };
 
 export default ProductPage;

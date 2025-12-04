@@ -78,20 +78,28 @@ export default function UpdateContactRecord() {
   if (loading)
     return <div className="text-center mt-40 text-gray-600">Loading contact record...</div>;
 
-  return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white shadow-xl rounded-2xl w-full max-w-2xl p-8 mt-20">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-semibold text-gray-800">✏️ Update Contact Record</h2>
-          <button
-            onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-gray-600 hover:text-blue-600"
-          >
-            <ArrowLeft size={18} /> Back
-          </button>
-        </div>
+ return (
+  <div className="min-h-screen bg-gray-50 flex items-start sm:items-center justify-center px-3 sm:px-6 py-10">
+    <div className="bg-white shadow-xl rounded-xl w-full max-w-md sm:max-w-xl md:max-w-2xl p-4 sm:p-6 md:p-8 mt-20">
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">
+        <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">
+          ✏️ Update Contact Record
+        </h2>
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-sm sm:text-base text-gray-600 hover:text-blue-600"
+        >
+          <ArrowLeft size={18} /> Back
+        </button>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+
+        {/* Grid for inputs */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
           {/* Full Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Full Name</label>
@@ -160,18 +168,6 @@ export default function UpdateContactRecord() {
             </select>
           </div>
 
-          {/* Message */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Message</label>
-            <textarea
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              rows="4"
-              className="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none resize-none"
-            />
-          </div>
-
           {/* Status */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Status</label>
@@ -186,37 +182,53 @@ export default function UpdateContactRecord() {
               <option value="Spam">Spam</option>
             </select>
           </div>
+        </div>
 
-          {/* Buttons */}
-          <div className="pt-4">
-            <button
-              type="submit"
-              disabled={updating}
-              className={`w-full flex items-center justify-center gap-2 bg-indigo-600 text-white py-2 rounded-lg font-semibold transition ${
-                updating ? "opacity-80 cursor-not-allowed" : "hover:bg-indigo-700"
-              }`}
-            >
-              {updating ? (
-                <>
-                  <Loader2 className="animate-spin" size={16} /> Updating...
-                </>
-              ) : (
-                "Update Record"
-              )}
-            </button>
-          </div>
+        {/* Message Full Width */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Message</label>
+          <textarea
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            rows="4"
+            className="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none resize-none"
+          />
+        </div>
 
-          {statusMsg && (
-            <p
-              className={`text-center mt-3 text-sm ${
-                statusMsg.startsWith("✅") ? "text-green-600" : "text-red-600"
-              }`}
-            >
-              {statusMsg}
-            </p>
-          )}
-        </form>
-      </div>
+        {/* Submit Button */}
+        <div className="pt-4">
+          <button
+            type="submit"
+            disabled={updating}
+            className={`w-full flex items-center justify-center gap-2 bg-indigo-600 text-white py-2 rounded-lg font-semibold transition ${
+              updating ? "opacity-80 cursor-not-allowed" : "hover:bg-indigo-700"
+            }`}
+          >
+            {updating ? (
+              <>
+                <Loader2 className="animate-spin" size={16} /> Updating...
+              </>
+            ) : (
+              "Update Record"
+            )}
+          </button>
+        </div>
+
+        {/* Status Message */}
+        {statusMsg && (
+          <p
+            className={`text-center mt-3 text-sm ${
+              statusMsg.startsWith("✅") ? "text-green-600" : "text-red-600"
+            }`}
+          >
+            {statusMsg}
+          </p>
+        )}
+
+      </form>
     </div>
-  );
+  </div>
+);
+
 }

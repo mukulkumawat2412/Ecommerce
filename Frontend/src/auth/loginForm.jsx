@@ -68,111 +68,92 @@ useEffect(() => {
 
 
 
-  return (
+ return (
+  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300 px-4">
     <motion.div
       initial={{ opacity: 0, y: -30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      style={{
-    
-        maxWidth: "400px",
-        margin: "auto",
-        padding: "20px",
-       
-        borderRadius: "12px",
-        boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-      }}
+      className="w-full max-w-sm md:max-w-md bg-white p-6 md:p-8 rounded-xl shadow-lg"
     >
       <motion.h2
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.5 }}
-        style={{ textAlign: "center", marginBottom: "20px" }}
+        className="text-center text-xl md:text-2xl font-semibold mb-6"
       >
         Login
       </motion.h2>
 
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleLogin} className="space-y-4">
+        {/* Email */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.3 }}
-          style={{ marginBottom: "15px" }}
         >
-          <label>Email:</label>
+          <label className="block text-sm md:text-base font-medium text-gray-700">
+            Email
+          </label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
             required
-            style={{
-              width: "100%",
-              padding: "10px",
-              borderRadius: "6px",
-              border: "1px solid #ccc",
-              marginTop: "5px",
-            }}
+            className="w-full mt-1 p-2.5 border rounded-md outline-none focus:ring-2 focus:ring-green-500 text-sm md:text-base"
           />
         </motion.div>
 
+        {/* Password */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
-          style={{ marginBottom: "15px" }}
         >
-          <label>Password:</label>
+          <label className="block text-sm md:text-base font-medium text-gray-700">
+            Password
+          </label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password"
             required
-            style={{
-              width: "100%",
-              padding: "10px",
-              borderRadius: "6px",
-              border: "1px solid #ccc",
-              marginTop: "5px",
-            }}
+            className="w-full mt-1 p-2.5 border rounded-md outline-none focus:ring-2 focus:ring-green-500 text-sm md:text-base"
           />
         </motion.div>
 
+        {/* Button */}
         <motion.button
-        
           type="submit"
           disabled={loading}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          style={{
-            width: "100%",
-            padding: "10px",
-            background: "#007BFF",
-            color: "#fff",
-            border: "none",
-            backgroundColor:"#16a34a",
-            borderRadius: "6px",
-            cursor: "pointer",
-            fontSize: "16px",
-          }}
+          className="w-full mt-4 py-2.5 bg-green-600 text-white rounded-md font-medium hover:bg-green-700 transition text-sm md:text-base flex justify-center items-center"
         >
-         {loading ? <CircularProgress size={24} className="text-white font-bold" /> : "login"}
+          {loading ? (
+            <CircularProgress size={24} className="text-white" />
+          ) : (
+            "Login"
+          )}
         </motion.button>
       </form>
 
-          <div style={{ textAlign: "center", marginTop: "10px" }}>
-  <Link to="/signup" style={{ color: "#007BFF", textDecoration: "none" }}>
-    Don’t have an account? Register here
-  </Link><br/>
-  <Link to="/forgot-password" style={{ color: "#007BFF", textDecoration: "none" }}>
-  ForgotPassword
-  </Link>
-</div>
-
-
+      {/* Links */}
+      <div className="text-center mt-4 text-sm md:text-base">
+        <Link to="/signup" className="text-blue-600 hover:underline">
+          Don’t have an account? Register here
+        </Link>
+        <br />
+        <Link to="/forgot-password" className="text-blue-600 hover:underline">
+          Forgot Password
+        </Link>
+      </div>
     </motion.div>
-  );
+  </div>
+);
+
 };
 
 export default LoginForm;

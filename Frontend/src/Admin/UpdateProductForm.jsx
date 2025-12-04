@@ -119,118 +119,128 @@ const UpdateProductForm = () => {
         };
 
         return (
-          <Form className="w-[500px] mx-auto mt-4">
-            <div className="mb-2">
-              <Field
-                as={TextField}
-                name="name"
-                label="Product Name"
-                value={values.name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.name && Boolean(errors.name)}
-                helperText={touched.name && errors.name}
-                fullWidth
-              />
-            </div>
+         <Form className="w-full  max-w-xl mx-auto mt-20 p-4 sm:p-6 md:p-8 bg-white rounded-lg shadow-md">
+  <div className="mb-3">
+    <Field
+      as={TextField}
+      name="name"
+      label="Product Name"
+      value={values.name}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      error={touched.name && Boolean(errors.name)}
+      helperText={touched.name && errors.name}
+      fullWidth
+      size="small"
+    />
+  </div>
 
-            <div className="mb-2">
-              <Field
-                as={TextField}
-                name="title"
-                label="Product Title"
-                value={values.title}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.title && Boolean(errors.title)}
-                helperText={touched.title && errors.title}
-                fullWidth
-              />
-            </div>
+  <div className="mb-3">
+    <Field
+      as={TextField}
+      name="title"
+      label="Product Title"
+      value={values.title}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      error={touched.title && Boolean(errors.title)}
+      helperText={touched.title && errors.title}
+      fullWidth
+      size="small"
+    />
+  </div>
 
-            <div className="mb-2">
-              <Field
-                as={TextField}
-                name="price"
-                label="Price"
-                type="number"
-                value={values.price}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.price && Boolean(errors.price)}
-                helperText={touched.price && errors.price}
-                fullWidth
-              />
-            </div>
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+    <Field
+      as={TextField}
+      name="price"
+      label="Price"
+      type="number"
+      value={values.price}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      error={touched.price && Boolean(errors.price)}
+      helperText={touched.price && errors.price}
+      fullWidth
+      size="small"
+    />
 
-            <div className="mb-2">
-              <Field
-                as={TextField}
-                name="stock"
-                label="Stock"
-                type="number"
-                value={values.stock}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.stock && Boolean(errors.stock)}
-                helperText={touched.stock && errors.stock}
-                fullWidth
-              />
-            </div>
+    <Field
+      as={TextField}
+      name="stock"
+      label="Stock"
+      type="number"
+      value={values.stock}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      error={touched.stock && Boolean(errors.stock)}
+      helperText={touched.stock && errors.stock}
+      fullWidth
+      size="small"
+    />
+  </div>
 
-            <div className="mb-2">
-              <Field
-                as={TextField}
-                select
-                name="category"
-                label="Category"
-                value={values.category}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.category && Boolean(errors.category)}
-                helperText={touched.category && errors.category}
-                fullWidth
-              >
-                {categories.map((cat) => (
-                  <MenuItem key={cat._id} value={cat._id}>{cat.name}</MenuItem>
-                ))}
-              </Field>
-            </div>
+  <div className="mb-3">
+    <Field
+      as={TextField}
+      select
+      name="category"
+      label="Category"
+      value={values.category}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      error={touched.category && Boolean(errors.category)}
+      helperText={touched.category && errors.category}
+      fullWidth
+      size="small"
+    >
+      {categories.map((cat) => (
+        <MenuItem key={cat._id} value={cat._id}>
+          {cat.name}
+        </MenuItem>
+      ))}
+    </Field>
+  </div>
 
-            <div className="mb-2">
-              <Field
-                as={TextField}
-                name="description"
-                label="Description"
-                value={values.description}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.description && Boolean(errors.description)}
-                helperText={touched.description && errors.description}
-                fullWidth
-              />
-            </div>
+  <div className="mb-3">
+    <Field
+      as={TextField}
+      name="description"
+      label="Description"
+      value={values.description}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      error={touched.description && Boolean(errors.description)}
+      helperText={touched.description && errors.description}
+      fullWidth
+      multiline
+      minRows={3}
+      size="small"
+    />
+  </div>
 
-            <div className="mb-2">
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={handleImageChange}
-              />
-              {images.length > 0 && (
-                <div className="mt-2 text-sm">
-                  Selected {images.length} image(s)
-                </div>
-              )}
-            </div>
+  <div className="mb-3">
+    <input
+      type="file"
+      multiple
+      accept="image/*"
+      onChange={handleImageChange}
+      className="w-full text-sm sm:text-base"
+    />
+    {images.length > 0 && (
+      <div className="mt-2 text-sm sm:text-base">
+        Selected {images.length} image(s)
+      </div>
+    )}
+  </div>
 
-            <div className="mb-2">
-              <Button type="submit" variant="contained" color="primary" fullWidth>
-                Update Product
-              </Button>
-            </div>
-          </Form>
+  <div className="mb-3">
+    <Button type="submit" variant="contained" color="primary" fullWidth size="medium">
+      Update Product
+    </Button>
+  </div>
+</Form>
+
         );
       }}
     </Formik>

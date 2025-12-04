@@ -49,9 +49,13 @@ const ProfileChangePassword = () => {
     }
   };
 
-  return (
-    <div className="max-w-md mx-auto mt-25 p-6 bg-white shadow rounded">
-      <h2 className="text-2xl font-bold mb-4">Change Password</h2>
+ return (
+  <div className="w-full min-h-screen flex items-start justify-center pt-28 px-4 sm:px-6 lg:px-0">
+    <div className="w-full max-w-md p-5 sm:p-6 bg-white shadow rounded">
+      <h2 className="text-xl sm:text-2xl font-bold mb-4 text-center">
+        Change Password
+      </h2>
+
       <Formik
         initialValues={{ oldPassword: '', newPassword: '', confirmNewPassword: '' }}
         validationSchema={validationSchema}
@@ -59,9 +63,18 @@ const ProfileChangePassword = () => {
       >
         {({ values, handleChange, handleBlur, errors, touched, isSubmitting, status }) => (
           <Form className="flex flex-col gap-4">
+            
             {/* Status Messages */}
-            {status?.success && <p className="text-green-600">{status.success}</p>}
-            {status?.error && <p className="text-red-600">{status.error}</p>}
+            {status?.success && (
+              <p className="text-green-600 text-sm text-center">
+                {status.success}
+              </p>
+            )}
+            {status?.error && (
+              <p className="text-red-600 text-sm text-center">
+                {status.error}
+              </p>
+            )}
 
             <Field
               as={TextField}
@@ -108,6 +121,7 @@ const ProfileChangePassword = () => {
               color="primary"
               disabled={isSubmitting}
               fullWidth
+              className="py-2"
             >
               {isSubmitting ? "Updating..." : "Change Password"}
             </Button>
@@ -115,7 +129,9 @@ const ProfileChangePassword = () => {
         )}
       </Formik>
     </div>
-  );
+  </div>
+);
+
 };
 
 export default ProfileChangePassword;

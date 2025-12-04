@@ -24,10 +24,15 @@ const categories = [
 ];
 
 const CategoriesGrid = () => {
-  return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
-      <h2 className="text-2xl font-bold mb-6 text-center">Shop by Category</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+return (
+  <div className="w-full px-4 sm:px-6 lg:px-8 py-10">
+    <div className="max-w-7xl mx-auto">
+
+      <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center">
+        Shop by Category
+      </h2>
+
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
         {categories.map((cat) => (
           <div
             key={cat.id}
@@ -37,20 +42,23 @@ const CategoriesGrid = () => {
             <img
               src={cat.img}
               alt={cat.label}
-              className="w-full h-48 object-contain"
+              className="w-full h-36 sm:h-44 md:h-48 object-contain bg-white"
             />
 
-            {/* Overlay with gradient for better visibility */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end justify-center">
-              <h3 className="text-white text-lg font-semibold mb-3">
+            {/* Overlay Gradient */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end justify-center">
+              <h3 className="text-white text-sm sm:text-lg font-semibold mb-3">
                 {cat.label}
               </h3>
             </div>
           </div>
         ))}
       </div>
+
     </div>
-  );
+  </div>
+);
+
 };
 
 export default CategoriesGrid;

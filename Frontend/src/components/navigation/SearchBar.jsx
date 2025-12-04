@@ -81,32 +81,37 @@ const SearchBar = () => {
 
 
     return (
-        <div className='relative w-72'>
-            <input
-                type='text'
-                onChange={handleChange}
-                value={query}
-                placeholder='Search Products...'
-                onFocus={() => query && searchProduct.length > 0 && setShowDropdown(true)}
-                className='outline-none py-2 pl-2 px-20 border rounded-sm focus:ring-1 focus:ring-purple-400 placeholder-lg'
-            />
+  <div className="relative w-72 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
+    <input
+      type="text"
+      onChange={handleChange}
+      value={query}
+      placeholder="Search Products..."
+      onFocus={() => query && searchProduct.length > 0 && setShowDropdown(true)}
+      className="w-full outline-none py-2 pl-3 pr-10 border rounded-md focus:ring-1 focus:ring-purple-400 text-sm sm:text-base"
+    />
 
-            {
-                showDropdown && searchProduct.length > 0 && (
-                    <ul className='absolute w-68 bg-white border rounded-lg shadow-lg max-h-60 overflow-y-auto z-50'>
-                        {searchProduct.map((p) => (
-                            <Link key={p._id} to={`/product-details/${p._id}`}>
-                                <li className='flex items-center gap-3 p-2 cursor-pointer hover:bg-gray-100'>
-                                    <img src={p.image[0]} alt={p.name} className='w-10 h-10 object-contain' />
-                                    <span className='text-black'>{p.name} - ₹{p.price}</span>
-                                </li>
-                            </Link>
-                        ))}
-                    </ul>
-                )
-            }
-        </div>
-    )
+    {showDropdown && searchProduct.length > 0 && (
+      <ul className="absolute left-0 right-0 mt-1 bg-white border rounded-md shadow-lg max-h-60 overflow-y-auto z-50">
+        {searchProduct.map((p) => (
+          <Link key={p._id} to={`/product-details/${p._id}`}>
+            <li className="flex items-center gap-3 p-2 cursor-pointer hover:bg-gray-100">
+              <img
+                src={p.image[0]}
+                alt={p.name}
+                className="w-9 h-9 sm:w-10 sm:h-10 object-contain"
+              />
+              <span className="text-black text-xs sm:text-sm">
+                {p.name} - ₹{p.price}
+              </span>
+            </li>
+          </Link>
+        ))}
+      </ul>
+    )}
+  </div>
+);
+
 }
 
 export default SearchBar

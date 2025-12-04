@@ -6,7 +6,7 @@ import {BrowserRouter} from "react-router-dom"
 import React from 'react'
 import {Provider} from "react-redux"
 import store from './redux/slices/store.js'
-import { AuthProvider } from "./contextApi/AuthContext.jsx";
+// import { AuthProvider } from "./contextApi/AuthContext.jsx";
 // import { LoadingProvider } from './contextApi/LoadingContext.jsx'
 
 

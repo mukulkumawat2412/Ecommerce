@@ -23,34 +23,35 @@ const CategoriesDropdown = () => {
   }, [dispatch]);
 
   return (
-    <div className="relative inline-block text-left">
-      <button
-        onClick={() => setDropdownOpen(!dropdownOpen)}
-        className="inline-flex justify-between items-center w-48 px-4 py-2 bg-sky-500 text-white font-medium rounded-md hover:bg-sky-600 focus:outline-none"
-      >
-        Select Category
-        <span className="ml-2">{dropdownOpen ? "▲" : "▼"}</span>
-      </button>
+  <div className="relative inline-block text-left w-full sm:w-auto">
+    <button
+      onClick={() => setDropdownOpen(!dropdownOpen)}
+      className="inline-flex justify-between items-center w-full sm:w-48 px-4 py-2 bg-sky-500 text-white font-medium rounded-md hover:bg-sky-600 focus:outline-none text-sm sm:text-base"
+    >
+      Select Category
+      <span className="ml-2">{dropdownOpen ? "▲" : "▼"}</span>
+    </button>
 
-      {dropdownOpen && (
-        <div className="absolute mt-2 w-48 bg-white border rounded-md shadow-lg z-10">
-          <ul>
-            {categories.map((cat) => (
-              <li key={cat._id}>
-                <Link
-                  to={`/category-by-products/${cat._id}`}
-                  className="block px-4 py-2 hover:bg-sky-100 cursor-pointer"
-                  onClick={() => setDropdownOpen(false)} // close dropdown on click
-                >
-                  {cat.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
-  );
+    {dropdownOpen && (
+      <div className="absolute mt-2 w-full sm:w-48 bg-white border rounded-md shadow-lg z-10 left-0">
+        <ul className="max-h-60 overflow-y-auto">
+          {categories.map((cat) => (
+            <li key={cat._id}>
+              <Link
+                to={`/category-by-products/${cat._id}`}
+                className="block px-4 py-2 hover:bg-sky-100 cursor-pointer text-sm sm:text-base"
+                onClick={() => setDropdownOpen(false)}
+              >
+                {cat.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </div>
+);
+
 };
 
 export default CategoriesDropdown;
