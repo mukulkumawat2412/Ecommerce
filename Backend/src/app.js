@@ -7,32 +7,19 @@ dotenv.config();
 
 const app = express();
 
-
 app.use(express.json());
 app.use("/uploads", express.static("public/temp"));
 
-
-const allowedOrigins = [
-  "https://ecommerce-rosy-three.vercel.app"
-];
-
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: process.env.CORS_ORIGIN,
   credentials: true,
+ 
 }));
 
 
 
 
-
-
-
+app.use(cookieParser());
 
 // ✅ ROUTES
 import userRouter from "./Routes/user.route.js";
