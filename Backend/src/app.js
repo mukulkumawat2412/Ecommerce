@@ -7,12 +7,13 @@ dotenv.config();
 
 const app = express();
 
+
 app.use(express.json());
 app.use("/uploads", express.static("public/temp"));
 
+
 const allowedOrigins = [
-  "https://ecommerce-rosy-three.vercel.app",
-  "https://ecommerce-i7jwu5tzn-mukul-kumawats-projects.vercel.app"
+  "https://ecommerce-rosy-three.vercel.app"
 ];
 
 app.use(cors({
@@ -25,6 +26,9 @@ app.use(cors({
   },
   credentials: true,
 }));
+
+a
+
 
 
 
