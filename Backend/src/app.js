@@ -10,16 +10,25 @@ const app = express();
 app.use(express.json());
 app.use("/uploads", express.static("public/temp"));
 
+const allowedOrigins = [
+  "https://ecommerce-rosy-three.vercel.app",
+  "https://ecommerce-i7jwu5tzn-mukul-kumawats-projects.vercel.app"
+];
+
 app.use(cors({
-  origin: process.env.CORS_ORIGIN,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
- 
 }));
 
 
 
 
-app.use(cookieParser());
 
 // ✅ ROUTES
 import userRouter from "./Routes/user.route.js";
