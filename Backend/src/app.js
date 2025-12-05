@@ -12,31 +12,20 @@ app.use(express.json());
 app.use("/uploads", express.static("public/temp"));
 
 
-
-
-
-import cors from "cors";
-
 const allowedOrigins = [
-  "https://ecommerce-assipiozk-mukul-kumawats-projects.vercel.app"
+  "https://ecommerce-rosy-three.vercel.app"
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin) return callback(null, true); // postman, mobile apps
-
-    if (allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
 }));
-
-  // ✅ VERY IMPORTANT FOR PREFLIGHT
 
 
 
