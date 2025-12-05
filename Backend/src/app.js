@@ -36,7 +36,7 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-app.options("*", cors());   // ✅ VERY IMPORTANT FOR PREFLIGHT
+  // ✅ VERY IMPORTANT FOR PREFLIGHT
 
 
 
