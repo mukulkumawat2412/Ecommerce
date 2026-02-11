@@ -54,23 +54,23 @@ function App() {
   const { authLoading, user } = useSelector((state) => state.auth);
 
   // ✅ Silent refresh on app load
-  useEffect(() => {
-    const initAuth = async () => {
-      try {
-        await dispatch(RefreshAccessToken()).unwrap();
-      } catch (error) {
-        console.log("Silent refresh failed:", error);
-      } finally {
-        setInitialLoading(false);
-      }
-    };
-    initAuth();
-  }, [dispatch]);
+  // useEffect(() => {
+  //   const initAuth = async () => {
+  //     try {
+  //       await dispatch(RefreshAccessToken()).unwrap();
+  //     } catch (error) {
+  //       console.log("Silent refresh failed:", error);
+  //     } finally {
+  //       setInitialLoading(false);
+  //     }
+  //   };
+  //   initAuth();
+  // }, [dispatch]);
 
   // ✅ Global spinner
-  if (authLoading && initialLoading) {
-    return <FullPageSpinner />;
-  }
+  // if (authLoading && initialLoading) {
+  //   return <FullPageSpinner />;
+  // }
 
   return (
     <>
