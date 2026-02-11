@@ -57,11 +57,11 @@ function Navbar() {
   const handleLogout = async () => {
     try {
       
-  if(isAuthenticated){
+
      await dispatch(Logout())
     navigate("/login")
     
-  }
+
       
     
       
