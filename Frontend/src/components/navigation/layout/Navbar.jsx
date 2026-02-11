@@ -10,6 +10,7 @@ import { Logout, RefreshAccessToken } from '../../../redux/slices/authSlice.jsx'
 import { getCartItems } from '../../../redux/slices/cartSlice.jsx';
 import { wishlistProducts } from '../../../redux/slices/wishlistSlice.jsx';
 
+
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -56,9 +57,13 @@ function Navbar() {
   const handleLogout = async () => {
     try {
       
-
-      
+  if(isAuthenticated){
      await dispatch(Logout())
+    navigate("/login")
+    
+  }
+      
+    
       
     } catch (error) {
       console.log("Logout error:", error);
