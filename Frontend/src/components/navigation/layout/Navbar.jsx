@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Logout, RefreshAccessToken } from '../../../redux/slices/authSlice.jsx';
 import { getCartItems } from '../../../redux/slices/cartSlice.jsx';
 import { wishlistProducts } from '../../../redux/slices/wishlistSlice.jsx';
+import { CiLogout } from "react-icons/ci";
 
 
 function Navbar() {
@@ -170,6 +171,7 @@ return (
                   onClick={handleLogout}
                   className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-200"
                 >
+                  <CiLogout />
                   Logout
                 </button>
               </div>
