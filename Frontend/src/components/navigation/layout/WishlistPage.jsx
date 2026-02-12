@@ -22,6 +22,11 @@ const WishlistPage = () => {
   }
 
 
+    useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+
 
   const handleWishlistItems = async(itemId)=>{
   const res =  await dispatch(DeleteWishlistProduct({itemId}))
