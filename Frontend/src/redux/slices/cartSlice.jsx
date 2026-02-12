@@ -109,15 +109,18 @@ const cartSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-.addCase(AddToCart.fulfilled, (state, action) => {
+
+  .addCase(AddToCart.fulfilled, (state, action) => {
     state.loading = false;
-    // ✅ Merge safely with existing cart
-    if(action.payload?.cartItems){ 
-        state.cartItems = action.payload.cartItems;
-    } else {
+    if(action.payload?.product?._id){
         state.cartItems.push(action.payload);
+    } else {
+        console.warn("AddToCart returned invalid item", action.payload);
     }
 });
+
+
+      
       .addCase(AddToCart.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to add to cart";
