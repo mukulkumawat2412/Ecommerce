@@ -64,7 +64,7 @@ const CartPage = () => {
   const removeItem = async (cartId) => {
     try {
       await dispatch(DeleteCartItems({ cartId }));
-      navigate(0);
+      
     } catch (error) {
       console.error("Error removing item:", error);
     }
