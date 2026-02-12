@@ -109,11 +109,15 @@ const cartSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(AddToCart.fulfilled, (state, action) => {
-        state.loading = false;
-        console.log(action.payload);
+.addCase(AddToCart.fulfilled, (state, action) => {
+    state.loading = false;
+    // ✅ Merge safely with existing cart
+    if(action.payload?.cartItems){ 
+        state.cartItems = action.payload.cartItems;
+    } else {
         state.cartItems.push(action.payload);
-      })
+    }
+});
       .addCase(AddToCart.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to add to cart";
