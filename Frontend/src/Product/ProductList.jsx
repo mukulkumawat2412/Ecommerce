@@ -14,6 +14,7 @@ import TopCategoryByProducts from "./TopCategoryByProducts.jsx";
 const ProductList = ({ setCartCount }) => {
   const [loading, setLoading] = useState(true);
   const [wishlist, setWishlist] = useState([]);
+  const [cartlist,setCartList] = useState([])
 
   const dispatch = useDispatch();
   const { products } = useSelector((state) => state.product);
@@ -48,12 +49,19 @@ const ProductList = ({ setCartCount }) => {
       const res = await dispatch(AddToCart({ productId, quantity:1 })).unwrap();
       console.log("AddToCart response:", res);
 
-      if (!alreadyInCart) {
-        setCartCount((prev) => prev + 1);
-        console.log("✅ New product added, count increased");
-      } else {
-        console.log("⚠️ Existing product, quantity updated, count unchanged");
-      }
+       setCartList((prev) =>
+        prev.includes(productId)
+          ? prev.filter((id) => id !== productId)
+          : [...prev, productId]
+      );
+
+      
+      // if (!alreadyInCart) {
+      //   setCartCount((prev) => prev + 1);
+      //   console.log("✅ New product added, count increased");
+      // } else {
+      //   console.log("⚠️ Existing product, quantity updated, count unchanged");
+      // }
     } catch (error) {
       console.log("Error adding to cart:", error);
     }
