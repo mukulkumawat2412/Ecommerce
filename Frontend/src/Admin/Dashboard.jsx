@@ -42,7 +42,7 @@ const Dashboard = () => {
   const handleDelete = async (id) => {
     try {
       
-   const res =  await dispatch(deleteProduct({id}))
+     await dispatch(deleteProduct({id}))
       
       // if(res.payload.success){
       //   alert("Product deleted successfully")
