@@ -39,19 +39,17 @@ const Dashboard = () => {
 
 
 
-  const handleDelete = async (id) => {
-    try {
-      
-     await dispatch(deleteProduct({id}))
-      
-      // if(res.payload.success){
-      //   alert("Product deleted successfully")
-       
-      // }
-    } catch (error) {
-      console.log("Error deleting product", error);
-    }
-  };
+const handleDelete = async (id) => {
+  try {
+    await dispatch(deleteProduct({ id })).unwrap();
+
+    // ✅ UI se turant remove karo
+    setProducts((prev) => prev.filter((p) => p._id !== id));
+
+  } catch (error) {
+    console.log("Error deleting product", error);
+  }
+};
 
   return (
   <AdminLayout>
