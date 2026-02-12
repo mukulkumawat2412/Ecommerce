@@ -46,7 +46,7 @@ const Dashboard = () => {
       
       if(res.payload.success){
         alert("Product deleted successfully")
-        navigate(0)
+       
       }
     } catch (error) {
       console.log("Error deleting product", error);
