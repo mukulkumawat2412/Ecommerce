@@ -163,18 +163,21 @@ return (
             </button>
 
             {isDropdownOpen && (
-              <div className="absolute right-0 top-12 w-44 bg-white text-black border rounded-md shadow-md z-50">
-                <Link to="/profile" className="block px-4 py-2 hover:bg-gray-200">View Profile</Link>
-                <Link to="/update/profile" className="block px-4 py-2 hover:bg-gray-200">Update Profile</Link>
-                <Link to="/changePassword/profile" className="block px-4 py-2 hover:bg-gray-200">Change Password</Link>
-                <button
-                  onClick={handleLogout}
-                  className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-200"
-                >
-                  <CiLogout className="inline-block text-black"  style={{ width: '50px' }} />
-                  Logout
-                </button>
-              </div>
+            <div className="absolute right-0 top-12 w-44 bg-white text-black border rounded-md shadow-md z-50">
+  <Link to="/profile" className="block px-4 py-2 hover:bg-gray-200">View Profile</Link>
+  <Link to="/update/profile" className="block px-4 py-2 hover:bg-gray-200">Update Profile</Link>
+  <Link to="/changePassword/profile" className="block px-4 py-2 hover:bg-gray-200">Change Password</Link>
+  <button
+    onClick={handleLogout}
+    className="flex items-center w-full text-left px-4 py-2 text-red-600 hover:bg-gray-200 gap-2"
+  >
+    <CiLogout className="text-black" style={{ width: '24px', height: '24px' }} />
+    Logout
+  </button>
+</div>
+
+
+            
             )}
           </div>
         )}
