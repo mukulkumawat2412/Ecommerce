@@ -111,15 +111,18 @@ const wishlistSlice = createSlice({
     }).addCase(DeleteWishlistProduct.pending,(state)=>{
       state.loading = true
 
-    }).addCase(DeleteWishlistProduct.fulfilled,(state,action)=>{
-      state.loading = false
-      console.log(action.payload)
-       state.wishlistItems = state.wishlistItems.filter((item)=>item._id !==action.payload.data)
-      toast.success(action.payload.message)
-      
+    }).addCase(DeleteWishlistProduct.fulfilled, (state, action) => {
+  state.loading = false;
 
-       
-    }).addCase(DeleteWishlistProduct.rejected,(state,action)=>{
+  const deletedId = action.meta.arg.itemId; // 👈 original id lo
+
+  state.wishlistItems = state.wishlistItems.filter(
+    (item) => item._id !== deletedId
+  );
+
+  toast.success(action.payload.message);
+        
+}).addCase(DeleteWishlistProduct.rejected,(state,action)=>{
       state.loading = false
       console.log(action.payload)
       
