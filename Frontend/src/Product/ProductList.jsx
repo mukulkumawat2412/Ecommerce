@@ -42,7 +42,7 @@ const ProductList = ({ setCartCount }) => {
   const addToCart = async (productId) => {
     try {
       const alreadyInCart = cartItems.some(
-        (item) => item.product._id.toString() === productId.toString()
+        (item) => item?.product?._id.toString() === productId.toString()
       );
 
       const res = await dispatch(AddToCart({ productId, quantity: 1 })).unwrap();
