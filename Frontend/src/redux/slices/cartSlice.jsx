@@ -99,9 +99,7 @@ const cartSlice = createSlice({
       .addCase(AddToCart.pending, (state) => {
         state.loading = true;
         state.error = null;
-      })
-
-      .addCase(AddToCart.fulfilled, (state, action) => {
+      }).addCase(AddToCart.fulfilled, (state, action) => {
   state.loading = false;
   if (action.payload?.product?._id) {
     const existingItem = state.cartItems.find(
@@ -115,13 +113,7 @@ const cartSlice = createSlice({
   } else {
     console.warn("AddToCart returned invalid item", action.payload);
   }
-});
-
-
-
-
-      
-      .addCase(AddToCart.rejected, (state, action) => {
+}).addCase(AddToCart.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to add to cart";
       })
