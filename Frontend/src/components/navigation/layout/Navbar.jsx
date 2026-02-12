@@ -168,12 +168,13 @@ return (
   <Link to="/update/profile" className="block px-4 py-2 hover:bg-gray-200">Update Profile</Link>
   <Link to="/changePassword/profile" className="block px-4 py-2 hover:bg-gray-200">Change Password</Link>
   <button
-    onClick={handleLogout}
-    className="flex items-center w-full text-left px-4 py-2 text-red-600 hover:bg-gray-200 gap-2"
-  >
-    <CiLogout className="text-black" style={{ width: '24px', height: '24px' }} />
-    Logout
-  </button>
+  onClick={handleLogout}
+  className="flex items-center w-full text-left px-4 py-2 text-red-600 hover:bg-gray-200 gap-2"
+>
+  <CiLogout className="text-black text-2xl" /> {/* text-2xl ya text-3xl bada icon */}
+  Logout
+</button>
+
 </div>
 
 
