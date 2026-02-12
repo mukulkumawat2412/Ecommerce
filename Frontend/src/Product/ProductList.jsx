@@ -39,25 +39,40 @@ const ProductList = ({ setCartCount }) => {
 
   if (loading) return <p className="text-center text-lg mt-10">Loading...</p>;
 
+  // const addToCart = async (productId) => {
+  //   try {
+  //     const alreadyInCart = cartItems.some(
+  //       (item) => item.product._id.toString() === productId.toString()
+  //     );
+
+  //     const res = await dispatch(AddToCart({ productId, quantity: 1 })).unwrap();
+  //     console.log("AddToCart response:", res);
+
+  //     if (!alreadyInCart) {
+  //       setCartCount((prev) => prev + 1);
+  //       console.log("✅ New product added, count increased");
+  //     } else {
+  //       console.log("⚠️ Existing product, quantity updated, count unchanged");
+  //     }
+  //   } catch (error) {
+  //     console.log("Error adding to cart:", error);
+  //   }
+  // };
+
+
+
   const addToCart = async (productId) => {
-    try {
-      const alreadyInCart = cartItems.some(
-        (item) => item.product._id.toString() === productId.toString()
-      );
+  try {
+    const res = await dispatch(AddToCart({ productId, quantity: 1 })).unwrap();
+    console.log("AddToCart response:", res);
 
-      const res = await dispatch(AddToCart({ productId, quantity: 1 })).unwrap();
-      console.log("AddToCart response:", res);
+    // ✅ Immediately refresh cart items
 
-      if (!alreadyInCart) {
-        setCartCount((prev) => prev + 1);
-        console.log("✅ New product added, count increased");
-      } else {
-        console.log("⚠️ Existing product, quantity updated, count unchanged");
-      }
-    } catch (error) {
-      console.log("Error adding to cart:", error);
-    }
-  };
+  } catch (error) {
+    console.error("Error adding to cart:", error);
+  }
+};
+
 
   const toggleWishlist = async (productId) => {
     try {
