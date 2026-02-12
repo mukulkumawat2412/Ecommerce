@@ -121,68 +121,72 @@ const CartPage = () => {
       <div className="flex flex-col lg:flex-row gap-6">
         {/* ✅ Cart Items */}
         <div className="flex-1 space-y-4">
-          {cartItems.map((item) => (
-            <div
-              key={item._id}
-              className="flex flex-col sm:flex-row sm:items-center border rounded-lg p-4 shadow-sm"
-            >
-              <img
-                src={item.product.image?.[0] || "/placeholder.png"}
-                alt={item.product.name}
-                className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded mb-3 sm:mb-0 sm:mr-4"
-              />
+        {cartItems
+  ?.filter(item => item?.product)
+  ?.map((item) => (
+    <div
+      key={item._id}
+      className="flex flex-col sm:flex-row sm:items-center border rounded-lg p-4 shadow-sm"
+    >
+      <img
+        src={item?.product?.image?.[0] || "/placeholder.png"}
+        alt={item?.product?.name || "product"}
+        className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded mb-3 sm:mb-0 sm:mr-4"
+      />
 
-              <div className="flex-1">
-                <h2 className="font-semibold text-base sm:text-lg">
-                  {item.product.name}
-                </h2>
-                <p className="text-gray-600 text-sm sm:text-base">
-                  Price: ₹{item.product.price}
-                </p>
+      <div className="flex-1">
+        <h2 className="font-semibold text-base sm:text-lg">
+          {item?.product?.name}
+        </h2>
 
-                <div className="flex flex-wrap items-center mt-3 gap-2">
-                  <span className="text-sm">Qty:</span>
+        <p className="text-gray-600 text-sm sm:text-base">
+          Price: ₹{item?.product?.price}
+        </p>
 
-                  <button
-                    onClick={() => updateQuantity(item._id, -1)}
-                    className="bg-gray-300 px-3 py-1 rounded hover:bg-gray-400"
-                  >
-                    -
-                  </button>
+        <div className="flex flex-wrap items-center mt-3 gap-2">
+          <span className="text-sm">Qty:</span>
 
-                  <input
-                    type="number"
-                    min="1"
-                    value={item.quantity}
-                    onChange={(e) => {
-                      const value = parseInt(e.target.value);
-                      const diff = value - item.quantity;
-                      updateQuantity(item._id, diff);
-                    }}
-                    className="border w-16 text-center rounded px-2 py-1"
-                  />
+          <button
+            onClick={() => updateQuantity(item._id, -1)}
+            className="bg-gray-300 px-3 py-1 rounded hover:bg-gray-400"
+          >
+            -
+          </button>
 
-                  <button
-                    onClick={() => updateQuantity(item._id, 1)}
-                    className="bg-gray-300 px-3 py-1 rounded hover:bg-gray-400"
-                  >
-                    +
-                  </button>
+          <input
+            type="number"
+            min="1"
+            value={item.quantity}
+            onChange={(e) => {
+              const value = parseInt(e.target.value);
+              const diff = value - item.quantity;
+              updateQuantity(item._id, diff);
+            }}
+            className="border w-16 text-center rounded px-2 py-1"
+          />
 
-                  <button
-                    onClick={() => removeItem(item._id)}
-                    className="bg-red-500 text-white px-4 py-1 rounded text-sm"
-                  >
-                    Remove
-                  </button>
-                </div>
-              </div>
+          <button
+            onClick={() => updateQuantity(item._id, 1)}
+            className="bg-gray-300 px-3 py-1 rounded hover:bg-gray-400"
+          >
+            +
+          </button>
 
-              <div className="mt-3 sm:mt-0 sm:ml-4 font-semibold text-base sm:text-lg">
-                ₹{item.product.price * item.quantity}
-              </div>
-            </div>
-          ))}
+          <button
+            onClick={() => removeItem(item._id)}
+            className="bg-red-500 text-white px-4 py-1 rounded text-sm"
+          >
+            Remove
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-3 sm:mt-0 sm:ml-4 font-semibold text-base sm:text-lg">
+        ₹{item?.product?.price * item?.quantity}
+      </div>
+    </div>
+))}
+
         </div>
 
         {/* ✅ Order Summary */}
