@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import getCookie from "../../../../../Backend/src/utils/GetToken.js";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,14 +24,7 @@ const CartPage = () => {
   const { discount, message, totalAfterDiscount } = useSelector(
     (state) => state.coupon
   );
-
-  console.log(cartItems);
-
-  const isAuthenticated = useSelector(
-    (state) => state.auth.isAuthenticated
-  );
-
-  console.log(subTotal);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   // Scroll to top
   useEffect(() => {
@@ -63,7 +56,6 @@ const CartPage = () => {
   const removeItem = async (cartId) => {
     try {
       await dispatch(DeleteCartItems({ cartId }));
-      navigate(0);
     } catch (error) {
       console.error("Error removing item:", error);
     }
@@ -75,10 +67,8 @@ const CartPage = () => {
       setCouponMessage("Please enter a coupon code");
       return;
     }
-
     setCouponMessage("");
     setIsApplying(true);
-
     try {
       const res = await dispatch(
         ApplyCoupon({ coupon_code: MYCouponCode, subTotal })
@@ -97,11 +87,9 @@ const CartPage = () => {
       const response = await dispatch(
         createCheckOut({
           products: cartItems,
-          amount:
-            totalAfterDiscount > 0 ? totalAfterDiscount : subTotal,
+          amount: totalAfterDiscount > 0 ? totalAfterDiscount : subTotal,
         })
       ).unwrap();
-
       if (response?.url) {
         window.location.href = response.url;
       }
@@ -124,77 +112,71 @@ const CartPage = () => {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* ✅ Cart Items */}
           <div className="flex-1 space-y-4">
-            {cartItems.map((item) => (
-              <div
-                key={item._id}
-                className="flex flex-col sm:flex-row sm:items-center border rounded-lg p-4 shadow-sm"
-              >
-                <img
-                  src={
-                    item.product.image?.[0] || "/placeholder.png"
-                  }
-                  alt={item.product.name}
-                  className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded mb-3 sm:mb-0 sm:mr-4"
-                />
+            {cartItems
+              ?.filter((item) => item?.product) // ✅ CHANGE: filter out null products
+              ?.map((item) => (
+                <div
+                  key={item._id}
+                  className="flex flex-col sm:flex-row sm:items-center border rounded-lg p-4 shadow-sm"
+                >
+                  <img
+                    src={item?.product?.image?.[0] || "/placeholder.png"} // ✅ CHANGE: safe image access
+                    alt={item?.product?.name || "product"}
+                    className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded mb-3 sm:mb-0 sm:mr-4"
+                  />
 
-                <div className="flex-1">
-                  <h2 className="font-semibold text-base sm:text-lg">
-                    {item.product.name}
-                  </h2>
+                  <div className="flex-1">
+                    <h2 className="font-semibold text-base sm:text-lg">
+                      {item?.product?.name}
+                    </h2>
 
-                  <p className="text-gray-600 text-sm sm:text-base">
-                    Price: ₹{item.product.price}
-                  </p>
+                    <p className="text-gray-600 text-sm sm:text-base">
+                      Price: ₹{item?.product?.price || 0} {/* ✅ CHANGE: safe price */}
+                    </p>
 
-                  <div className="flex flex-wrap items-center mt-3 gap-2">
-                    <span className="text-sm">Qty:</span>
+                    <div className="flex flex-wrap items-center mt-3 gap-2">
+                      <span className="text-sm">Qty:</span>
 
-                    <button
-                      onClick={() =>
-                        updateQuantity(item._id, -1)
-                      }
-                      className="bg-gray-300 px-3 py-1 rounded hover:bg-gray-400"
-                    >
-                      -
-                    </button>
+                      <button
+                        onClick={() => updateQuantity(item._id, -1)}
+                        className="bg-gray-300 px-3 py-1 rounded hover:bg-gray-400"
+                      >
+                        -
+                      </button>
 
-                    <input
-                      type="number"
-                      min="1"
-                      value={item.quantity}
-                      onChange={(e) => {
-                        const value = parseInt(e.target.value);
-                        const diff = value - item.quantity;
-                        updateQuantity(item._id, diff);
-                      }}
-                      className="border w-16 text-center rounded px-2 py-1"
-                    />
+                      <input
+                        type="number"
+                        min="1"
+                        value={item.quantity}
+                        onChange={(e) => {
+                          const value = parseInt(e.target.value);
+                          const diff = value - item.quantity;
+                          updateQuantity(item._id, diff);
+                        }}
+                        className="border w-16 text-center rounded px-2 py-1"
+                      />
 
-                    <button
-                      onClick={() =>
-                        updateQuantity(item._id, 1)
-                      }
-                      className="bg-gray-300 px-3 py-1 rounded hover:bg-gray-400"
-                    >
-                      +
-                    </button>
+                      <button
+                        onClick={() => updateQuantity(item._id, 1)}
+                        className="bg-gray-300 px-3 py-1 rounded hover:bg-gray-400"
+                      >
+                        +
+                      </button>
 
-                    <button
-                      onClick={() =>
-                        removeItem(item._id)
-                      }
-                      className="bg-red-500 text-white px-4 py-1 rounded text-sm"
-                    >
-                      Remove
-                    </button>
+                      <button
+                        onClick={() => removeItem(item._id)}
+                        className="bg-red-500 text-white px-4 py-1 rounded text-sm"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 sm:mt-0 sm:ml-4 font-semibold text-base sm:text-lg">
+                    ₹{(item?.product?.price || 0) * item?.quantity} {/* ✅ CHANGE: safe total */}
                   </div>
                 </div>
-
-                <div className="mt-3 sm:mt-0 sm:ml-4 font-semibold text-base sm:text-lg">
-                  ₹{item.product.price * item.quantity}
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
 
           {/* ✅ Order Summary */}
@@ -225,9 +207,7 @@ const CartPage = () => {
                 type="text"
                 placeholder="Enter coupon code"
                 value={MYCouponCode}
-                onChange={(e) =>
-                  setMYCouponCode(e.target.value)
-                }
+                onChange={(e) => setMYCouponCode(e.target.value)}
                 className="border p-2 rounded w-full mb-2 text-sm"
               />
 
@@ -242,9 +222,7 @@ const CartPage = () => {
               {message && (
                 <p
                   className={`text-xs sm:text-sm mt-2 text-center ${
-                    discount > 0
-                      ? "text-green-600 font-medium"
-                      : "text-red-500"
+                    discount > 0 ? "text-green-600 font-medium" : "text-red-500"
                   }`}
                 >
                   {message}
@@ -258,7 +236,6 @@ const CartPage = () => {
                 <h3 className="text-base sm:text-lg font-semibold text-green-700 mb-2">
                   Coupon Applied
                 </h3>
-
                 <div className="flex justify-between text-green-600 font-semibold text-sm sm:text-base">
                   <span>You Saved:</span>
                   <span>₹{discount}</span>
@@ -269,19 +246,11 @@ const CartPage = () => {
             {/* ✅ Final Total */}
             <div className="flex justify-between items-center font-bold text-base sm:text-lg border-t pt-3 mt-3">
               <span>Total:</span>
-
               <div className="flex items-center gap-2">
-                <span>
-                  ₹{discount > 0
-                    ? totalAfterDiscount
-                    : subTotal}
-                </span>
-
+                <span>₹{discount > 0 ? totalAfterDiscount : subTotal}</span>
                 {discount > 0 && (
                   <button
-                    onClick={() =>
-                      dispatch(removeCoupon())
-                    }
+                    onClick={() => dispatch(removeCoupon())}
                     className="text-red-500 hover:text-red-700 font-bold text-xl"
                   >
                     ✕
