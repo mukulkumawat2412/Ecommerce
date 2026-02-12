@@ -45,7 +45,7 @@ const ProductList = ({ setCartCount }) => {
         (item) => item?.product?._id.toString() === productId.toString()
       );
 
-      const res = await dispatch(AddToCart({ productId, quantity: 1 })).unwrap();
+      const res = await dispatch(AddToCart({ productId, quantity })).unwrap();
       console.log("AddToCart response:", res);
 
       if (!alreadyInCart) {
