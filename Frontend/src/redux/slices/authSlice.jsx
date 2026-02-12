@@ -157,7 +157,7 @@ const authSlice = createSlice({
       state.profileData = null;
       state.authLoading = false;
       delete api.defaults.headers.common["Authorization"];
-      window.location.href = "/login"; // redirect user
+      // window.location.href = "/login"; // redirect user
     });
 
     /* Refresh Token */
