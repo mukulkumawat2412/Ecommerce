@@ -171,7 +171,7 @@ return (
                   onClick={handleLogout}
                   className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-200"
                 >
-                  <CiLogout className="inline-block w-[50px] text-black" />
+                  <CiLogout className="inline-block style={{ width: '50px' }} text-black" />
                   Logout
                 </button>
               </div>
