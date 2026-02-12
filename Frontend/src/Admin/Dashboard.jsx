@@ -44,10 +44,10 @@ const Dashboard = () => {
       
    const res =  await dispatch(deleteProduct({id}))
       
-      if(res.payload.success){
-        alert("Product deleted successfully")
+      // if(res.payload.success){
+      //   alert("Product deleted successfully")
        
-      }
+      // }
     } catch (error) {
       console.log("Error deleting product", error);
     }
