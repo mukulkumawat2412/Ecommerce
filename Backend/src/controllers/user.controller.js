@@ -1,0 +1,327 @@
+import asyncHandler from "../utils/AsyncHandler.js";
+
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { GenerateAccessTokenAndRefreshToken } from "../utils/GenerateAccessAndRefreshToken.js";
+
+
+import jwt from "jsonwebtoken"
+import User from "../models/user.model.js";
+import bcrypt from "bcrypt"
+import dotenv from "dotenv"
+import crypto from "crypto";
+
+dotenv.config()
+
+
+
+
+const Register = asyncHandler(async(req,res)=>{
+
+const {username,email,password,fullName,} =    req.body
+
+
+if([username,email,password,fullName].some((value)=>value?.trim()==="")){
+   throw new ApiError(400,"All field are required")
+}
+
+const alreadyExist = await User.findOne({
+   $or:[{email,username}]
+})
+
+
+if(alreadyExist){
+   throw new ApiError(400,"Username and email already exist")
+}
+
+
+const user = await User.create({
+   username:username.toLowerCase(),
+   email,
+   password,
+   fullName
+})
+
+
+const createdUser = await User.findById(user._id).select("-password -refreshToken")
+
+if(!createdUser){
+   throw new ApiError(400,"something went wrong registering user")
+}
+
+
+return res.status(201).json(new ApiResponse(200,createdUser,"User Register successfully"))
+
+
+})
+
+
+
+
+
+
+
+
+
+
+const Login = asyncHandler(async (req, res) => {
+  const { email, username, password } = req.body;
+
+  if (!email && !username) throw new ApiError(400, "Email or Username is required");
+
+  const user = await User.findOne({ $or: [{ email }, { username }] }).select("+password");
+  if (!user) throw new ApiError(404, "User does not exist");
+
+  const isPasswordValid = await user.isPasswordCorrect(password);
+  if (!isPasswordValid) throw new ApiError(400, "Incorrect password");
+
+  const { accessToken, refreshToken } = await GenerateAccessTokenAndRefreshToken(user._id);
+
+
+  const sanitizedUser = await User.findById(user._id).select("-password -refreshToken -refreshTokenExpiry");
+
+
+  const cookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production" ? true :false,
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    path: "/",
+  };
+
+  return res
+    .status(200)
+    .cookie("refreshToken", refreshToken, cookieOptions)
+    .cookie("accessToken", accessToken, { ...cookieOptions, maxAge: 15 * 50 * 1000 }) // 15m access token
+    .json(new ApiResponse(200, { sanitizedUser, accessToken }, "Login successful"));
+});
+
+
+
+
+
+
+
+
+
+const RefreshAccessToken = asyncHandler(async (req, res) => {
+  // If access token is still valid, don't fail refresh (prevents noisy 401s on page reloads)
+  const existingAccessToken = req.cookies?.accessToken;
+  if (existingAccessToken) {
+    try {
+      const decodedAccess = jwt.verify(existingAccessToken, process.env.ACCESS_TOKEN_SECRET);
+      const existingUser = await User.findById(decodedAccess._id).select("-password -refreshToken -refreshTokenExpiry");
+      if (existingUser) {
+        return res
+          .status(200)
+          .json(new ApiResponse(200, { accessToken: existingAccessToken, user: existingUser }, "Access token still valid"));
+      }
+    } catch {
+      // ignore and continue normal refresh flow
+    }
+  }
+
+  const incomingRefreshToken = req.cookies?.refreshToken;
+
+ 
+  if (!incomingRefreshToken)
+    return res.status(400).json(new ApiError(400, "refreshToken is missing"));
+
+  try {
+    // 1️⃣ Verify the plain incoming refresh token
+    const decoded = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+    // 2️⃣ Get user
+    const user = await User.findById(decoded._id);
+    if (!user) throw new ApiError(401, "Invalid refresh token: user not found");
+
+
+    // 3️⃣ Compare hashed token in DB
+    const hashedIncomingToken = crypto
+      .createHash("sha256")
+      .update(incomingRefreshToken)
+      .digest("hex");
+
+  
+
+    if (hashedIncomingToken !== user.refreshToken)
+      throw new ApiError(401, "Refresh token invalid");
+
+    // 4️⃣ Check expiry
+    if (!user.refreshTokenExpiry || user.refreshTokenExpiry.getTime() < Date.now())
+      throw new ApiError(401, "Refresh token expired");
+
+    // 5️⃣ Generate new tokens
+    const { accessToken, refreshToken: newRefreshToken } =
+      await GenerateAccessTokenAndRefreshToken(user._id);
+
+    // 6️⃣ Hash and save new refresh token in DB
+    const hashedNewToken = crypto.createHash("sha256").update(newRefreshToken).digest("hex");
+    user.refreshToken = hashedNewToken;
+    user.refreshTokenExpiry = Date.now() + 7 * 24 * 60 * 60 * 1000; // 7 days
+    await user.save();
+
+    // 7️⃣ Remove sensitive fields for response
+    const sanitizedUser = await User.findById(user._id).select("-password -refreshToken -refreshTokenExpiry");
+
+    // 8️⃣ Set cookies
+    const cookieOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      path: "/",
+    };
+
+    return res
+      .status(200)
+      .cookie("refreshToken", newRefreshToken, cookieOptions)
+      .cookie("accessToken", accessToken, { ...cookieOptions, maxAge:15 * 60 * 1000 }) // 15 min
+      .json(new ApiResponse(200, { accessToken, user: sanitizedUser }, "Access token refreshed successfully"));
+  } catch (error) {
+     return res.status(401).json(new ApiError(401, error?.message || "Invalid or expired refresh token"))
+  }
+});
+
+export default RefreshAccessToken;
+
+
+
+
+
+
+
+
+const Logout = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+
+  if (!userId) {
+    throw new ApiError(401, "Unauthorized");
+  }
+
+  // 🧹 Remove refresh token from DB
+  await User.findByIdAndUpdate(
+    userId,
+    { $unset: { refreshToken: 1 } },
+    { new: true }
+  );
+
+ 
+
+  const cookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production" ? true : false,
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    path: "/", // important for clearing
+  }
+
+
+  return res
+    .status(200)
+    .clearCookie("accessToken", cookieOptions)
+    .clearCookie("refreshToken", cookieOptions)
+    .json(new ApiResponse(200, {}, "Logout successful"));
+});
+
+
+
+
+const Profile = asyncHandler(async(req,res)=>{
+
+   const userId = req.user?._id
+
+const user =   await User.findById(userId).select("-password -refreshToken")
+
+if(!user){
+   throw new ApiError(404,"User not found")
+}
+
+
+return res.status(200).json(new ApiResponse(200,user,"User profile successfully fetched"))
+
+})
+
+
+const UpdateProfile = asyncHandler(async(req,res)=>{
+const user =   await User.findById(req.user?._id)
+
+if(!user){
+   throw new ApiError(404,"User not found")
+}
+
+const {username,fullName,email} = req.body
+
+if([username,fullName,email].some((value)=>value?.trim()==="")){
+   throw new ApiError(400,"Some field is required")
+   
+}
+
+
+
+
+
+const updatedProfile = await User.findByIdAndUpdate(req.user?._id,{
+   username,
+   fullName,
+   email
+   
+   
+
+},{new:true, select:"-password"})
+
+
+if(!updatedProfile){
+   throw new ApiError(400,"Profile not updated")
+}
+
+
+return res.status(200).json(new ApiResponse(200,updatedProfile,"Profile updated successfully"))
+
+
+})
+
+
+const ProfileChangePassword = asyncHandler(async(req,res)=>{
+
+const user =   await User.findById(req.user?._id)
+
+if(!user){
+   throw new ApiError(404,"User not found")
+}
+
+const {oldPassword,newPassword,confirmNewPassword} = req.body
+
+
+const isMatch =  await bcrypt.compare(oldPassword,user.password)
+
+if(!isMatch){
+   throw new ApiError(400,"oldPassword is incorrect, please correct oldPassword")
+
+}
+
+
+if(newPassword !==confirmNewPassword){
+   throw new ApiError(400,"newPassword and confirmPassword do not match ")
+}
+
+
+
+ user.password = newPassword
+
+ await user.save()
+
+
+
+return res.status(200).json(new ApiResponse(200,user,"Profile password change successfully"))
+
+
+})
+
+
+
+
+export {Login,RefreshAccessToken,Logout,Register,Profile,UpdateProfile,ProfileChangePassword}
+
+
+
+
