@@ -64,7 +64,6 @@ import couponRouter from "./Routes/coupon.route.js";
 import contactRouter from "./Routes/contact.route.js";
 import healthRouter from "./Routes/health.route.js"
 import cron from "node-cron";
-import axios from "axios";import cron from "node-cron";
 import axios from "axios";
 
 /* =========================
