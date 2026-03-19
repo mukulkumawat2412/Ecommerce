@@ -7,95 +7,79 @@ import { createCategory } from '../redux/slices/categorySlice.jsx'
 
 const AddCategory = () => {
 
+    const [message, setMessage] = useState("")
+    const [name, setName] = useState("")
+    const [slug, setSlug] = useState("")
 
-    const [message,setMessage] = useState("")
-    const [name,setName] = useState("")
-    const [slug,setSlug] = useState("")
+    const dispatch = useDispatch()
 
-
-    const dispatch  = useDispatch()
-
-
-    const handleSubmit = async(e)=>{
+    const handleSubmit = async (e) => {
         e.preventDefault()
-
         try {
-
-          await dispatch(createCategory({name,slug}))
-      
-
-
-        setMessage("created category successfully")
-        setName("")
-        setSlug("")
-
-            
+            await dispatch(createCategory({ name, slug }))
+            setMessage("Created category successfully")
+            setName("")
+            setSlug("")
         } catch (error) {
-            console.log("Error create categories",error)
-            
+            console.log("Error create categories", error)
         }
-
     }
 
+    return (
+        <div className="min-h-screen flex items-start justify-center bg-gray-100 px-4 py-10 sm:py-16">
+            <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-6 sm:p-8">
 
+                <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">
+                    Add Category
+                </h2>
 
- return (
-  <div className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-md 
-                  mx-auto p-4 sm:p-6 md:p-8 
-                  shadow rounded mt-10 sm:mt-16 md:mt-24">
+                {message && (
+                    <p className="mb-4 text-sm text-green-600 bg-green-50 border border-green-200 rounded-lg px-4 py-2 text-center">
+                        {message}
+                    </p>
+                )}
 
-    <h2 className="text-lg sm:text-xl md:text-2xl 
-                   font-bold mb-4 text-center sm:text-left">
-      Add Category
-    </h2>
+                <form onSubmit={handleSubmit} className="space-y-5">
 
-    {message && (
-      <p className="mb-2 text-sm sm:text-base text-green-600 text-center sm:text-left">
-        {message}
-      </p>
-    )}
+                    <div>
+                        <label className="block mb-1 text-sm font-medium text-gray-700">
+                            Category Name
+                        </label>
+                        <input
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="e.g. Electronics"
+                            className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500"
+                            required
+                        />
+                    </div>
 
-    <form onSubmit={handleSubmit} className="space-y-4">
-      
-      <div>
-        <label className="block mb-1 text-sm sm:text-base">
-          Category Name
-        </label>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full border p-2 sm:p-3 rounded text-sm sm:text-base"
-          required
-        />
-      </div>
+                    <div>
+                        <label className="block mb-1 text-sm font-medium text-gray-700">
+                            Slug
+                        </label>
+                        <input
+                            type="text"
+                            value={slug}
+                            onChange={(e) => setSlug(e.target.value)}
+                            placeholder="e.g. electronics"
+                            className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500"
+                            required
+                        />
+                    </div>
 
-      <div>
-        <label className="block mb-1 text-sm sm:text-base">
-          Slug
-        </label>
-        <input
-          type="text"
-          value={slug}
-          onChange={(e) => setSlug(e.target.value)}
-          className="w-full border p-2 sm:p-3 rounded text-sm sm:text-base"
-          required
-        />
-      </div>
+                    <button
+                        type="submit"
+                        className="w-full bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2.5 rounded-lg text-sm transition"
+                    >
+                        Add Category
+                    </button>
 
-      <button
-        type="submit"
-        className="w-full sm:w-auto 
-                   bg-gray-600 text-white 
-                   px-6 py-2 sm:py-3 
-                   rounded font-semibold text-sm sm:text-base"
-      >
-        Add Category
-      </button>
-    </form>
-  </div>
-)
-
+                </form>
+            </div>
+        </div>
+    )
 }
 
 export default AddCategory
