@@ -91,7 +91,7 @@ app.use("/api/v1/health",healthRouter)
 // Sabse neeche routes ke baad
 cron.schedule("* * * * *", async () => {
   try {
-    const response = await axios.get(`${process.env.VITE_API_BASE_URL}/health/Health`);
+    const response = await axios.get(`${process.env.VITE_API_BASE_URL || "https://ecommerce-backend-4fyg.onrender.com/api/v1"}/health/Health`);
     console.log("Health Check Success:", response.data);
   } catch (error) {
     console.log("Health Check Failed:", error.message);
