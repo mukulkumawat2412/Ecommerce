@@ -140,9 +140,11 @@ const Checkout = asyncHandler(async (req, res) => {
 
   const finalAmount = Math.max(amount, 1);
 
-  // 🔹 Collect all images from all products
+  // 🔹 Null check lagaya - agar product ya image null ho toh skip karo
   const images = products.flatMap((item) =>
-    item.product.image ? item.product.image[0] : []
+    item.product && item.product.image && item.product.image[0]
+      ? [item.product.image[0]]
+      : []
   );
 
   const lineItems = [
@@ -152,7 +154,7 @@ const Checkout = asyncHandler(async (req, res) => {
         product_data: {
           name: "Your Cart (Discount Applied)",
           description: "Final total after discount applied",
-          images: images, // ✅ all product images
+          images: images,
         },
         unit_amount: Math.round(finalAmount * 100),
       },
@@ -174,7 +176,6 @@ const Checkout = asyncHandler(async (req, res) => {
     .status(201)
     .json(new ApiResponse(201, session, "Payment session created successfully"));
 });
-
 
 
 
