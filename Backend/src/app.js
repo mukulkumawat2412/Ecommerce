@@ -25,7 +25,7 @@ app.use(
   cors({
     origin: (origin, callback) => {
       // Allow server-to-server / Postman requests
-      // if (!origin) return callback(null, true);
+      if (!origin) return callback(null, true);
 
       // Allow ALL Vercel deployments (preview + production)
       // if (origin.endsWith(".vercel.app")) {
