@@ -168,6 +168,23 @@ function Navbar() {
               <Link to="/contact-us" onClick={() => setIsMenuOpen(false)} className="py-2 border-b border-gray-800">Contact</Link>
               <Link to="/faq" onClick={() => setIsMenuOpen(false)} className="py-2 border-b border-gray-800">FAQ</Link>
               {isAuthenticated && <Link to="/product-page" onClick={() => setIsMenuOpen(false)} className="py-2 border-b border-gray-800">Products</Link>}
+
+              {/* Cart & Wishlist - Mobile */}
+              {isAuthenticated && (
+                <div className="flex gap-8 py-3 border-b border-gray-800">
+                  <Link to="/cart-page" onClick={() => setIsMenuOpen(false)} className="relative flex items-center gap-2">
+                    <FaShoppingCart size={22}/>
+                    <span>Cart</span>
+                    {cartItems.length > 0 && <span className="absolute -top-1 left-3 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">{cartItems.length}</span>}
+                  </Link>
+                  <Link to="/wishlist-page" onClick={() => setIsMenuOpen(false)} className="relative flex items-center gap-2">
+                    <FaRegHeart size={22}/>
+                    <span>Wishlist</span>
+                    {wishlistItems.length > 0 && <span className="absolute -top-1 left-3 bg-red-500 text-white text-xs px-1.5 rounded-full">{wishlistItems.length}</span>}
+                  </Link>
+                </div>
+              )}
+
             </div>
           </div>
         </div>
