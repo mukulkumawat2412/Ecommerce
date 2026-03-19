@@ -62,6 +62,10 @@ import cartRouter from "./Routes/cart.route.js";
 import adminRouter from "./Routes/admin.route.js";
 import couponRouter from "./Routes/coupon.route.js";
 import contactRouter from "./Routes/contact.route.js";
+import healthRouter from "./Routes/health.route.js"
+import cron from "node-cron";
+import axios from "axios";import cron from "node-cron";
+import axios from "axios";
 
 /* =========================
    ROOT
@@ -80,6 +84,21 @@ app.use("/api/v1/cart", cartRouter);
 app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/coupon", couponRouter);
 app.use("/api/v1/contact", contactRouter);
+app.use("/api/v1/health",healthRouter)
+
+
+
+
+// Sabse neeche routes ke baad
+cron.schedule("* * * * *", async () => {
+  try {
+    const response = await axios.get(`${process.env.VITE_API_BASE_URL}/health/Health`);
+    console.log("Health Check Success:", response.data);
+  } catch (error) {
+    console.log("Health Check Failed:", error.message);
+  }
+});
+
 
 /* =========================
    EXPORT (REQUIRED FOR VERCEL)
