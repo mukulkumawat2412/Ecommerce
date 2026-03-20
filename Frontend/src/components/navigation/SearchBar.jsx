@@ -78,7 +78,7 @@ const SearchBar = () => {
                 <ul className="absolute left-0 right-0 mt-1 bg-white border rounded-md shadow-lg max-h-60 overflow-y-auto z-50">
                     {searchProduct.map((p) => (
                         <Link key={p._id} to={`/product-details/${p._id}`}>
-                            <li className="flex items-center gap-3 p-2 cursor-pointer hover:bg-gray-100">
+                            <li className="flex items-center gap-3 p-2 cursor-pointer hover:bg-gray-100" onClick={()=>setQuery("")}>
                                 <img
                                     src={p.image[0]}
                                     alt={p.name}
