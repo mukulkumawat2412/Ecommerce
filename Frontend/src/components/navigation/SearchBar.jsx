@@ -25,6 +25,7 @@ const SearchBar = () => {
         const handleClickOutside = (e) => {
             if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
                 setShowDropdown(false)
+                setQuery("")
             }
         }
         document.addEventListener("mousedown", handleClickOutside)
