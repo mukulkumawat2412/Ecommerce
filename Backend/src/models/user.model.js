@@ -36,6 +36,34 @@ const userSchema  =  new Schema({
     },
 
 
+     sessionId:{
+        type:String,
+        default:null
+    },
+
+
+
+    ActiveSystem:{
+        type:String,
+        enum:["system A","system B"],
+        default:null
+    },
+
+
+
+    isActive:{
+        type:Boolean,
+        default:false
+    },
+
+
+    loginTime:{
+        type:Date,
+        default:null
+    }
+
+
+
     refreshTokenExpiry: {
   type: Date
 },
