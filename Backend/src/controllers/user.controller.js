@@ -195,6 +195,25 @@ const systemBLogin = async(req,res)=>{
 
 
 
+const SysTemLogout = async(req,res)=>{
+    try {
+
+        const {sessionId} = req.cookies
+
+        if(!sessionId) return res.status(400).json({message:"No active session"})
+
+            await User.findOneAndUpdate({sessionId},{
+                sessionId:null,
+                ActiveSystem:null,
+                isActive:false,
+                loginTime:null
+            })
+        
+    } catch (error) {
+        return res.status(500).json({message:"Internal Server Error"})
+    }
+}
+
 
 
 
@@ -445,7 +464,7 @@ return res.status(200).json(new ApiResponse(200,user,"Profile password change su
 
 
 
-export {Login,RefreshAccessToken,Logout,Register,Profile,UpdateProfile,ProfileChangePassword,systemALogin,systemBLogin}
+export {Login,RefreshAccessToken,Logout,Register,Profile,UpdateProfile,ProfileChangePassword,systemALogin,systemBLogin,SysTemLogout}
 
 
 
