@@ -60,7 +60,7 @@ const userSchema  =  new Schema({
     loginTime:{
         type:Date,
         default:null
-    }
+    },
 
 
 
