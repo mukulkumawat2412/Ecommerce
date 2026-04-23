@@ -115,25 +115,25 @@ const Login = asyncHandler(async (req, res) => {
 
 
 
-const SysTemLogout = async(req,res)=>{
-    try {
-        const {sessionId} = req.cookies
-        if(!sessionId) return res.status(400).json({message:"No active session"})
+// const SysTemLogout = async(req,res)=>{
+//     try {
+//         const {sessionId} = req.cookies
+//         if(!sessionId) return res.status(400).json({message:"No active session"})
         
-        await User.findOneAndUpdate({sessionId},{
-            sessionId:null,
-            ActiveSystem:null,
-            isActive:false,
-            loginTime:null
-        })
+//         await User.findOneAndUpdate({sessionId},{
+//             sessionId:null,
+//             ActiveSystem:null,
+//             isActive:false,
+//             loginTime:null
+//         })
 
-        res.clearCookie('sessionId');
-        return res.status(200).json({message:"Logged out successfully"}) // ← REDIRECT HATAYA, JSON DIYA
+//         res.clearCookie('sessionId');
+//         return res.status(200).json({message:"Logged out successfully"}) // ← REDIRECT HATAYA, JSON DIYA
 
-    } catch (error) {
-        return res.status(500).json({message:"Internal Server Error"})
-    }
-}
+//     } catch (error) {
+//         return res.status(500).json({message:"Internal Server Error"})
+//     }
+// }
 
 
 
@@ -256,6 +256,23 @@ export default RefreshAccessToken;
 
 
 const Logout = asyncHandler(async (req, res) => {
+
+
+
+       const {sessionId} = req.cookies
+
+        if(!sessionId) return res.status(400).json({message:"No active session"})
+
+            await User.findOneAndUpdate({sessionId},{
+                sessionId:null,
+                ActiveSystem:null,
+                isActive:false,
+                loginTime:null
+            })
+
+
+              res.clearCookie('sessionId');
+
   const userId = req.user?._id;
 
   if (!userId) {
@@ -268,6 +285,9 @@ const Logout = asyncHandler(async (req, res) => {
     { $unset: { refreshToken: 1 } },
     { new: true }
   );
+
+
+
 
  
 
