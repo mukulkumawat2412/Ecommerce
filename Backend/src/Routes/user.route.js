@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Login ,Logout,RefreshAccessToken,Register,Profile, UpdateProfile, ProfileChangePassword,systemBLogin,systemALogin} from "../controllers/user.controller.js";
+import { Login ,Logout,RefreshAccessToken,Register,Profile, UpdateProfile, ProfileChangePassword,systemBLogin,systemALogin,SysTemLogout} from "../controllers/user.controller.js";
 
 import verifyToken from "../middleware/auth.middleware.js";
 import authorizeRoles from "../middleware/checkRole.js";
@@ -16,7 +16,7 @@ router.route("/register").post(Register)
 router.route("/login").post(Login)
 router.post('/systemA/login', systemALogin);
 router.post('/systemB/login', systemBLogin);
-router.post('/logout', logout);
+router.post('/Slogout', SysTemLogout);
 router.route("/profile").get(verifyToken,authorizeRoles(["admin","user"]),Profile)
 router.route("/profile-update").put(verifyToken,authorizeRoles(["admin","user"]),UpdateProfile)
 router.route("/profile-change-password").put(verifyToken,authorizeRoles(["admin","user"]),ProfileChangePassword)
