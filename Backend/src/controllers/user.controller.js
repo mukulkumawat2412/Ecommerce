@@ -250,61 +250,39 @@ export default RefreshAccessToken;
 
 
 
-
-
-
-
-
 const Logout = asyncHandler(async (req, res) => {
-
-
-
-       const {sessionId} = req.cookies
-
-        if(!sessionId) return res.status(400).json({message:"No active session"})
-
-            await User.findOneAndUpdate({sessionId},{
-                sessionId:null,
-                ActiveSystem:null,
-                isActive:false,
-                loginTime:null
-            })
-
-
-              res.clearCookie('sessionId');
-
-  const userId = req.user?._id;
-
-  if (!userId) {
-    throw new ApiError(401, "Unauthorized");
-  }
-
-  // 🧹 Remove refresh token from DB
-  await User.findByIdAndUpdate(
-    userId,
-    { $unset: { refreshToken: 1 } },
-    { new: true }
-  );
-
-
-
-
- 
+  const { sessionId } = req.cookies;
 
   const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production" ? true : false,
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    path: "/", // important for clearing
+    path: "/",
+  };
+
+  if (sessionId) {
+    await User.findOneAndUpdate({ sessionId }, {
+      sessionId: null,
+      ActiveSystem: null,
+      isActive: false,
+      loginTime: null
+    });
   }
 
+  const userId = req.user?._id;
+  if (!userId) throw new ApiError(401, "Unauthorized");
+
+  await User.findByIdAndUpdate(userId, { $unset: { refreshToken: 1 } }, { new: true });
 
   return res
     .status(200)
     .clearCookie("accessToken", cookieOptions)
     .clearCookie("refreshToken", cookieOptions)
+    .clearCookie("sessionId", cookieOptions) // ✅ cookieOptions add hua
     .json(new ApiResponse(200, {}, "Logout successful"));
 });
+
+
 
 
 
