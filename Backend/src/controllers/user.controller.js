@@ -98,6 +98,131 @@ const Login = asyncHandler(async (req, res) => {
 
 
 
+const systemALogin = async(req,res)=>{
+    try {
+
+        const {email,password} = req.body
+
+
+     const user =    await User.findOne({email})
+        
+
+  if (!user || !(await user.isPasswordCorrect(password)) {
+  return res.status(400).json({message:"Invalid credentials"})
+  }
+
+
+
+  if(user.isActive){
+    return res.status(400).json({message:"User already Logged in",activeSystem:user.ActiveSystem,loginTime:user.loginTime})
+  }
+
+
+const sessionId =   crypto.randomUUID()
+
+await User.findByIdAndUpdate(user._id,{
+    sessionId,
+    ActiveSystem:"system A",
+    isActive:true,
+    loginTime:Date.now()
+})
+
+res.cookie("sessionId",sessionId,{
+    httpOnly:true,
+    secure:true,
+    sameSite:"none",
+    maxAge:24*60*60*1000
+})
+
+
+
+    } catch (error) {
+        return res.status(500).json({message:"Internal Server Error"})
+    }
+
+}
+
+
+
+
+
+
+
+
+const systemBLogin = async(req,res)=>{
+    try {
+
+        const {email,password} = req.body
+
+     const user =   await  User.findOne({email})
+        
+    if (!user || !(await user.isPasswordCorrect(password)) {
+        return res.status(400).json({message:"Invalid credentials"})
+  }
+
+
+
+  if(user.isActive) return res.status(400).json({message:"Pehle System A se Logout karo",activeSystem:user.ActiveSystem,loginTime:user.loginTime})
+
+
+    const sessionId = crypto.randomUUID()
+    await User.findByIdAndUpdate(user._id,{
+        sessionId,
+        ActiveSystem:"system B",
+        isActive:true,
+        loginTime:Date.now()
+    })
+
+
+    res.cookie("sessionId",sessionId,{
+        httpOnly:true,
+        secure:true,
+        sameSite:"none",
+        maxAge:24*60*60*1000
+    })
+
+
+
+
+    } catch (error) {
+        return res.status(500).json({message:"Internal Server Error"})
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
