@@ -208,6 +208,10 @@ const SysTemLogout = async(req,res)=>{
                 isActive:false,
                 loginTime:null
             })
+
+
+                     res.clearCookie('sessionId');
+  return res.redirect('/login');
         
     } catch (error) {
         return res.status(500).json({message:"Internal Server Error"})
