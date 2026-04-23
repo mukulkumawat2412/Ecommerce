@@ -445,7 +445,7 @@ return res.status(200).json(new ApiResponse(200,user,"Profile password change su
 
 
 
-export {Login,RefreshAccessToken,Logout,Register,Profile,UpdateProfile,ProfileChangePassword}
+export {Login,RefreshAccessToken,Logout,Register,Profile,UpdateProfile,ProfileChangePassword,systemALogin,systemBLogin}
 
 
 
