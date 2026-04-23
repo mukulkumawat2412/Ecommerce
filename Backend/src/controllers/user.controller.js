@@ -108,6 +108,7 @@ const Login = asyncHandler(async (req, res) => {
     .status(200)
     .cookie("refreshToken", refreshToken, cookieOptions)
     .cookie("accessToken", accessToken, { ...cookieOptions, maxAge: 15 * 50 * 1000 })
+   .cookie("sessionId", sessionId, cookieOptions)
     .json(new ApiResponse(200, { sanitizedUser, accessToken }, "Login successful"));
 });
 
