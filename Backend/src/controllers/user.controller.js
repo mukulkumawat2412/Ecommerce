@@ -66,24 +66,39 @@ return res.status(201).json(new ApiResponse(200,createdUser,"User Register succe
 
 const Login = asyncHandler(async (req, res) => {
   const { email, username, password } = req.body;
-
   if (!email && !username) throw new ApiError(400, "Email or Username is required");
-
+  
   const user = await User.findOne({ $or: [{ email }, { username }] }).select("+password");
   if (!user) throw new ApiError(404, "User does not exist");
-
+  
   const isPasswordValid = await user.isPasswordCorrect(password);
   if (!isPasswordValid) throw new ApiError(400, "Incorrect password");
 
+  // ✅ YEH ADD KARO
+  if (user.isActive) {
+    return res.status(403).json({
+      message: "User already logged in on another device",
+      activeSystem: user.ActiveSystem,
+      loginTime: user.loginTime
+    });
+  }
+
   const { accessToken, refreshToken } = await GenerateAccessTokenAndRefreshToken(user._id);
 
+  // ✅ YEH BHI ADD KARO — session update karo
+  const sessionId = crypto.randomUUID();
+  await User.findByIdAndUpdate(user._id, {
+    sessionId,
+    ActiveSystem: "system A",
+    isActive: true,
+    loginTime: Date.now()
+  });
 
   const sanitizedUser = await User.findById(user._id).select("-password -refreshToken -refreshTokenExpiry");
-
-
+  
   const cookieOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production" ? true :false,
+    secure: process.env.NODE_ENV === "production" ? true : false,
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000,
     path: "/",
@@ -92,89 +107,12 @@ const Login = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .cookie("refreshToken", refreshToken, cookieOptions)
-    .cookie("accessToken", accessToken, { ...cookieOptions, maxAge: 15 * 50 * 1000 }) // 15m access token
+    .cookie("accessToken", accessToken, { ...cookieOptions, maxAge: 15 * 50 * 1000 })
     .json(new ApiResponse(200, { sanitizedUser, accessToken }, "Login successful"));
 });
 
 
 
-const systemALogin = async(req,res)=>{
-    try {
-        const {email,password} = req.body
-        const user = await User.findOne({email})
-        
-        if (!user || !(await user.isPasswordCorrect(password))) {
-            return res.status(400).json({message:"Invalid credentials"})
-        }
-
-        if(user.isActive){
-            return res.status(403).json({
-                message:"User already Logged in",
-                activeSystem:user.ActiveSystem,
-                loginTime:user.loginTime
-            })
-        }
-
-        const sessionId = crypto.randomUUID()
-        await User.findByIdAndUpdate(user._id,{
-            sessionId,
-            ActiveSystem:"system A",
-            isActive:true,
-            loginTime:Date.now()
-        })
-
-        res.cookie("sessionId", sessionId, {
-            httpOnly:true,
-            secure:true,
-            sameSite:"none",
-            maxAge:24*60*60*1000
-        })
-
-        return res.status(200).json({message:"System A Login Successful"}) // ← ADD HUA
-
-    } catch (error) {
-        return res.status(500).json({message:"Internal Server Error"})
-    }
-}
-
-const systemBLogin = async(req,res)=>{
-    try {
-        const {email,password} = req.body
-        const user = await User.findOne({email})
-        
-        if (!user || !(await user.isPasswordCorrect(password))) {
-            return res.status(400).json({message:"Invalid credentials"})
-        }
-
-        if(user.isActive){
-            return res.status(403).json({
-                message:"Pehle System A se Logout karo",
-                activeSystem:user.ActiveSystem,
-                loginTime:user.loginTime
-            })
-        }
-
-        const sessionId = crypto.randomUUID()
-        await User.findByIdAndUpdate(user._id,{
-            sessionId,
-            ActiveSystem:"system B",
-            isActive:true,
-            loginTime:Date.now()
-        })
-
-        res.cookie("sessionId", sessionId, {
-            httpOnly:true,
-            secure:true,
-            sameSite:"none",
-            maxAge:24*60*60*1000
-        })
-
-        return res.status(200).json({message:"System B Login Successful"}) // ← ADD HUA
-
-    } catch (error) {
-        return res.status(500).json({message:"Internal Server Error"})
-    }
-}
 
 const SysTemLogout = async(req,res)=>{
     try {
