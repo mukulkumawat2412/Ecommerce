@@ -107,7 +107,7 @@ const systemALogin = async(req,res)=>{
      const user =    await User.findOne({email})
         
 
-  if (!user || !(await user.isPasswordCorrect(password)) {
+  if (!user || !(await user.isPasswordCorrect(password))) {
   return res.status(400).json({message:"Invalid credentials"})
   }
 
@@ -156,7 +156,7 @@ const systemBLogin = async(req,res)=>{
 
      const user =   await  User.findOne({email})
         
-    if (!user || !(await user.isPasswordCorrect(password)) {
+    if (!user || !(await user.isPasswordCorrect(password))) {
         return res.status(400).json({message:"Invalid credentials"})
   }
 
