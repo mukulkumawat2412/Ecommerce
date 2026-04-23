@@ -100,125 +100,101 @@ const Login = asyncHandler(async (req, res) => {
 
 const systemALogin = async(req,res)=>{
     try {
-
         const {email,password} = req.body
-
-
-     const user =    await User.findOne({email})
+        const user = await User.findOne({email})
         
+        if (!user || !(await user.isPasswordCorrect(password))) {
+            return res.status(400).json({message:"Invalid credentials"})
+        }
 
-  if (!user || !(await user.isPasswordCorrect(password))) {
-  return res.status(400).json({message:"Invalid credentials"})
-  }
+        if(user.isActive){
+            return res.status(403).json({
+                message:"User already Logged in",
+                activeSystem:user.ActiveSystem,
+                loginTime:user.loginTime
+            })
+        }
 
+        const sessionId = crypto.randomUUID()
+        await User.findByIdAndUpdate(user._id,{
+            sessionId,
+            ActiveSystem:"system A",
+            isActive:true,
+            loginTime:Date.now()
+        })
 
+        res.cookie("sessionId", sessionId, {
+            httpOnly:true,
+            secure:true,
+            sameSite:"none",
+            maxAge:24*60*60*1000
+        })
 
-  if(user.isActive){
-    return res.status(400).json({message:"User already Logged in",activeSystem:user.ActiveSystem,loginTime:user.loginTime})
-  }
-
-
-const sessionId =   crypto.randomUUID()
-
-await User.findByIdAndUpdate(user._id,{
-    sessionId,
-    ActiveSystem:"system A",
-    isActive:true,
-    loginTime:Date.now()
-})
-
-res.cookie("sessionId",sessionId,{
-    httpOnly:true,
-    secure:true,
-    sameSite:"none",
-    maxAge:24*60*60*1000
-})
-
-
+        return res.status(200).json({message:"System A Login Successful"}) // ← ADD HUA
 
     } catch (error) {
         return res.status(500).json({message:"Internal Server Error"})
     }
-
 }
-
-
-
-
-
-
-
 
 const systemBLogin = async(req,res)=>{
     try {
-
         const {email,password} = req.body
-
-     const user =   await  User.findOne({email})
+        const user = await User.findOne({email})
         
-    if (!user || !(await user.isPasswordCorrect(password))) {
-        return res.status(400).json({message:"Invalid credentials"})
-  }
+        if (!user || !(await user.isPasswordCorrect(password))) {
+            return res.status(400).json({message:"Invalid credentials"})
+        }
 
+        if(user.isActive){
+            return res.status(403).json({
+                message:"Pehle System A se Logout karo",
+                activeSystem:user.ActiveSystem,
+                loginTime:user.loginTime
+            })
+        }
 
+        const sessionId = crypto.randomUUID()
+        await User.findByIdAndUpdate(user._id,{
+            sessionId,
+            ActiveSystem:"system B",
+            isActive:true,
+            loginTime:Date.now()
+        })
 
-  if(user.isActive) return res.status(400).json({message:"Pehle System A se Logout karo",activeSystem:user.ActiveSystem,loginTime:user.loginTime})
+        res.cookie("sessionId", sessionId, {
+            httpOnly:true,
+            secure:true,
+            sameSite:"none",
+            maxAge:24*60*60*1000
+        })
 
-
-    const sessionId = crypto.randomUUID()
-    await User.findByIdAndUpdate(user._id,{
-        sessionId,
-        ActiveSystem:"system B",
-        isActive:true,
-        loginTime:Date.now()
-    })
-
-
-    res.cookie("sessionId",sessionId,{
-        httpOnly:true,
-        secure:true,
-        sameSite:"none",
-        maxAge:24*60*60*1000
-    })
-
-
-
+        return res.status(200).json({message:"System B Login Successful"}) // ← ADD HUA
 
     } catch (error) {
         return res.status(500).json({message:"Internal Server Error"})
     }
-
 }
-
-
-
-
-
 
 const SysTemLogout = async(req,res)=>{
     try {
-
         const {sessionId} = req.cookies
-
         if(!sessionId) return res.status(400).json({message:"No active session"})
-
-            await User.findOneAndUpdate({sessionId},{
-                sessionId:null,
-                ActiveSystem:null,
-                isActive:false,
-                loginTime:null
-            })
-
-
-                     res.clearCookie('sessionId');
-  return res.redirect('/login');
         
+        await User.findOneAndUpdate({sessionId},{
+            sessionId:null,
+            ActiveSystem:null,
+            isActive:false,
+            loginTime:null
+        })
+
+        res.clearCookie('sessionId');
+        return res.status(200).json({message:"Logged out successfully"}) // ← REDIRECT HATAYA, JSON DIYA
+
     } catch (error) {
         return res.status(500).json({message:"Internal Server Error"})
     }
 }
-
-
 
 
 
