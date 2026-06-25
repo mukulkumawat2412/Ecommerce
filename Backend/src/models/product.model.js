@@ -46,7 +46,7 @@ const productSchema = new Schema({
 },{timestamps:true})
 
 
-// productSchema.index({category:1})
+productSchema.index({category:1})
 
 
 
