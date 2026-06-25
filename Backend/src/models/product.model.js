@@ -47,6 +47,7 @@ const productSchema = new Schema({
 
 
 productSchema.index({category:1})
+productSchema.index({name:1})
 
 
 
