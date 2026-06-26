@@ -47,6 +47,7 @@ export default function HeroSectionMinimal({ onCategoryClick = () => {} }) {
           <img
             src="https://plus.unsplash.com/premium_photo-1664201890375-f8fa405cdb7d?w=600&auto=format&fit=crop&q=60"
             alt="products"
+            loading="lazy"
             className="w-full max-w-xs sm:max-w-sm rounded-lg shadow-sm object-cover opacity-95"
           />
         </div>
