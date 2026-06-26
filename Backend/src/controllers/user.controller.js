@@ -72,7 +72,7 @@ const Login = asyncHandler(async (req, res) => {
   if (!user) throw new ApiError(404, "User does not exist");
 
    if(user.isLocked){
-      return res.status(423).json({ message: "Account locked, contact admin to unlock." })
+      throw new ApiError(423,"Account locked, contact admin to unlock.");
    }
 
    
