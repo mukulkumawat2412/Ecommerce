@@ -29,6 +29,7 @@
     "nodemon": "^3.1.14",
     "socket.io": "^4.8.1",
     "stripe": "^19.3.0",
-    "compression": "^1.7.4"
+    "compression": "^1.7.4",
+    "helmet": "^8.0.0"
   }
 }
