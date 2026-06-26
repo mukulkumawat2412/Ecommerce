@@ -17,7 +17,14 @@ const app = express();
 app.use(express.json());
 app.use(helmet())
 app.use(compression())
-app.use(morgan("combined"))
+app.use(morgan((tokens, req, res) => {
+  return [
+    new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+  ].join(" ")
+}))
 
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static("public/temp"));
