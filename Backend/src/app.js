@@ -155,7 +155,7 @@ const app = express();
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 5,
+  max: 100,
   message: { message: "Too many login attempts, please try again after 15 minutes." }
 })
 
