@@ -93,7 +93,7 @@ const GetProducts = asyncHandler(async(req,res)=>{
 
 
 
-const products = await Product.find({})
+const products = await Product.find({}).lean()
 
 
 
