@@ -22,6 +22,7 @@ const AboutUsPage = () => {
           <img
             src={AboutUsimage}
             alt="About Us"
+            loading="lazy"
             className="rounded-2xl shadow-lg w-full h-auto object-cover"
           />
         </div>
