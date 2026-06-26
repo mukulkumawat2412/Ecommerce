@@ -79,8 +79,8 @@ const Login = asyncHandler(async (req, res) => {
   const isPasswordValid = await user.isPasswordCorrect(password);
    
    if(!isPasswordValid){
-      user.loginAttempts ++
-      if(user.loginAttempts >=5){
+      user.loginAttempt ++
+      if(user.loginAttempt >=5){
          user.isLocked = true
    }
       await user.save()
