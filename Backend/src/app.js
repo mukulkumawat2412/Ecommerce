@@ -112,10 +112,10 @@ app.use("/api/v1/health",healthRouter)
 
 
 
-// app.use((err, req, res, next) => {
-//   console.error(err.stack)
-//   res.status(500).json({ message: err.message })
-// })
+app.use((err, req, res, next) => {
+  console.error(err.stack)
+  res.status(500).json({ message: err.message })
+})
 
 
 
