@@ -72,8 +72,22 @@ const userSchema  =  new Schema({
         type:String,
         enum:["admin","user"],
         default:"user"
+    },
+
+
+
+    loginAttempt:{
+        type:Number,
+        default:0
+    },
+    
+
+    isLocked:{
+        type:Boolean,
+        default:false
     }
 
+    
 
    
 
