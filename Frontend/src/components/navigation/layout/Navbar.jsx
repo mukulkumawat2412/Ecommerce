@@ -84,6 +84,7 @@ function Navbar() {
           <img
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvUy6QJ_dbr3a08V_Tj_IcuC7ewqh5W0ezjQ&s"
             alt="Logo"
+            loading="lazy"
             className="w-[120px] md:w-[150px] h-[40px] md:h-[60px]"
           />
         </div>
