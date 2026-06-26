@@ -16,7 +16,7 @@ const app = express();
 app.use(express.json());
 app.use(helmet())
 app.use(compression())
-app.use(morgan("dev"))
+app.use(morgan("combined"))
 
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static("public/temp"));
