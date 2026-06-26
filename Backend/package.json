@@ -30,6 +30,7 @@
     "socket.io": "^4.8.1",
     "stripe": "^19.3.0",
     "compression": "^1.7.4",
-    "helmet": "^8.0.0"
+    "helmet": "^8.0.0",
+    "express-rate-limit": "^7.0.0"
   }
 }
