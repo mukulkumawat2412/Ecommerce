@@ -73,6 +73,7 @@ const WishlistPage = () => {
                     <img
                       src={item.product?.image?.[0]}
                       alt={item.product?.name}
+                      loading="lazy"
                       className="max-h-full object-contain rounded-md"
                     />
                   </div>
