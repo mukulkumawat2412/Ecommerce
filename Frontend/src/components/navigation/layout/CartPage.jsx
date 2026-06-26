@@ -122,6 +122,7 @@ const CartPage = () => {
                   <img
                     src={item?.product?.image?.[0] || "/placeholder.png"} // ✅ CHANGE: safe image access
                     alt={item?.product?.name || "product"}
+                    loading="lazy"
                     className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded mb-3 sm:mb-0 sm:mr-4"
                   />
 
