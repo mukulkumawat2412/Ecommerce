@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan"
 import compression from 'compression'
+import helmet from "helmet"
 
 dotenv.config();
 
