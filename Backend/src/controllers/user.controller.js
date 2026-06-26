@@ -70,9 +70,30 @@ const Login = asyncHandler(async (req, res) => {
   
   const user = await User.findOne({ $or: [{ email }, { username }] }).select("+password");
   if (!user) throw new ApiError(404, "User does not exist");
-  
+
+   if(user.isLocked){
+      return res.status(423).json({ message: "Account locked, contact admin to unlock." })
+   }
+
+   
   const isPasswordValid = await user.isPasswordCorrect(password);
-  if (!isPasswordValid) throw new ApiError(400, "Incorrect password");
+   
+   if(!isPasswordValid){
+      user.loginAttempts ++
+      if(user.loginAttempts >=5){
+         user.isLocked = true
+   }
+      await user.save()
+      throw new ApiError(400, "Incorrect password");
+   }
+
+   
+
+
+
+
+
+   
 
   // ✅ YEH ADD KARO
   if (user.isActive) {
@@ -94,7 +115,14 @@ const Login = asyncHandler(async (req, res) => {
     loginTime: Date.now()
   });
 
+
+   
+
+   
+
   const sanitizedUser = await User.findById(user._id).select("-password -refreshToken -refreshTokenExpiry");
+
+   
   
   const cookieOptions = {
     httpOnly: true,
