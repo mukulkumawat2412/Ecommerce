@@ -83,6 +83,7 @@ const SearchBar = () => {
                                 <img
                                     src={p.image[0]}
                                     alt={p.name}
+                                    loading="lazy"
                                     className="w-9 h-9 sm:w-10 sm:h-10 object-contain"
                                 />
                                 <span className="text-black text-xs sm:text-sm">
