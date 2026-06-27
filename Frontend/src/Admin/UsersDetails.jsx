@@ -179,7 +179,7 @@ const UsersDetails = () => {
                               : "text-gray-700"
                           }`}
                         >
-                          {user.loginAttempts ?? 0}
+                          {user.loginAttempt ?? 0}
                         </span>
                         <span className="text-gray-400">/ 5</span>
                       </div>
