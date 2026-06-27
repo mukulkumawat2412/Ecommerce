@@ -12,7 +12,7 @@ const router = Router()
 
 
 router.route("/register").post(Register)
-
+router.route("/get-users").get(verifyToken,authorizeRoles(["admin"]),)
 router.route("/login").post(Login)
 router.route("/profile").get(verifyToken,authorizeRoles(["admin","user"]),Profile)
 router.route("/profile-update").put(verifyToken,authorizeRoles(["admin","user"]),UpdateProfile)

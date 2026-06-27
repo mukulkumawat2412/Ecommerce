@@ -12,7 +12,7 @@ const navLinks = [
   { to: "/add-category", icon: <MdCategory size={20} />, label: "Add Category" },
   { to: "/admin-coupons", icon: <RiCouponLine size={20} />, label: "Coupons" },
   { to: "/contact-dashboard", icon: <IoMdContact size={20} />, label: "Contact" },
-  { to: "/users", icon: <FiUsers size={20} />, label: "Users" },
+  { to: "/user-details", icon: <FiUsers size={20} />, label: "Users" },
   { to: "/settings", icon: <FiSettings size={20} />, label: "Settings" },
 ];
 

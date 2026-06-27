@@ -167,6 +167,7 @@ import OpenRoutes from "./components/OpenRoutes.jsx";
 
 import HomePage from "./pages/HomePage";
 
+
 // ✅ Lazy loaded components
 const LoginForm = lazy(() => import("./auth/loginForm"));
 const SignUp = lazy(() => import("./auth/SignUp"));
@@ -197,6 +198,7 @@ const Faq = lazy(() => import("./pages/FaqPage.jsx"));
 const ContactDashboard = lazy(() => import("./Admin/ContactDashboard.jsx"));
 const UpdateContactRecord = lazy(() => import("./Admin/UpdateContactRecords.jsx"));
 const ImageUpload = lazy(() => import("./pages/ImageUpload.jsx"));
+const UsersDetails = lazy(()=> import("./Admin/UsersDetails.jsx"))
 
 // ✅ Full page spinner
 const FullPageSpinner = () => (
@@ -266,6 +268,7 @@ function App() {
               <Route path="/contact-dashboard" element={<ContactDashboard />} />
               <Route path="/update-contactRecord/:cId" element={<UpdateContactRecord />} />
               <Route path="/image-upload" element={<ImageUpload />} />
+              <Route path="/user-details" element={<UsersDetails/>}/>
             </Route>
 
           </Route>
