@@ -46,6 +46,9 @@ const UsersDetails = () => {
       setUnlocking(userId);
         
       await dispatch(UnlockUser(userId))
+      setUsers(prev => prev.map(u => 
+  u._id === userId ? { ...u, isLocked: false, loginAttempt: 0 } : u
+));
 
       toast.success("User unlocked successfully");
      await fetchUsers();
