@@ -48,7 +48,7 @@ const UsersDetails = () => {
       await dispatch(UnlockUser(userId))
 
       toast.success("User unlocked successfully");
-      fetchUsers();
+     await fetchUsers();
     } catch (err) {
       toast.error("Failed to unlock user");
     } finally {
