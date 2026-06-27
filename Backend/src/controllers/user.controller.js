@@ -78,7 +78,7 @@ return res.status(200).json(new ApiResponse(200,users,"All-users fetched success
 
 
 
-const Unlockuser = asyncHandler(async(req,res)=>{
+const Unlockeduser = asyncHandler(async(req,res)=>{
  
   const {id} = req.params
 
@@ -457,7 +457,7 @@ return res.status(200).json(new ApiResponse(200,user,"Profile password change su
 
 
 
-export {Login,RefreshAccessToken,Logout,Register,Profile,UpdateProfile,ProfileChangePassword,GetAllUsers}
+export {Login,RefreshAccessToken,Logout,Register,Profile,UpdateProfile,ProfileChangePassword,GetAllUsers,Unlockeduser}
 
 
 
