@@ -131,7 +131,7 @@ const UsersDetails = () => {
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-semibold uppercase text-sm">
-                          {user.fullName?.charAt(0) || "U"}
+                          {user.username?.charAt(0) || "U"}
                         </div>
                         <span className="font-medium text-gray-800">{user.fullName}</span>
                       </div>

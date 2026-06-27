@@ -62,7 +62,7 @@ return res.status(201).json(new ApiResponse(200,createdUser,"User Register succe
 const GetAllUsers = asyncHandler(async(req,res)=>{
 
 
-const users =  await  User.find({}).select("-password -fullName -refreshToken -sessionId -ActiveSystem -isActive -loginTime -refreshTokenExpiry -isLocked")
+const users =  await  User.find({}).select("-password -fullName -refreshToken -sessionId -ActiveSystem -isActive -loginTime -refreshTokenExpiry")
 
 console.log(users)
 
