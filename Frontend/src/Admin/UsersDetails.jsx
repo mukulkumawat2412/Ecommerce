@@ -12,7 +12,7 @@ import {
   Search,
 } from "lucide-react";
 import { useDispatch } from "react-redux";
-import { GetAllusers } from "../redux/slices/authSlice";
+import { GetAllusers, UnlockUser } from "../redux/slices/authSlice";
 
 
 
@@ -44,11 +44,9 @@ const UsersDetails = () => {
   const handleUnlock = async (userId) => {
     try {
       setUnlocking(userId);
-      await axios.patch(
-        `${BASE_URL}/api/v1/admin/unlock-user/${userId}`,
-        {},
-        { withCredentials: true }
-      );
+        
+      await dispatch(UnlockUser(userId))
+
       toast.success("User unlocked successfully");
       fetchUsers();
     } catch (err) {

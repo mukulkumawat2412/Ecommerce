@@ -59,6 +59,19 @@ export const GetAllusers  = createAsyncThunk("/allUsers",async(_,{rejectWithValu
 
 
 
+export const UnlockUser = createAsyncThunk("/unlockUser",async(userId,{rejectWithValue})=>{
+  try {
+
+   const res  =  await api.patch(`/users/unlock-user/${userId}`,{withCredentials:true})
+    
+   return res.data.data
+  } catch (error) {
+      return rejectWithValue(error.response?.data || error.message)
+  }
+
+})
+
+
 
 
 
@@ -220,6 +233,17 @@ const authSlice = createSlice({
       state.userDetail = action.payload
 
     }).addCase(GetAllusers.rejected,(state,action)=>{
+      state.loading = false
+    });
+
+    builder.addCase(UnlockUser.pending,(state,action)=>{
+      state.loading = true
+
+    }).addCase(UnlockUser.fulfilled,(state,action)=>{
+      state.loading = false
+      toast.success("User unlocked successfully");
+
+    }).addCase(UnlockUser.rejected,(state,action)=>{
       state.loading = false
     })
     

@@ -78,6 +78,35 @@ return res.status(200).json(new ApiResponse(200,users,"All-users fetched success
 
 
 
+const Unlockuser = asyncHandler(async(req,res)=>{
+ 
+  const {id} = req.params
+
+const user =  await User.findById(id)
+
+if(!user){
+  throw new ApiError(404,"user not found")
+}
+
+
+user.loginAttempt = 0
+user.isLocked = false
+
+await user.save()
+
+
+return res.status(200).json(new ApiResponse(200,user,"user unlocked successfully"))
+
+
+})
+
+
+
+
+
+
+
+
 
 
 
