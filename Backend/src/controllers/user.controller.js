@@ -126,12 +126,19 @@ const Login = asyncHandler(async (req, res) => {
    
   const isPasswordValid = await user.isPasswordCorrect(password);
    
+
+  
    if(!isPasswordValid){
-      user.loginAttempt ++
+    if(user.role !=="admin"){
+          user.loginAttempt ++
       if(user.loginAttempt >=5){
          user.isLocked = true
+         
    }
-      await user.save()
+
+        await user.save()
+    }
+
       throw new ApiError(400, "Incorrect password");
    }
 
