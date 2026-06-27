@@ -10,6 +10,7 @@ const initialState = {
   user: null,
   isAuthenticated:false,
   profileData: null,
+  userDetail:[]
 };
 
 /* --------------------------------------------------------------------- */
@@ -42,6 +43,29 @@ export const Register = createAsyncThunk(
     }
   }
 );
+
+
+export const GetAllusers  = createAsyncThunk("/allUsers",async(_,{rejectWithValue})=>{
+  try {
+  const res  =   await api.get("/users/get-users",{withCredentials:true})
+    return res.data.data
+    
+  } catch (error) {
+    return rejectWithValue(error.response?.data || error.message)
+  }
+
+})
+
+
+
+
+
+
+
+
+
+
+
 
 /* --------------------------------------------------------------------- */
 // 🔑 Login
@@ -186,6 +210,20 @@ const authSlice = createSlice({
     builder.addCase(profileChangePassword.fulfilled, (state) => {
       toast.success("Password changed successfully");
     });
+
+
+    builder.addCase(GetAllusers.pending,(state,action)=>{
+      state.loading = true
+
+    }).addCase(GetAllusers.fulfilled,(state,action)=>{
+      state.loading = false
+      state.userDetail = action.payload
+
+    }).addCase(GetAllusers.rejected,(state,action)=>{
+      state.loading = false
+    })
+    
+
   },
 });
 

@@ -11,10 +11,11 @@ import {
   AlertTriangle,
   Search,
 } from "lucide-react";
-import axios from "axios";
-import { toast } from "sonner";
+import { useDispatch } from "react-redux";
+import { GetAllusers } from "../redux/slices/authSlice";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+
 
 const UsersDetails = () => {
   const [users, setUsers] = useState([]);
@@ -22,13 +23,17 @@ const UsersDetails = () => {
   const [search, setSearch] = useState("");
   const [unlocking, setUnlocking] = useState(null);
 
+
+  const dispatch = useDispatch()
+
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${BASE_URL}/api/v1/admin/all-users`, {
-        withCredentials: true,
-      });
-      setUsers(res.data.data);
+
+     const res =    await dispatch(GetAllusers())
+        setUsers(res.payload)
+
+  
     } catch (err) {
       toast.error("Failed to fetch users");
     } finally {
@@ -64,7 +69,7 @@ const UsersDetails = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-6 mt-10">
       {/* Header */}
       <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-3">

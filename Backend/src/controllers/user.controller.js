@@ -61,6 +61,18 @@ return res.status(201).json(new ApiResponse(200,createdUser,"User Register succe
 
 const GetAllUsers = asyncHandler(async(req,res)=>{
 
+
+const users =  await  User.find({}).select("-password -fullName -refreshToken -sessionId -ActiveSystem -isActive -loginTime -refreshTokenExpiry -isLocked")
+
+console.log(users)
+
+return res.status(200).json(new ApiResponse(200,users,"All-users fetched successfully"))
+
+
+
+
+
+
 })
 
 
@@ -416,7 +428,7 @@ return res.status(200).json(new ApiResponse(200,user,"Profile password change su
 
 
 
-export {Login,RefreshAccessToken,Logout,Register,Profile,UpdateProfile,ProfileChangePassword}
+export {Login,RefreshAccessToken,Logout,Register,Profile,UpdateProfile,ProfileChangePassword,GetAllUsers}
 
 
 
