@@ -167,14 +167,14 @@ const UsersDetails = () => {
                     {/* Login Attempts */}
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-1.5">
-                        {user.loginAttempts >= 3 ? (
+                        {user.loginAttempt >= 3 ? (
                           <AlertTriangle size={14} className="text-orange-400" />
                         ) : null}
                         <span
                           className={`font-semibold ${
-                            user.loginAttempts >= 5
+                            user.loginAttempt >= 5
                               ? "text-red-500"
-                              : user.loginAttempts >= 3
+                              : user.loginAttempt >= 3
                               ? "text-orange-500"
                               : "text-gray-700"
                           }`}
