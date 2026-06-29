@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getProducts } from "../redux/slices/productSlice";
-import getCookie from "../../../Backend/src/utils/GetToken.js";
+
 import { AddToCart } from "../redux/slices/cartSlice.jsx";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai"; // ✅ icons change
 import { addWishlistProduct } from "../redux/slices/wishlistSlice.jsx";

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import getCookie from '../../../Backend/src/utils/GetToken.js';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { TopCategoryBy_Products } from '../redux/slices/productSlice.jsx';
 import { Link } from 'react-router-dom';

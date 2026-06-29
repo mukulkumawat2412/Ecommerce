@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React from 'react'
 import { useState } from 'react'
-import getCookie from '../../../Backend/src/utils/GetToken.js'
+
 import { useDispatch } from 'react-redux'
 import { createCategory } from '../redux/slices/categorySlice.jsx'
 

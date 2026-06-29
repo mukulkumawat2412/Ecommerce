@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import getCookie from "../../../Backend/src/utils/GetToken.js";
+
 import { Star } from "lucide-react"; // for rating icon
 import { useDispatch, useSelector } from 'react-redux';
 import { topProductsByPrice } from "../redux/slices/productSlice.jsx";
